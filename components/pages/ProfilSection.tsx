@@ -128,7 +128,7 @@ export const ProfilSection: React.FC<ProfilSectionProps> = ({
         {/* TUJUAN CARD */}
         <div className="bg-amber-50/70 dark:bg-slate-900 p-6 sm:p-8 rounded-2xl border border-amber-200 dark:border-slate-800 shadow-sm">
           <h3 className="text-lg font-bold text-emerald-950 dark:text-emerald-400 mb-4 flex items-center gap-2">
-            <Award className="w-5 h-5 text-amber-600 dark:text-amber-400" /> Target & Tujuan Capaian Lulusan
+            <Award className="w-5 h-5 text-amber-600 dark:text-amber-400" /> {pages.visi_misi.judul_tujuan || 'Target & Tujuan Capaian Lulusan'}
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {pages.visi_misi.tujuan.map((t, idx) => (
@@ -145,52 +145,63 @@ export const ProfilSection: React.FC<ProfilSectionProps> = ({
       <section className="bg-white dark:bg-slate-900 rounded-2xl p-6 sm:p-10 border border-slate-200 dark:border-slate-800 shadow-md">
         <div className="text-center max-w-xl mx-auto mb-8">
           <span className="text-xs font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider bg-amber-50 dark:bg-slate-800 px-3 py-1 rounded-full border border-amber-200 dark:border-slate-700">
-            Pimpinan & Pengelola
+            {pages.struktur_organisasi?.badge || 'PIMPINAN & PENGELOLA'}
           </span>
-          <h2 className="text-2xl font-bold text-emerald-950 dark:text-emerald-400 mt-2">Struktur Organisasi Madrasah</h2>
+          <h2 className="text-2xl font-bold text-emerald-950 dark:text-emerald-400 mt-2">
+            {pages.struktur_organisasi?.judul || 'Struktur Organisasi Madrasah'}
+          </h2>
           <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
-            Bagan kepemimpinan dan manajerial MI Syuriyah Pebatan
+            {pages.struktur_organisasi?.subjudul || 'Bagan kepemimpinan dan manajerial MI Syuriyah Pebatan'}
           </p>
         </div>
 
         {/* Organizational Chart Representation */}
         <div className="space-y-6">
           {/* Top Level - Kepala Madrasah & Komite */}
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-6">
-            <div className="bg-emerald-900 text-white p-4 rounded-xl border-2 border-amber-400 text-center w-full max-w-xs shadow-lg">
-              <div className="text-[10px] text-amber-300 uppercase tracking-wider font-bold">Komite Madrasah</div>
-              <div className="text-sm font-bold mt-1">KH. M. Syukron, S.Ag</div>
-              <div className="text-[11px] text-emerald-200">Perwakilan Tokoh & Wali Murid</div>
-            </div>
-
-            <div className="hidden sm:block text-amber-500 font-bold text-xl">•</div>
-
-            <div className="bg-emerald-950 text-white p-4 rounded-xl border-2 border-amber-400 text-center w-full max-w-xs shadow-lg">
-              <div className="text-[10px] text-amber-300 uppercase tracking-wider font-bold">Kepala Madrasah</div>
-              <div className="text-sm font-bold mt-1">{pages.sambutan_kepala.nama}</div>
-              <div className="text-[11px] text-emerald-200">Penanggung Jawab Utama</div>
-            </div>
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-6 flex-wrap">
+            {(pages.struktur_organisasi?.pimpinan_utama && pages.struktur_organisasi.pimpinan_utama.length > 0
+              ? pages.struktur_organisasi.pimpinan_utama
+              : [
+                  { id: 'org-1', jabatan: 'Komite Madrasah', nama: 'KH. M. Syukron, S.Ag', keterangan: 'Perwakilan Tokoh & Wali Murid' },
+                  { id: 'org-2', jabatan: 'Kepala Madrasah', nama: pages.sambutan_kepala.nama || 'Ahmad Fauzi, S.Pd.I', keterangan: 'Penanggung Jawab Utama' },
+                ]
+            ).map((item, idx, arr) => (
+              <React.Fragment key={item.id || idx}>
+                <div className="bg-emerald-900 dark:bg-emerald-950 text-white p-4 rounded-xl border-2 border-amber-400 text-center w-full sm:w-auto min-w-[220px] max-w-xs shadow-lg">
+                  <div className="text-[10px] text-amber-300 uppercase tracking-wider font-bold">{item.jabatan}</div>
+                  <div className="text-sm font-bold mt-1">{item.nama}</div>
+                  {item.keterangan && (
+                    <div className="text-[11px] text-emerald-200 mt-0.5">{item.keterangan}</div>
+                  )}
+                </div>
+                {idx < arr.length - 1 && (
+                  <div className="hidden sm:block text-amber-500 font-bold text-xl">•</div>
+                )}
+              </React.Fragment>
+            ))}
           </div>
 
           {/* Line Divider */}
           <div className="w-1/2 h-[2px] bg-amber-400/50 mx-auto" />
 
           {/* Second Level - Wakasek & TU */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto">
-            <div className="bg-emerald-50 dark:bg-slate-800 p-3.5 rounded-xl border border-emerald-200 dark:border-slate-700 text-center">
-              <div className="text-[10px] text-emerald-800 dark:text-emerald-400 uppercase font-bold">Waka Kurikulum</div>
-              <div className="text-xs font-bold text-emerald-950 dark:text-slate-100 mt-1">Ustadzah Nurul Hidayah, S.Pd</div>
-            </div>
-
-            <div className="bg-emerald-50 dark:bg-slate-800 p-3.5 rounded-xl border border-emerald-200 dark:border-slate-700 text-center">
-              <div className="text-[10px] text-emerald-800 dark:text-emerald-400 uppercase font-bold">Koordinator Tahfidz</div>
-              <div className="text-xs font-bold text-emerald-950 dark:text-slate-100 mt-1">Ust. M. Ridwan, S.Th.I</div>
-            </div>
-
-            <div className="bg-emerald-50 dark:bg-slate-800 p-3.5 rounded-xl border border-emerald-200 dark:border-slate-700 text-center">
-              <div className="text-[10px] text-emerald-800 dark:text-emerald-400 uppercase font-bold">Kepala Tata Usaha</div>
-              <div className="text-xs font-bold text-emerald-950 dark:text-slate-100 mt-1">Ustadzah Khadijah, A.Md</div>
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-3xl mx-auto">
+            {(pages.struktur_organisasi?.pengelola_tambahan && pages.struktur_organisasi.pengelola_tambahan.length > 0
+              ? pages.struktur_organisasi.pengelola_tambahan
+              : [
+                  { id: 'org-3', jabatan: 'Waka Kurikulum', nama: 'Ustadzah Nurul Hidayah, S.Pd' },
+                  { id: 'org-4', jabatan: 'Koordinator Tahfidz', nama: 'Ust. M. Ridwan, S.Th.I' },
+                  { id: 'org-5', jabatan: 'Kepala Tata Usaha', nama: 'Ustadzah Khadijah, A.Md' },
+                ]
+            ).map((item, idx) => (
+              <div key={item.id || idx} className="bg-emerald-50 dark:bg-slate-800 p-3.5 rounded-xl border border-emerald-200 dark:border-slate-700 text-center space-y-0.5">
+                <div className="text-[10px] text-emerald-800 dark:text-emerald-400 uppercase font-bold">{item.jabatan}</div>
+                <div className="text-xs font-bold text-emerald-950 dark:text-slate-100">{item.nama}</div>
+                {item.keterangan && (
+                  <div className="text-[10px] text-slate-500 dark:text-slate-400">{item.keterangan}</div>
+                )}
+              </div>
+            ))}
           </div>
         </div>
       </section>

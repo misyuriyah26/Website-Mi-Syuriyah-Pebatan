@@ -6,6 +6,7 @@ import {
   ProgramUnggulanItem,
   EkstrakurikulerItem,
   ScheduleItem,
+  OrgMemberItem,
 } from '@/lib/types';
 import {
   Save,
@@ -20,6 +21,7 @@ import {
   GraduationCap,
   Clock,
   Layers,
+  Users,
 } from 'lucide-react';
 import { ImageUploadInput } from '@/components/ui/ImageUploadInput';
 
@@ -72,6 +74,8 @@ export const PagesManager: React.FC<PagesManagerProps> = ({
       ...formData,
       visi_misi: {
         ...formData.visi_misi,
+        judul_tujuan:
+          formData.visi_misi?.judul_tujuan || 'Target & Tujuan Capaian Lulusan',
         misi: misiText.split('\n').map((s) => s.trim()).filter(Boolean),
         tujuan: tujuanText.split('\n').map((s) => s.trim()).filter(Boolean),
       },
@@ -102,6 +106,20 @@ export const PagesManager: React.FC<PagesManagerProps> = ({
           .split('\n')
           .map((s) => s.trim())
           .filter(Boolean),
+      },
+      struktur_organisasi: {
+        badge: formData.struktur_organisasi?.badge || 'PIMPINAN & PENGELOLA',
+        judul: formData.struktur_organisasi?.judul || 'Struktur Organisasi Madrasah',
+        subjudul: formData.struktur_organisasi?.subjudul || 'Bagan kepemimpinan dan manajerial MI Syuriyah Pebatan',
+        pimpinan_utama: formData.struktur_organisasi?.pimpinan_utama || [
+          { id: 'org-1', jabatan: 'Komite Madrasah', nama: 'KH. M. Syukron, S.Ag', keterangan: 'Perwakilan Tokoh & Wali Murid' },
+          { id: 'org-2', jabatan: 'Kepala Madrasah', nama: 'Ahmad Fauzi, S.Pd.I', keterangan: 'Penanggung Jawab Utama' },
+        ],
+        pengelola_tambahan: formData.struktur_organisasi?.pengelola_tambahan || [
+          { id: 'org-3', jabatan: 'Waka Kurikulum', nama: 'Ustadzah Nurul Hidayah, S.Pd' },
+          { id: 'org-4', jabatan: 'Koordinator Tahfidz', nama: 'Ust. M. Ridwan, S.Th.I' },
+          { id: 'org-5', jabatan: 'Kepala Tata Usaha', nama: 'Ustadzah Khadijah, A.Md' },
+        ],
       },
     };
 
@@ -241,6 +259,118 @@ export const PagesManager: React.FC<PagesManagerProps> = ({
     ];
     list.splice(index, 1);
     setFormData({ ...formData, jadwal_kbm: list });
+  };
+
+  // Handlers for Struktur Organisasi
+  const handleAddPimpinanUtama = () => {
+    const current = formData.struktur_organisasi?.pimpinan_utama || [
+      { id: 'org-1', jabatan: 'Komite Madrasah', nama: 'KH. M. Syukron, S.Ag', keterangan: 'Perwakilan Tokoh & Wali Murid' },
+      { id: 'org-2', jabatan: 'Kepala Madrasah', nama: 'Ahmad Fauzi, S.Pd.I', keterangan: 'Penanggung Jawab Utama' },
+    ];
+    const updated = [
+      ...current,
+      { id: `org-${Date.now()}`, jabatan: 'Jabatan Pimpinan', nama: 'Nama Pimpinan', keterangan: 'Keterangan Tambahan' },
+    ];
+    setFormData({
+      ...formData,
+      struktur_organisasi: {
+        ...(formData.struktur_organisasi || {}),
+        pimpinan_utama: updated,
+      },
+    });
+  };
+
+  const handleUpdatePimpinanUtama = (index: number, field: keyof OrgMemberItem, value: string) => {
+    const current = [
+      ...(formData.struktur_organisasi?.pimpinan_utama || [
+        { id: 'org-1', jabatan: 'Komite Madrasah', nama: 'KH. M. Syukron, S.Ag', keterangan: 'Perwakilan Tokoh & Wali Murid' },
+        { id: 'org-2', jabatan: 'Kepala Madrasah', nama: 'Ahmad Fauzi, S.Pd.I', keterangan: 'Penanggung Jawab Utama' },
+      ]),
+    ];
+    if (current[index]) {
+      current[index] = { ...current[index], [field]: value };
+      setFormData({
+        ...formData,
+        struktur_organisasi: {
+          ...(formData.struktur_organisasi || {}),
+          pimpinan_utama: current,
+        },
+      });
+    }
+  };
+
+  const handleDeletePimpinanUtama = (index: number) => {
+    const current = [
+      ...(formData.struktur_organisasi?.pimpinan_utama || [
+        { id: 'org-1', jabatan: 'Komite Madrasah', nama: 'KH. M. Syukron, S.Ag', keterangan: 'Perwakilan Tokoh & Wali Murid' },
+        { id: 'org-2', jabatan: 'Kepala Madrasah', nama: 'Ahmad Fauzi, S.Pd.I', keterangan: 'Penanggung Jawab Utama' },
+      ]),
+    ];
+    current.splice(index, 1);
+    setFormData({
+      ...formData,
+      struktur_organisasi: {
+        ...(formData.struktur_organisasi || {}),
+        pimpinan_utama: current,
+      },
+    });
+  };
+
+  const handleAddPengelola = () => {
+    const current = formData.struktur_organisasi?.pengelola_tambahan || [
+      { id: 'org-3', jabatan: 'Waka Kurikulum', nama: 'Ustadzah Nurul Hidayah, S.Pd' },
+      { id: 'org-4', jabatan: 'Koordinator Tahfidz', nama: 'Ust. M. Ridwan, S.Th.I' },
+      { id: 'org-5', jabatan: 'Kepala Tata Usaha', nama: 'Ustadzah Khadijah, A.Md' },
+    ];
+    const updated = [
+      ...current,
+      { id: `org-${Date.now()}`, jabatan: 'Jabatan Pengelola', nama: 'Nama Pengelola' },
+    ];
+    setFormData({
+      ...formData,
+      struktur_organisasi: {
+        ...(formData.struktur_organisasi || {}),
+        pengelola_tambahan: updated,
+      },
+    });
+  };
+
+  const handleUpdatePengelola = (index: number, field: keyof OrgMemberItem, value: string) => {
+    const current = [
+      ...(formData.struktur_organisasi?.pengelola_tambahan || [
+        { id: 'org-3', jabatan: 'Waka Kurikulum', nama: 'Ustadzah Nurul Hidayah, S.Pd' },
+        { id: 'org-4', jabatan: 'Koordinator Tahfidz', nama: 'Ust. M. Ridwan, S.Th.I' },
+        { id: 'org-5', jabatan: 'Kepala Tata Usaha', nama: 'Ustadzah Khadijah, A.Md' },
+      ]),
+    ];
+    if (current[index]) {
+      current[index] = { ...current[index], [field]: value };
+      setFormData({
+        ...formData,
+        struktur_organisasi: {
+          ...(formData.struktur_organisasi || {}),
+          pengelola_tambahan: current,
+        },
+      });
+    }
+  };
+
+  const handleDeletePengelola = (index: number) => {
+    const current = [
+      ...(formData.struktur_organisasi?.pengelola_tambahan || [
+        { id: 'org-3', jabatan: 'Waka Kurikulum', nama: 'Ustadzah Nurul Hidayah, S.Pd' },
+        { id: 'org-4', jabatan: 'Koordinator Tahfidz', nama: 'Ust. M. Ridwan, S.Th.I' },
+        { id: 'org-5', jabatan: 'Kepala Tata Usaha', nama: 'Ustadzah Khadijah, A.Md' },
+      ]),
+    ];
+    current.splice(index, 1);
+    setFormData({
+      ...formData,
+      struktur_organisasi: {
+        ...(formData.struktur_organisasi || {}),
+        pengelola_tambahan: current,
+      },
+    });
   };
 
   return (
@@ -484,6 +614,22 @@ export const PagesManager: React.FC<PagesManagerProps> = ({
             />
           </div>
 
+          <div>
+            <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">Judul Seksi Target & Tujuan Capaian</label>
+            <input
+              type="text"
+              value={formData.visi_misi?.judul_tujuan || ''}
+              placeholder="Target & Tujuan Capaian Lulusan"
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  visi_misi: { ...formData.visi_misi, judul_tujuan: e.target.value },
+                })
+              }
+              className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs focus:ring-2 focus:ring-emerald-600 focus:outline-none"
+            />
+          </div>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
@@ -513,7 +659,238 @@ export const PagesManager: React.FC<PagesManagerProps> = ({
           </div>
         </div>
 
-        {/* 4. PROGRAM UNGGULAN KARTU UTAMA */}
+        {/* 3.5 STRUKTUR ORGANISASI MADRASAH */}
+        <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-6">
+          <div className="border-b border-slate-100 dark:border-slate-800 pb-3">
+            <h3 className="text-base font-bold text-emerald-950 dark:text-emerald-400 flex items-center gap-2">
+              <Users className="w-4 h-4 text-amber-600" /> Struktur Organisasi Madrasah
+            </h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+              Kelola bagan pimpinan, komite, wakasek, dan pengelola madrasah.
+            </p>
+          </div>
+
+          {/* Header Info */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                Badge / Tagline Seksi
+              </label>
+              <input
+                type="text"
+                value={formData.struktur_organisasi?.badge || ''}
+                placeholder="PIMPINAN & PENGELOLA"
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    struktur_organisasi: {
+                      ...(formData.struktur_organisasi || {}),
+                      badge: e.target.value,
+                    },
+                  })
+                }
+                className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs focus:ring-2 focus:ring-emerald-600 focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                Judul Utama
+              </label>
+              <input
+                type="text"
+                value={formData.struktur_organisasi?.judul || ''}
+                placeholder="Struktur Organisasi Madrasah"
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    struktur_organisasi: {
+                      ...(formData.struktur_organisasi || {}),
+                      judul: e.target.value,
+                    },
+                  })
+                }
+                className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs focus:ring-2 focus:ring-emerald-600 focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                Subjudul / Deskripsi
+              </label>
+              <input
+                type="text"
+                value={formData.struktur_organisasi?.subjudul || ''}
+                placeholder="Bagan kepemimpinan dan manajerial MI Syuriyah Pebatan"
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    struktur_organisasi: {
+                      ...(formData.struktur_organisasi || {}),
+                      subjudul: e.target.value,
+                    },
+                  })
+                }
+                className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs focus:ring-2 focus:ring-emerald-600 focus:outline-none"
+              />
+            </div>
+          </div>
+
+          {/* Block A: Pimpinan Utama */}
+          <div className="space-y-3 pt-2">
+            <div className="flex items-center justify-between">
+              <span className="font-bold text-xs text-emerald-900 dark:text-emerald-300 flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-amber-500 inline-block" />
+                Pimpinan Utama (Level Atas / Kartu Bergaris Emas)
+              </span>
+              <button
+                type="button"
+                onClick={handleAddPimpinanUtama}
+                className="px-2.5 py-1 rounded-lg bg-emerald-800 text-white font-bold text-xs flex items-center gap-1 hover:bg-emerald-900"
+              >
+                <Plus className="w-3.5 h-3.5 text-amber-300" />
+                <span>Tambah Pimpinan Utama</span>
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {(
+                formData.struktur_organisasi?.pimpinan_utama || [
+                  { id: 'org-1', jabatan: 'Komite Madrasah', nama: 'KH. M. Syukron, S.Ag', keterangan: 'Perwakilan Tokoh & Wali Murid' },
+                  { id: 'org-2', jabatan: 'Kepala Madrasah', nama: 'Ahmad Fauzi, S.Pd.I', keterangan: 'Penanggung Jawab Utama' },
+                ]
+              ).map((item, idx) => (
+                <div
+                  key={item.id || idx}
+                  className="p-3.5 bg-emerald-50/60 dark:bg-slate-800/80 rounded-xl border border-emerald-200 dark:border-slate-700 space-y-2 relative"
+                >
+                  <div className="flex justify-between items-center">
+                    <span className="font-bold text-[11px] text-emerald-800 dark:text-emerald-400">
+                      Pimpinan #{idx + 1}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => handleDeletePimpinanUtama(idx)}
+                      className="p-1 rounded bg-red-100 dark:bg-red-950 text-red-600 dark:text-red-400 hover:text-red-800"
+                      title="Hapus"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-600 dark:text-slate-300 mb-0.5">
+                        Jabatan / Posisi
+                      </label>
+                      <input
+                        type="text"
+                        value={item.jabatan}
+                        onChange={(e) => handleUpdatePimpinanUtama(idx, 'jabatan', e.target.value)}
+                        className="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-600 dark:text-slate-300 mb-0.5">
+                        Nama Lengkap & Gelar
+                      </label>
+                      <input
+                        type="text"
+                        value={item.nama}
+                        onChange={(e) => handleUpdatePimpinanUtama(idx, 'nama', e.target.value)}
+                        className="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] font-bold text-slate-600 dark:text-slate-300 mb-0.5">
+                      Keterangan / Peran
+                    </label>
+                    <input
+                      type="text"
+                      value={item.keterangan || ''}
+                      placeholder="Contoh: Penanggung Jawab Utama"
+                      onChange={(e) => handleUpdatePimpinanUtama(idx, 'keterangan', e.target.value)}
+                      className="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs"
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Block B: Pengelola & Koordinator */}
+          <div className="space-y-3 pt-2">
+            <div className="flex items-center justify-between">
+              <span className="font-bold text-xs text-emerald-900 dark:text-emerald-300 flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block" />
+                Pengelola, Wakasek & Koordinator (Level Kedua)
+              </span>
+              <button
+                type="button"
+                onClick={handleAddPengelola}
+                className="px-2.5 py-1 rounded-lg bg-emerald-800 text-white font-bold text-xs flex items-center gap-1 hover:bg-emerald-900"
+              >
+                <Plus className="w-3.5 h-3.5 text-amber-300" />
+                <span>Tambah Pengelola</span>
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {(
+                formData.struktur_organisasi?.pengelola_tambahan || [
+                  { id: 'org-3', jabatan: 'Waka Kurikulum', nama: 'Ustadzah Nurul Hidayah, S.Pd' },
+                  { id: 'org-4', jabatan: 'Koordinator Tahfidz', nama: 'Ust. M. Ridwan, S.Th.I' },
+                  { id: 'org-5', jabatan: 'Kepala Tata Usaha', nama: 'Ustadzah Khadijah, A.Md' },
+                ]
+              ).map((item, idx) => (
+                <div
+                  key={item.id || idx}
+                  className="p-3 bg-slate-50 dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700 space-y-2 relative"
+                >
+                  <div className="flex justify-between items-center">
+                    <span className="font-bold text-[11px] text-amber-700 dark:text-amber-400">
+                      Pengelola #{idx + 1}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => handleDeletePengelola(idx)}
+                      className="p-1 rounded bg-red-100 dark:bg-red-950 text-red-600 dark:text-red-400 hover:text-red-800"
+                      title="Hapus"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] font-bold text-slate-600 dark:text-slate-300 mb-0.5">
+                      Jabatan / Posisi
+                    </label>
+                    <input
+                      type="text"
+                      value={item.jabatan}
+                      onChange={(e) => handleUpdatePengelola(idx, 'jabatan', e.target.value)}
+                      className="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] font-bold text-slate-600 dark:text-slate-300 mb-0.5">
+                      Nama Lengkap
+                    </label>
+                    <input
+                      type="text"
+                      value={item.nama}
+                      onChange={(e) => handleUpdatePengelola(idx, 'nama', e.target.value)}
+                      className="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs"
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
         <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
           <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
             <h3 className="text-base font-bold text-emerald-950 dark:text-emerald-400 flex items-center gap-2">

@@ -65,6 +65,21 @@ export interface ScheduleItem {
   type: 'Pembiasaan' | 'Akademik' | 'Istirahat' | 'Ekstra';
 }
 
+export interface OrgMemberItem {
+  id: string;
+  jabatan: string;
+  nama: string;
+  keterangan?: string;
+}
+
+export interface StrukturOrganisasiInfo {
+  badge?: string;
+  judul?: string;
+  subjudul?: string;
+  pimpinan_utama?: OrgMemberItem[];
+  pengelola_tambahan?: OrgMemberItem[];
+}
+
 export interface StaticPagesContent {
   sambutan_kepala: {
     nama: string;
@@ -82,6 +97,7 @@ export interface StaticPagesContent {
     visi: string;
     misi: string[];
     tujuan: string[];
+    judul_tujuan?: string;
   };
   program_unggulan?: ProgramUnggulanItem[];
   kurikulum_info?: {
@@ -93,6 +109,7 @@ export interface StaticPagesContent {
   };
   ekstrakurikuler?: EkstrakurikulerItem[];
   jadwal_kbm?: ScheduleItem[];
+  struktur_organisasi?: StrukturOrganisasiInfo;
   ppdb_info?: {
     judul: string;
     deskripsi: string;

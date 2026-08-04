@@ -249,6 +249,7 @@ Hingga saat ini, MI Syuriyah Pebatan telah meluluskan ribuan alumni yang berkipr
       'Menguasai kompetensi dasar literasi digital dan teknologi informasi untuk jenjang lanjutan.',
       'Memiliki sikap sopan santun, hormat kepada orang tua & guru, serta peduli sesama.',
     ],
+    judul_tujuan: 'Target & Tujuan Capaian Lulusan',
   },
   program_unggulan: [
     {
@@ -324,6 +325,20 @@ Hingga saat ini, MI Syuriyah Pebatan telah meluluskan ribuan alumni yang berkipr
     { id: 'kbm-6', time: '12.40 - 13.30 WIB', activity: 'KBM Jam ke 7 / Bimbingan Tahfidz Ekstra', type: 'Akademik' },
     { id: 'kbm-7', time: '13.30 WIB - Selesai', activity: 'Pulang & Bimbingan Ekstrakurikuler (Senin - Sabtu)', type: 'Ekstra' },
   ],
+  struktur_organisasi: {
+    badge: 'PIMPINAN & PENGELOLA',
+    judul: 'Struktur Organisasi Madrasah',
+    subjudul: 'Bagan kepemimpinan dan manajerial MI Syuriyah Pebatan',
+    pimpinan_utama: [
+      { id: 'org-1', jabatan: 'Komite Madrasah', nama: 'KH. M. Syukron, S.Ag', keterangan: 'Perwakilan Tokoh & Wali Murid' },
+      { id: 'org-2', jabatan: 'Kepala Madrasah', nama: 'Ahmad Fauzi, S.Pd.I', keterangan: 'Penanggung Jawab Utama' },
+    ],
+    pengelola_tambahan: [
+      { id: 'org-3', jabatan: 'Waka Kurikulum', nama: 'Ustadzah Nurul Hidayah, S.Pd' },
+      { id: 'org-4', jabatan: 'Koordinator Tahfidz', nama: 'Ust. M. Ridwan, S.Th.I' },
+      { id: 'org-5', jabatan: 'Kepala Tata Usaha', nama: 'Ustadzah Khadijah, A.Md' },
+    ],
+  },
   ppdb_info: {
     judul: 'Informasi & Ketentuan PPDB TA 2026/2027',
     deskripsi: 'Pendaftaran Peserta Didik Baru MI Syuriyah Pebatan dilaksanakan secara transparan, akuntabel, dan dapat diakses online maupun offline di sekretariat madrasah.',
