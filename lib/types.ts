@@ -51,6 +51,20 @@ export interface ProgramUnggulanItem {
   icon_name?: string;
 }
 
+export interface EkstrakurikulerItem {
+  id: string;
+  name: string;
+  desc: string;
+  icon_name?: string;
+}
+
+export interface ScheduleItem {
+  id: string;
+  time: string;
+  activity: string;
+  type: 'Pembiasaan' | 'Akademik' | 'Istirahat' | 'Ekstra';
+}
+
 export interface StaticPagesContent {
   sambutan_kepala: {
     nama: string;
@@ -70,6 +84,15 @@ export interface StaticPagesContent {
     tujuan: string[];
   };
   program_unggulan?: ProgramUnggulanItem[];
+  kurikulum_info?: {
+    badge_kurikulum?: string;
+    judul_kurikulum?: string;
+    deskripsi_kurikulum?: string;
+    matpel_agama?: string[];
+    matpel_akademik?: string[];
+  };
+  ekstrakurikuler?: EkstrakurikulerItem[];
+  jadwal_kbm?: ScheduleItem[];
   ppdb_info?: {
     judul: string;
     deskripsi: string;

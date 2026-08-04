@@ -60,24 +60,49 @@ export const ProgramSection: React.FC<ProgramSectionProps> = ({ pages, settings 
         },
       ];
 
-  const scheduleData = [
-    { time: '07.00 - 07.30 WIB', activity: 'Sholat Dhuha Berjamaah, Mudarosah Al-Qur\'an & Asmaul Husna', type: 'Pembiasaan' },
-    { time: '07.30 - 09.30 WIB', activity: 'Kegiatan Belajar Mengajar (KBM) Jam ke 1 - 3', type: 'Akademik' },
-    { time: '09.30 - 10.00 WIB', activity: 'Istirahat Pertama & Kantin Sehat', type: 'Istirahat' },
-    { time: '10.00 - 12.00 WIB', activity: 'Kegiatan Belajar Mengajar (KBM) Jam ke 4 - 6', type: 'Akademik' },
-    { time: '12.00 - 12.40 WIB', activity: 'Sholat Dzuhur Berjamaah & Kultum Santri', type: 'Pembiasaan' },
-    { time: '12.40 - 13.30 WIB', activity: 'KBM Jam ke 7 / Bimbingan Tahfidz Ekstra', type: 'Akademik' },
-    { time: '13.30 WIB - Selesai', activity: 'Pulang & Bimbingan Ekstrakurikuler (Senin - Sabtu)', type: 'Ekstra' },
+  const badgeKurikulum = pages?.kurikulum_info?.badge_kurikulum || 'STANDAR NASIONAL & KEMENAG';
+  const judulKurikulum = pages?.kurikulum_info?.judul_kurikulum || 'Kurikulum Terpadu Kurikulum Merdeka + KMA 183';
+  const kurikulumDesc = pages?.kurikulum_info?.deskripsi_kurikulum ||
+    'MI Syuriyah Pebatan mengimplementasikan Kurikulum Merdeka yang disempurnakan dengan muatan lokal pendidikan keagamaan khas Nahdlatul Ulama.';
+
+  const matpelAgama = pages?.kurikulum_info?.matpel_agama || [
+    'Al-Qur\'an Hadits (Membaca, Menghafal, Memahami)',
+    'Aqidah Akhlaq (Pembentukan Karakter Terpuji)',
+    'Fiqih & Praktek Ibadah Harian',
+    'Sejarah Kebudayaan Islam (SKI)',
+    'Bahasa Arab Dasar & Muhadatsah',
   ];
 
-  const ekstrakurikuler = [
-    { name: 'Tahfidz Al-Qur\'an (Yanbu\'a)', desc: 'Bimbingan intensif hafalan Al-Qur\'an target Juz 30 dengan tartil.', icon: BookOpen },
-    { name: 'Seni Rebana & Hadroh', desc: 'Grup sholawat santri untuk melestarikan kebudayaan Islam.', icon: Music },
-    { name: 'Seni Kaligrafi Islam', desc: 'Seni menulis ayat Al-Qur\'an indah, rutin meraih juara Porseni.', icon: Sparkles },
-    { name: 'Pramuka Penggalang & Siaga', desc: 'Membentuk kedisiplinan, kemandirian, dan kepemimpinan santri.', icon: Flame },
-    { name: 'Science & Math Club', desc: 'Persiapan Kompetisi Sains Madrasah (KSM) tingkat kabupaten.', icon: Code },
-    { name: 'Pencak Silat Pagar Nusa', desc: 'Seni bela diri islami untuk kesehatan fisik dan kewaspadaan diri.', icon: Award },
+  const matpelAkademik = pages?.kurikulum_info?.matpel_akademik || [
+    'Pendidikan Pancasila & Kewarganegaraan',
+    'Bahasa Indonesia & Literasi Digital',
+    'Matematika Logis & Numerasi',
+    'Ilmu Pengetahuan Alam & Sosial (IPAS)',
+    'Bahasa Inggris & Muatan Lokal TIK/Komputer',
   ];
+
+  const scheduleData = pages?.jadwal_kbm && pages.jadwal_kbm.length > 0
+    ? pages.jadwal_kbm
+    : [
+        { id: '1', time: '07.00 - 07.30 WIB', activity: 'Sholat Dhuha Berjamaah, Mudarosah Al-Qur\'an & Asmaul Husna', type: 'Pembiasaan' },
+        { id: '2', time: '07.30 - 09.30 WIB', activity: 'Kegiatan Belajar Mengajar (KBM) Jam ke 1 - 3', type: 'Akademik' },
+        { id: '3', time: '09.30 - 10.00 WIB', activity: 'Istirahat Pertama & Kantin Sehat', type: 'Istirahat' },
+        { id: '4', time: '10.00 - 12.00 WIB', activity: 'Kegiatan Belajar Mengajar (KBM) Jam ke 4 - 6', type: 'Akademik' },
+        { id: '5', time: '12.00 - 12.40 WIB', activity: 'Sholat Dzuhur Berjamaah & Kultum Santri', type: 'Pembiasaan' },
+        { id: '6', time: '12.40 - 13.30 WIB', activity: 'KBM Jam ke 7 / Bimbingan Tahfidz Ekstra', type: 'Akademik' },
+        { id: '7', time: '13.30 WIB - Selesai', activity: 'Pulang & Bimbingan Ekstrakurikuler (Senin - Sabtu)', type: 'Ekstra' },
+      ];
+
+  const ekstrakurikuler = pages?.ekstrakurikuler && pages.ekstrakurikuler.length > 0
+    ? pages.ekstrakurikuler
+    : [
+        { id: '1', name: 'Tahfidz Al-Qur\'an (Yanbu\'a)', desc: 'Bimbingan intensif hafalan Al-Qur\'an target Juz 30 dengan tartil.' },
+        { id: '2', name: 'Seni Rebana & Hadroh', desc: 'Grup sholawat santri untuk melestarikan kebudayaan Islam.' },
+        { id: '3', name: 'Seni Kaligrafi Islam', desc: 'Seni menulis ayat Al-Qur\'an indah, rutin meraih juara Porseni.' },
+        { id: '4', name: 'Pramuka Penggalang & Siaga', desc: 'Membentuk kedisiplinan, kemandirian, dan kepemimpinan santri.' },
+        { id: '5', name: 'Science & Math Club', desc: 'Persiapan Kompetisi Sains Madrasah (KSM) tingkat kabupaten.' },
+        { id: '6', name: 'Pencak Silat Pagar Nusa', desc: 'Seni bela diri islami untuk kesehatan fisik dan kewaspadaan diri.' },
+      ];
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-16">
@@ -124,73 +149,45 @@ export const ProgramSection: React.FC<ProgramSectionProps> = ({ pages, settings 
       {/* 1. KURIKULUM PENGAJARAN */}
       <section className="bg-white dark:bg-slate-900 rounded-2xl p-6 sm:p-10 border border-slate-200 dark:border-slate-800 shadow-md space-y-8">
         <div>
-          <span className="text-xs font-bold text-amber-600 uppercase tracking-wider bg-amber-50 px-3 py-1 rounded-full border border-amber-200">
-            Standar Nasional & Kemenag
+          <span className="text-xs font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider bg-amber-50 dark:bg-amber-950/50 px-3 py-1 rounded-full border border-amber-200 dark:border-amber-800">
+            {badgeKurikulum}
           </span>
-          <h2 className="text-2xl sm:text-3xl font-bold text-emerald-950 mt-2">
-            Kurikulum Terpadu Kurikulum Merdeka + KMA 183
+          <h2 className="text-2xl sm:text-3xl font-bold text-emerald-950 dark:text-emerald-400 mt-2">
+            {judulKurikulum}
           </h2>
-          <p className="text-slate-600 text-xs sm:text-sm mt-1">
-            MI Syuriyah Pebatan mengimplementasikan Kurikulum Merdeka yang disempurnakan dengan muatan lokal pendidikan keagamaan khas Nahdlatul Ulama.
+          <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm mt-1 leading-relaxed">
+            {kurikulumDesc}
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Box 1: Kelompok Pendidikan Agama Islam (PAI) */}
-          <div className="bg-emerald-50/60 p-6 rounded-2xl border border-emerald-200 space-y-3">
-            <h3 className="text-lg font-bold text-emerald-950 flex items-center gap-2">
-              <BookOpen className="w-5 h-5 text-amber-600" /> Kelompok Agama Islam (KMA 183)
+          <div className="bg-emerald-50/60 dark:bg-emerald-950/40 p-6 rounded-2xl border border-emerald-200 dark:border-emerald-800 space-y-3">
+            <h3 className="text-lg font-bold text-emerald-950 dark:text-emerald-300 flex items-center gap-2">
+              <BookOpen className="w-5 h-5 text-amber-600 dark:text-amber-400" /> Kelompok Agama Islam (KMA 183)
             </h3>
-            <ul className="space-y-2 text-xs sm:text-sm text-slate-700">
-              <li className="flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-emerald-700" />
-                <span>Al-Qur&apos;an Hadits (Membaca, Menghafal, Memahami)</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-emerald-700" />
-                <span>Aqidah Akhlaq (Pembentukan Karakter Terpuji)</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-emerald-700" />
-                <span>Fiqih & Praktek Ibadah Harian</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-emerald-700" />
-                <span>Sejarah Kebudayaan Islam (SKI)</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-emerald-700" />
-                <span>Bahasa Arab Dasar & Muhadatsah</span>
-              </li>
+            <ul className="space-y-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+              {matpelAgama.map((item, idx) => (
+                <li key={idx} className="flex items-center gap-2">
+                  <CheckCircle className="w-4 h-4 text-emerald-700 dark:text-emerald-400 shrink-0" />
+                  <span>{item}</span>
+                </li>
+              ))}
             </ul>
           </div>
 
           {/* Box 2: Kelompok Umum & Sains */}
-          <div className="bg-amber-50/60 p-6 rounded-2xl border border-amber-200 space-y-3">
-            <h3 className="text-lg font-bold text-emerald-950 flex items-center gap-2">
-              <GraduationCap className="w-5 h-5 text-amber-600" /> Kelompok Akademik & Sains
+          <div className="bg-amber-50/60 dark:bg-amber-950/30 p-6 rounded-2xl border border-amber-200 dark:border-amber-800 space-y-3">
+            <h3 className="text-lg font-bold text-emerald-950 dark:text-emerald-300 flex items-center gap-2">
+              <GraduationCap className="w-5 h-5 text-amber-600 dark:text-amber-400" /> Kelompok Akademik & Sains
             </h3>
-            <ul className="space-y-2 text-xs sm:text-sm text-slate-700">
-              <li className="flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-amber-600" />
-                <span>Pendidikan Pancasila & Kewarganegaraan</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-amber-600" />
-                <span>Bahasa Indonesia & Literasi Digital</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-amber-600" />
-                <span>Matematika Logis & Numerasi</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-amber-600" />
-                <span>Ilmu Pengetahuan Alam & Sosial (IPAS)</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-amber-600" />
-                <span>Bahasa Inggris & Muatan Lokal TIK/Komputer</span>
-              </li>
+            <ul className="space-y-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+              {matpelAkademik.map((item, idx) => (
+                <li key={idx} className="flex items-center gap-2">
+                  <CheckCircle className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
+                  <span>{item}</span>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
@@ -204,21 +201,18 @@ export const ProgramSection: React.FC<ProgramSectionProps> = ({ pages, settings 
         />
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {ekstrakurikuler.map((ekstra, idx) => {
-            const Icon = ekstra.icon;
-            return (
-              <div
-                key={idx}
-                className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all group hover:border-amber-400 space-y-3"
-              >
-                <div className="w-12 h-12 rounded-xl bg-emerald-800 text-amber-300 flex items-center justify-center group-hover:bg-amber-500 group-hover:text-emerald-950 transition-colors shadow">
-                  <Icon className="w-6 h-6" />
-                </div>
-                <h3 className="text-base font-bold text-emerald-950">{ekstra.name}</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">{ekstra.desc}</p>
+          {ekstrakurikuler.map((ekstra, idx) => (
+            <div
+              key={ekstra.id || idx}
+              className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition-all group hover:border-amber-400 space-y-3"
+            >
+              <div className="w-12 h-12 rounded-xl bg-emerald-800 text-amber-300 flex items-center justify-center group-hover:bg-amber-500 group-hover:text-emerald-950 transition-colors shadow">
+                <Sparkles className="w-6 h-6" />
               </div>
-            );
-          })}
+              <h3 className="text-base font-bold text-emerald-950 dark:text-emerald-400">{ekstra.name}</h3>
+              <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">{ekstra.desc}</p>
+            </div>
+          ))}
         </div>
       </section>
 

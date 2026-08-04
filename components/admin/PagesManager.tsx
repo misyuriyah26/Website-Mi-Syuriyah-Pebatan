@@ -1,8 +1,26 @@
 'use client';
 
 import React, { useState } from 'react';
-import { StaticPagesContent, ProgramUnggulanItem } from '@/lib/types';
-import { Save, CheckCircle2, FileText, Sparkles, BookOpen, Award, UserCheck, Plus, Trash2 } from 'lucide-react';
+import {
+  StaticPagesContent,
+  ProgramUnggulanItem,
+  EkstrakurikulerItem,
+  ScheduleItem,
+} from '@/lib/types';
+import {
+  Save,
+  CheckCircle2,
+  FileText,
+  Sparkles,
+  BookOpen,
+  Award,
+  UserCheck,
+  Plus,
+  Trash2,
+  GraduationCap,
+  Clock,
+  Layers,
+} from 'lucide-react';
 import { ImageUploadInput } from '@/components/ui/ImageUploadInput';
 
 interface PagesManagerProps {
@@ -25,6 +43,26 @@ export const PagesManager: React.FC<PagesManagerProps> = ({
     (pagesContent.ppdb_info?.persyaratan || []).join('\n')
   );
 
+  const [matpelAgamaText, setMatpelAgamaText] = useState<string>(
+    (pagesContent.kurikulum_info?.matpel_agama || [
+      'Al-Qur\'an Hadits (Membaca, Menghafal, Memahami)',
+      'Aqidah Akhlaq (Pembentukan Karakter Terpuji)',
+      'Fiqih & Praktek Ibadah Harian',
+      'Sejarah Kebudayaan Islam (SKI)',
+      'Bahasa Arab Dasar & Muhadatsah',
+    ]).join('\n')
+  );
+
+  const [matpelAkademikText, setMatpelAkademikText] = useState<string>(
+    (pagesContent.kurikulum_info?.matpel_akademik || [
+      'Pendidikan Pancasila & Kewarganegaraan',
+      'Bahasa Indonesia & Literasi Digital',
+      'Matematika Logis & Numerasi',
+      'Ilmu Pengetahuan Alam & Sosial (IPAS)',
+      'Bahasa Inggris & Muatan Lokal TIK/Komputer',
+    ]).join('\n')
+  );
+
   const [savedSuccess, setSavedSuccess] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -37,11 +75,33 @@ export const PagesManager: React.FC<PagesManagerProps> = ({
         misi: misiText.split('\n').map((s) => s.trim()).filter(Boolean),
         tujuan: tujuanText.split('\n').map((s) => s.trim()).filter(Boolean),
       },
+      kurikulum_info: {
+        badge_kurikulum:
+          formData.kurikulum_info?.badge_kurikulum ||
+          'STANDAR NASIONAL & KEMENAG',
+        judul_kurikulum:
+          formData.kurikulum_info?.judul_kurikulum ||
+          'Kurikulum Terpadu Kurikulum Merdeka + KMA 183',
+        deskripsi_kurikulum:
+          formData.kurikulum_info?.deskripsi_kurikulum ||
+          'MI Syuriyah Pebatan mengimplementasikan Kurikulum Merdeka yang disempurnakan dengan muatan lokal pendidikan keagamaan khas Nahdlatul Ulama.',
+        matpel_agama: matpelAgamaText
+          .split('\n')
+          .map((s) => s.trim())
+          .filter(Boolean),
+        matpel_akademik: matpelAkademikText
+          .split('\n')
+          .map((s) => s.trim())
+          .filter(Boolean),
+      },
       ppdb_info: {
         judul: formData.ppdb_info?.judul || 'Informasi PPDB 2026/2027',
         deskripsi: formData.ppdb_info?.deskripsi || '',
         beasiswa_info: formData.ppdb_info?.beasiswa_info || '',
-        persyaratan: ppdbPersyaratanText.split('\n').map((s) => s.trim()).filter(Boolean),
+        persyaratan: ppdbPersyaratanText
+          .split('\n')
+          .map((s) => s.trim())
+          .filter(Boolean),
       },
     };
 
@@ -73,6 +133,114 @@ export const PagesManager: React.FC<PagesManagerProps> = ({
     const list = [...(formData.program_unggulan || [])];
     list.splice(index, 1);
     setFormData({ ...formData, program_unggulan: list });
+  };
+
+  // Handlers for Ekstrakurikuler
+  const handleAddEkskul = () => {
+    const list = [
+      ...(formData.ekstrakurikuler || [
+        { id: 'ekstra-1', name: 'Tahfidz Al-Qur\'an (Yanbu\'a)', desc: 'Bimbingan intensif hafalan Al-Qur\'an target Juz 30 dengan tartil.' },
+        { id: 'ekstra-2', name: 'Seni Rebana & Hadroh', desc: 'Grup sholawat santri untuk melestarikan kebudayaan Islam.' },
+        { id: 'ekstra-3', name: 'Seni Kaligrafi Islam', desc: 'Seni menulis ayat Al-Qur\'an indah, rutin meraih juara Porseni.' },
+        { id: 'ekstra-4', name: 'Pramuka Penggalang & Siaga', desc: 'Membentuk kedisiplinan, kemandirian, dan kepemimpinan santri.' },
+        { id: 'ekstra-5', name: 'Science & Math Club', desc: 'Persiapan Kompetisi Sains Madrasah (KSM) tingkat kabupaten.' },
+        { id: 'ekstra-6', name: 'Pencak Silat Pagar Nusa', desc: 'Seni bela diri islami untuk kesehatan fisik dan kewaspadaan diri.' },
+      ]),
+    ];
+    list.push({
+      id: `ekstra-${Date.now()}`,
+      name: 'Ekstrakurikuler Baru',
+      desc: 'Deskripsi kegiatan ekstrakurikuler.',
+    });
+    setFormData({ ...formData, ekstrakurikuler: list });
+  };
+
+  const handleUpdateEkskul = (index: number, field: keyof EkstrakurikulerItem, value: string) => {
+    const list = [
+      ...(formData.ekstrakurikuler || [
+        { id: 'ekstra-1', name: 'Tahfidz Al-Qur\'an (Yanbu\'a)', desc: 'Bimbingan intensif hafalan Al-Qur\'an target Juz 30 dengan tartil.' },
+        { id: 'ekstra-2', name: 'Seni Rebana & Hadroh', desc: 'Grup sholawat santri untuk melestarikan kebudayaan Islam.' },
+        { id: 'ekstra-3', name: 'Seni Kaligrafi Islam', desc: 'Seni menulis ayat Al-Qur\'an indah, rutin meraih juara Porseni.' },
+        { id: 'ekstra-4', name: 'Pramuka Penggalang & Siaga', desc: 'Membentuk kedisiplinan, kemandirian, dan kepemimpinan santri.' },
+        { id: 'ekstra-5', name: 'Science & Math Club', desc: 'Persiapan Kompetisi Sains Madrasah (KSM) tingkat kabupaten.' },
+        { id: 'ekstra-6', name: 'Pencak Silat Pagar Nusa', desc: 'Seni bela diri islami untuk kesehatan fisik dan kewaspadaan diri.' },
+      ]),
+    ];
+    if (list[index]) {
+      list[index] = { ...list[index], [field]: value };
+      setFormData({ ...formData, ekstrakurikuler: list });
+    }
+  };
+
+  const handleDeleteEkskul = (index: number) => {
+    const list = [
+      ...(formData.ekstrakurikuler || [
+        { id: 'ekstra-1', name: 'Tahfidz Al-Qur\'an (Yanbu\'a)', desc: 'Bimbingan intensif hafalan Al-Qur\'an target Juz 30 dengan tartil.' },
+        { id: 'ekstra-2', name: 'Seni Rebana & Hadroh', desc: 'Grup sholawat santri untuk melestarikan kebudayaan Islam.' },
+        { id: 'ekstra-3', name: 'Seni Kaligrafi Islam', desc: 'Seni menulis ayat Al-Qur\'an indah, rutin meraih juara Porseni.' },
+        { id: 'ekstra-4', name: 'Pramuka Penggalang & Siaga', desc: 'Membentuk kedisiplinan, kemandirian, dan kepemimpinan santri.' },
+        { id: 'ekstra-5', name: 'Science & Math Club', desc: 'Persiapan Kompetisi Sains Madrasah (KSM) tingkat kabupaten.' },
+        { id: 'ekstra-6', name: 'Pencak Silat Pagar Nusa', desc: 'Seni bela diri islami untuk kesehatan fisik dan kewaspadaan diri.' },
+      ]),
+    ];
+    list.splice(index, 1);
+    setFormData({ ...formData, ekstrakurikuler: list });
+  };
+
+  // Handlers for Jadwal KBM
+  const handleAddJadwal = () => {
+    const list = [
+      ...(formData.jadwal_kbm || [
+        { id: 'kbm-1', time: '07.00 - 07.30 WIB', activity: 'Sholat Dhuha Berjamaah, Mudarosah Al-Qur\'an & Asmaul Husna', type: 'Pembiasaan' as const },
+        { id: 'kbm-2', time: '07.30 - 09.30 WIB', activity: 'Kegiatan Belajar Mengajar (KBM) Jam ke 1 - 3', type: 'Akademik' as const },
+        { id: 'kbm-3', time: '09.30 - 10.00 WIB', activity: 'Istirahat Pertama & Kantin Sehat', type: 'Istirahat' as const },
+        { id: 'kbm-4', time: '10.00 - 12.00 WIB', activity: 'Kegiatan Belajar Mengajar (KBM) Jam ke 4 - 6', type: 'Akademik' as const },
+        { id: 'kbm-5', time: '12.00 - 12.40 WIB', activity: 'Sholat Dzuhur Berjamaah & Kultum Santri', type: 'Pembiasaan' as const },
+        { id: 'kbm-6', time: '12.40 - 13.30 WIB', activity: 'KBM Jam ke 7 / Bimbingan Tahfidz Ekstra', type: 'Akademik' as const },
+        { id: 'kbm-7', time: '13.30 WIB - Selesai', activity: 'Pulang & Bimbingan Ekstrakurikuler (Senin - Sabtu)', type: 'Ekstra' as const },
+      ]),
+    ];
+    list.push({
+      id: `kbm-${Date.now()}`,
+      time: '14.00 - 15.00 WIB',
+      activity: 'Kegiatan Tambahan',
+      type: 'Ekstra',
+    });
+    setFormData({ ...formData, jadwal_kbm: list });
+  };
+
+  const handleUpdateJadwal = (index: number, field: keyof ScheduleItem, value: any) => {
+    const list = [
+      ...(formData.jadwal_kbm || [
+        { id: 'kbm-1', time: '07.00 - 07.30 WIB', activity: 'Sholat Dhuha Berjamaah, Mudarosah Al-Qur\'an & Asmaul Husna', type: 'Pembiasaan' as const },
+        { id: 'kbm-2', time: '07.30 - 09.30 WIB', activity: 'Kegiatan Belajar Mengajar (KBM) Jam ke 1 - 3', type: 'Akademik' as const },
+        { id: 'kbm-3', time: '09.30 - 10.00 WIB', activity: 'Istirahat Pertama & Kantin Sehat', type: 'Istirahat' as const },
+        { id: 'kbm-4', time: '10.00 - 12.00 WIB', activity: 'Kegiatan Belajar Mengajar (KBM) Jam ke 4 - 6', type: 'Akademik' as const },
+        { id: 'kbm-5', time: '12.00 - 12.40 WIB', activity: 'Sholat Dzuhur Berjamaah & Kultum Santri', type: 'Pembiasaan' as const },
+        { id: 'kbm-6', time: '12.40 - 13.30 WIB', activity: 'KBM Jam ke 7 / Bimbingan Tahfidz Ekstra', type: 'Akademik' as const },
+        { id: 'kbm-7', time: '13.30 WIB - Selesai', activity: 'Pulang & Bimbingan Ekstrakurikuler (Senin - Sabtu)', type: 'Ekstra' as const },
+      ]),
+    ];
+    if (list[index]) {
+      list[index] = { ...list[index], [field]: value };
+      setFormData({ ...formData, jadwal_kbm: list });
+    }
+  };
+
+  const handleDeleteJadwal = (index: number) => {
+    const list = [
+      ...(formData.jadwal_kbm || [
+        { id: 'kbm-1', time: '07.00 - 07.30 WIB', activity: 'Sholat Dhuha Berjamaah, Mudarosah Al-Qur\'an & Asmaul Husna', type: 'Pembiasaan' as const },
+        { id: 'kbm-2', time: '07.30 - 09.30 WIB', activity: 'Kegiatan Belajar Mengajar (KBM) Jam ke 1 - 3', type: 'Akademik' as const },
+        { id: 'kbm-3', time: '09.30 - 10.00 WIB', activity: 'Istirahat Pertama & Kantin Sehat', type: 'Istirahat' as const },
+        { id: 'kbm-4', time: '10.00 - 12.00 WIB', activity: 'Kegiatan Belajar Mengajar (KBM) Jam ke 4 - 6', type: 'Akademik' as const },
+        { id: 'kbm-5', time: '12.00 - 12.40 WIB', activity: 'Sholat Dzuhur Berjamaah & Kultum Santri', type: 'Pembiasaan' as const },
+        { id: 'kbm-6', time: '12.40 - 13.30 WIB', activity: 'KBM Jam ke 7 / Bimbingan Tahfidz Ekstra', type: 'Akademik' as const },
+        { id: 'kbm-7', time: '13.30 WIB - Selesai', activity: 'Pulang & Bimbingan Ekstrakurikuler (Senin - Sabtu)', type: 'Ekstra' as const },
+      ]),
+    ];
+    list.splice(index, 1);
+    setFormData({ ...formData, jadwal_kbm: list });
   };
 
   return (
@@ -400,6 +568,251 @@ export const PagesManager: React.FC<PagesManagerProps> = ({
                     className="w-full px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs"
                   />
                 </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* 4.1 KURIKULUM & MATAPELAJARAN */}
+        <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+          <h3 className="text-base font-bold text-emerald-950 dark:text-emerald-400 flex items-center gap-2">
+            <GraduationCap className="w-4 h-4 text-amber-600" /> Kurikulum & Struktur Mata Pelajaran
+          </h3>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                Badge / Tagline Kurikulum
+              </label>
+              <input
+                type="text"
+                value={formData.kurikulum_info?.badge_kurikulum || ''}
+                placeholder="STANDAR NASIONAL & KEMENAG"
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    kurikulum_info: {
+                      ...(formData.kurikulum_info || {}),
+                      badge_kurikulum: e.target.value,
+                    },
+                  })
+                }
+                className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs focus:ring-2 focus:ring-emerald-600 focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                Judul Utama Kurikulum
+              </label>
+              <input
+                type="text"
+                value={formData.kurikulum_info?.judul_kurikulum || ''}
+                placeholder="Kurikulum Terpadu Kurikulum Merdeka + KMA 183"
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    kurikulum_info: {
+                      ...(formData.kurikulum_info || {}),
+                      judul_kurikulum: e.target.value,
+                    },
+                  })
+                }
+                className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs focus:ring-2 focus:ring-emerald-600 focus:outline-none"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+              Deskripsi Singkat Kurikulum
+            </label>
+            <textarea
+              rows={2}
+              value={formData.kurikulum_info?.deskripsi_kurikulum || ''}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  kurikulum_info: {
+                    ...(formData.kurikulum_info || {}),
+                    deskripsi_kurikulum: e.target.value,
+                  },
+                })
+              }
+              className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs focus:ring-2 focus:ring-emerald-600 focus:outline-none"
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                Kelompok Mata Pelajaran Agama Islam (KMA 183) — 1 baris = 1 poin
+              </label>
+              <textarea
+                rows={5}
+                value={matpelAgamaText}
+                onChange={(e) => setMatpelAgamaText(e.target.value)}
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs focus:ring-2 focus:ring-emerald-600 focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                Kelompok Mata Pelajaran Akademik & Sains — 1 baris = 1 poin
+              </label>
+              <textarea
+                rows={5}
+                value={matpelAkademikText}
+                onChange={(e) => setMatpelAkademikText(e.target.value)}
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs focus:ring-2 focus:ring-emerald-600 focus:outline-none"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* 4.2 EKSTRAKURIKULER & PENGEMBANGAN BAKAT */}
+        <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+          <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+            <h3 className="text-base font-bold text-emerald-950 dark:text-emerald-400 flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-amber-600" /> Ekstrakurikuler & Pengembangan Bakat
+            </h3>
+            <button
+              type="button"
+              onClick={handleAddEkskul}
+              className="px-3 py-1.5 rounded-lg bg-emerald-800 text-white font-bold text-xs flex items-center gap-1"
+            >
+              <Plus className="w-3.5 h-3.5 text-amber-300" />
+              <span>Tambah Ekskul</span>
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {(formData.ekstrakurikuler || [
+              { id: 'ekstra-1', name: 'Tahfidz Al-Qur\'an (Yanbu\'a)', desc: 'Bimbingan intensif hafalan Al-Qur\'an target Juz 30 dengan tartil.' },
+              { id: 'ekstra-2', name: 'Seni Rebana & Hadroh', desc: 'Grup sholawat santri untuk melestarikan kebudayaan Islam.' },
+              { id: 'ekstra-3', name: 'Seni Kaligrafi Islam', desc: 'Seni menulis ayat Al-Qur\'an indah, rutin meraih juara Porseni.' },
+              { id: 'ekstra-4', name: 'Pramuka Penggalang & Siaga', desc: 'Membentuk kedisiplinan, kemandirian, dan kepemimpinan santri.' },
+              { id: 'ekstra-5', name: 'Science & Math Club', desc: 'Persiapan Kompetisi Sains Madrasah (KSM) tingkat kabupaten.' },
+              { id: 'ekstra-6', name: 'Pencak Silat Pagar Nusa', desc: 'Seni bela diri islami untuk kesehatan fisik dan kewaspadaan diri.' },
+            ]).map((eks, idx) => (
+              <div
+                key={eks.id || idx}
+                className="p-4 bg-slate-50 dark:bg-slate-800/80 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-3 relative"
+              >
+                <div className="flex justify-between items-center">
+                  <span className="font-bold text-xs text-amber-700 dark:text-amber-400">
+                    Ekskul #{idx + 1}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => handleDeleteEkskul(idx)}
+                    className="p-1 rounded bg-red-100 dark:bg-red-950 text-red-600 dark:text-red-400 hover:text-red-800"
+                    title="Hapus Ekskul"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1">
+                    Nama Kegiatan
+                  </label>
+                  <input
+                    type="text"
+                    value={eks.name}
+                    onChange={(e) => handleUpdateEkskul(idx, 'name', e.target.value)}
+                    className="w-full px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1">
+                    Deskripsi Ringkas
+                  </label>
+                  <textarea
+                    rows={2}
+                    value={eks.desc}
+                    onChange={(e) => handleUpdateEkskul(idx, 'desc', e.target.value)}
+                    className="w-full px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs"
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* 4.3 JADWAL KBM & AKTIVITAS HARIAN */}
+        <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+          <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+            <h3 className="text-base font-bold text-emerald-950 dark:text-emerald-400 flex items-center gap-2">
+              <Clock className="w-4 h-4 text-amber-600" /> Jadwal Kegiatan Belajar Mengajar (KBM)
+            </h3>
+            <button
+              type="button"
+              onClick={handleAddJadwal}
+              className="px-3 py-1.5 rounded-lg bg-emerald-800 text-white font-bold text-xs flex items-center gap-1"
+            >
+              <Plus className="w-3.5 h-3.5 text-amber-300" />
+              <span>Tambah Jadwal</span>
+            </button>
+          </div>
+
+          <div className="space-y-3">
+            {(formData.jadwal_kbm || [
+              { id: 'kbm-1', time: '07.00 - 07.30 WIB', activity: 'Sholat Dhuha Berjamaah, Mudarosah Al-Qur\'an & Asmaul Husna', type: 'Pembiasaan' as const },
+              { id: 'kbm-2', time: '07.30 - 09.30 WIB', activity: 'Kegiatan Belajar Mengajar (KBM) Jam ke 1 - 3', type: 'Akademik' as const },
+              { id: 'kbm-3', time: '09.30 - 10.00 WIB', activity: 'Istirahat Pertama & Kantin Sehat', type: 'Istirahat' as const },
+              { id: 'kbm-4', time: '10.00 - 12.00 WIB', activity: 'Kegiatan Belajar Mengajar (KBM) Jam ke 4 - 6', type: 'Akademik' as const },
+              { id: 'kbm-5', time: '12.00 - 12.40 WIB', activity: 'Sholat Dzuhur Berjamaah & Kultum Santri', type: 'Pembiasaan' as const },
+              { id: 'kbm-6', time: '12.40 - 13.30 WIB', activity: 'KBM Jam ke 7 / Bimbingan Tahfidz Ekstra', type: 'Akademik' as const },
+              { id: 'kbm-7', time: '13.30 WIB - Selesai', activity: 'Pulang & Bimbingan Ekstrakurikuler (Senin - Sabtu)', type: 'Ekstra' as const },
+            ]).map((item, idx) => (
+              <div
+                key={item.id || idx}
+                className="p-3 bg-slate-50 dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row items-start sm:items-center gap-3"
+              >
+                <div className="w-full sm:w-1/4">
+                  <label className="block text-[10px] font-bold text-slate-500 mb-0.5">Waktu</label>
+                  <input
+                    type="text"
+                    value={item.time}
+                    onChange={(e) => handleUpdateJadwal(idx, 'time', e.target.value)}
+                    className="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-mono"
+                  />
+                </div>
+
+                <div className="w-full sm:w-1/2">
+                  <label className="block text-[10px] font-bold text-slate-500 mb-0.5">Aktivitas / Kegiatan</label>
+                  <input
+                    type="text"
+                    value={item.activity}
+                    onChange={(e) => handleUpdateJadwal(idx, 'activity', e.target.value)}
+                    className="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs"
+                  />
+                </div>
+
+                <div className="w-full sm:w-1/4">
+                  <label className="block text-[10px] font-bold text-slate-500 mb-0.5">Kategori</label>
+                  <select
+                    value={item.type}
+                    onChange={(e) => handleUpdateJadwal(idx, 'type', e.target.value)}
+                    className="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs"
+                  >
+                    <option value="Pembiasaan">Pembiasaan</option>
+                    <option value="Akademik">Akademik</option>
+                    <option value="Istirahat">Istirahat</option>
+                    <option value="Ekstra">Ekstra</option>
+                  </select>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => handleDeleteJadwal(idx)}
+                  className="p-2 rounded bg-red-100 dark:bg-red-950 text-red-600 dark:text-red-400 hover:text-red-800 self-end sm:self-center shrink-0"
+                  title="Hapus Jadwal"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                </button>
               </div>
             ))}
           </div>
