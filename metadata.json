@@ -1,0 +1,6 @@
+{
+  "name": "MI Syuriyah Pebatan",
+  "description": "Website Profil Resmi dan Panel Operator MI Syuriyah Pebatan",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
