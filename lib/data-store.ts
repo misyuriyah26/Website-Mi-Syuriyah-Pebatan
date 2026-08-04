@@ -1247,11 +1247,11 @@ export class DataStore {
   // --- SUPABASE FULL SQL SCHEMA GENERATOR ---
   static generateSupabaseSqlSchema(): string {
     return `-- =========================================================
--- SKEMA DATABASE SUPABASE DENGAN AUTO-SEED DATA
--- MI SYURIYAH PEBATAN (TA 2026/2027)
+-- SKEMA DATABASE SUPABASE RESMI & AUTO-FIX RLS + MIGRATION
+-- MI SYURIYAH PEBATAN (PERIODE 2026/2027)
 -- =========================================================
 
--- 1. TABEL SETTINGS
+-- 1. TABEL SETTINGS & ALTER COLUMN MIGRATION
 CREATE TABLE IF NOT EXISTS public.settings (
   id TEXT PRIMARY KEY DEFAULT 'main_settings',
   school_name TEXT NOT NULL,
@@ -1279,6 +1279,14 @@ CREATE TABLE IF NOT EXISTS public.settings (
   nilai_akreditasi_bansm TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+-- Migrasi Kolom Tambahan Jika Tabel Sudah Ada Sebelumnya
+ALTER TABLE public.settings ADD COLUMN IF NOT EXISTS total_siswa_aktif TEXT;
+ALTER TABLE public.settings ADD COLUMN IF NOT EXISTS total_siswi_aktif TEXT;
+ALTER TABLE public.settings ADD COLUMN IF NOT EXISTS tingkat_kelulusan TEXT;
+ALTER TABLE public.settings ADD COLUMN IF NOT EXISTS total_guru_staf TEXT;
+ALTER TABLE public.settings ADD COLUMN IF NOT EXISTS nilai_akreditasi_bansm TEXT;
+ALTER TABLE public.settings ADD COLUMN IF NOT EXISTS maps_iframe_url TEXT;
 
 -- 2. TABEL PAGES
 CREATE TABLE IF NOT EXISTS public.pages (
@@ -1409,8 +1417,13 @@ CREATE TABLE IF NOT EXISTS public.admin_users (
   email TEXT UNIQUE NOT NULL,
   role TEXT NOT NULL,
   status TEXT DEFAULT 'Active',
+  password_hash TEXT,
+  last_login TIMESTAMPTZ,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+ALTER TABLE public.admin_users ADD COLUMN IF NOT EXISTS password_hash TEXT;
+ALTER TABLE public.admin_users ADD COLUMN IF NOT EXISTS last_login TIMESTAMPTZ;
 
 CREATE TABLE IF NOT EXISTS public.activity_logs (
   id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
@@ -1422,55 +1435,26 @@ CREATE TABLE IF NOT EXISTS public.activity_logs (
   timestamp TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 12. ROW LEVEL SECURITY (AKSES PUBLIC & ANON)
-ALTER TABLE public.settings ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.pages ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.news ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.staff ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.gallery ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.messages ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.ppdb ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.testimonials ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.achievements ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.documents ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.admin_users ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.activity_logs ENABLE ROW LEVEL SECURITY;
+-- 12. ROW LEVEL SECURITY (MATIKAN RLS / BUKA AKSES PUBLIC UNTUK APLIKASI WEB)
+ALTER TABLE public.settings DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.pages DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.news DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.staff DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.gallery DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.messages DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.ppdb DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.testimonials DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.achievements DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.documents DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.admin_users DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.activity_logs DISABLE ROW LEVEL SECURITY;
 
-DROP POLICY IF EXISTS "Allow all settings" ON public.settings;
-CREATE POLICY "Allow all settings" ON public.settings FOR ALL USING (true) WITH CHECK (true);
+-- KELOLA HAK AKSES PERMISSIONS SCHEMA PUBLIC
+GRANT ALL ON ALL TABLES IN SCHEMA public TO anon, authenticated, postgres, service_role;
+GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO anon, authenticated, postgres, service_role;
 
-DROP POLICY IF EXISTS "Allow all pages" ON public.pages;
-CREATE POLICY "Allow all pages" ON public.pages FOR ALL USING (true) WITH CHECK (true);
-
-DROP POLICY IF EXISTS "Allow all news" ON public.news;
-CREATE POLICY "Allow all news" ON public.news FOR ALL USING (true) WITH CHECK (true);
-
-DROP POLICY IF EXISTS "Allow all staff" ON public.staff;
-CREATE POLICY "Allow all staff" ON public.staff FOR ALL USING (true) WITH CHECK (true);
-
-DROP POLICY IF EXISTS "Allow all gallery" ON public.gallery;
-CREATE POLICY "Allow all gallery" ON public.gallery FOR ALL USING (true) WITH CHECK (true);
-
-DROP POLICY IF EXISTS "Allow all messages" ON public.messages;
-CREATE POLICY "Allow all messages" ON public.messages FOR ALL USING (true) WITH CHECK (true);
-
-DROP POLICY IF EXISTS "Allow all ppdb" ON public.ppdb;
-CREATE POLICY "Allow all ppdb" ON public.ppdb FOR ALL USING (true) WITH CHECK (true);
-
-DROP POLICY IF EXISTS "Allow all testimonials" ON public.testimonials;
-CREATE POLICY "Allow all testimonials" ON public.testimonials FOR ALL USING (true) WITH CHECK (true);
-
-DROP POLICY IF EXISTS "Allow all achievements" ON public.achievements;
-CREATE POLICY "Allow all achievements" ON public.achievements FOR ALL USING (true) WITH CHECK (true);
-
-DROP POLICY IF EXISTS "Allow all documents" ON public.documents;
-CREATE POLICY "Allow all documents" ON public.documents FOR ALL USING (true) WITH CHECK (true);
-
-DROP POLICY IF EXISTS "Allow all admin_users" ON public.admin_users;
-CREATE POLICY "Allow all admin_users" ON public.admin_users FOR ALL USING (true) WITH CHECK (true);
-
-DROP POLICY IF EXISTS "Allow all activity_logs" ON public.activity_logs;
-CREATE POLICY "Allow all activity_logs" ON public.activity_logs FOR ALL USING (true) WITH CHECK (true);
+-- REFRESH SCHEMA CACHE SUPABASE
+NOTIFY pgrst, 'reload schema';
 `;
   }
 }

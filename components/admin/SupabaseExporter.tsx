@@ -100,7 +100,7 @@ export const SupabaseExporter: React.FC = () => {
             <button
               onClick={handleSyncToSupabase}
               disabled={isSyncing}
-              className="px-5 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-emerald-950 font-black text-xs shadow-md transition-all flex items-center gap-2 border border-amber-300 disabled:opacity-50"
+              className="px-5 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-emerald-950 font-black text-xs shadow-md transition-all flex items-center gap-2 border border-amber-300 disabled:opacity-50 cursor-pointer"
             >
               <Database className="w-4 h-4" />
               <span>{isSyncing ? 'Sedang Mengirim Data...' : ' Upload Semua Data ke Supabase'}</span>
@@ -109,10 +109,45 @@ export const SupabaseExporter: React.FC = () => {
             <button
               onClick={handleFetchFromSupabase}
               disabled={isFetching}
-              className="px-4 py-2.5 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-emerald-100 font-bold text-xs transition-all border border-emerald-700 disabled:opacity-50"
+              className="px-4 py-2.5 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-emerald-100 font-bold text-xs transition-all border border-emerald-700 disabled:opacity-50 cursor-pointer"
             >
               <span>{isFetching ? 'Mengambil...' : 'Tarik Data dari Supabase'}</span>
             </button>
+          </div>
+        </div>
+
+        {/* Action Alert Banner for SQL Execution */}
+        <div className="bg-amber-500/15 border border-amber-400/40 p-4 rounded-xl space-y-3">
+          <div className="flex items-start gap-3">
+            <AlertCircle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+            <div className="space-y-1 text-xs text-amber-100">
+              <p className="font-bold text-amber-300 text-sm">
+                Perhatian: Jika Muncul Error Row-Level Security (RLS) atau Column Missing
+              </p>
+              <p className="leading-relaxed">
+                Database Supabase Anda memerlukan penyesuaian izin (RLS) & penambahan kolom baru. Silakan ikuti 2 langkah cepat berikut agar upload data berjalan 100% sukses:
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3 pt-1">
+            <button
+              onClick={handleCopySql}
+              className="px-4 py-2 rounded-lg bg-amber-400 hover:bg-amber-300 text-emerald-950 font-extrabold text-xs flex items-center gap-2 transition-all cursor-pointer shadow"
+            >
+              {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+              <span>{copied ? '1. Script SQL Berhasil Disalin!' : '1. Salin Script Fix SQL Supabase'}</span>
+            </button>
+
+            <a
+              href="https://supabase.com/dashboard/projects"
+              target="_blank"
+              rel="noreferrer"
+              className="px-4 py-2 rounded-lg bg-emerald-700 hover:bg-emerald-600 text-white font-bold text-xs flex items-center gap-2 transition-all border border-emerald-500 cursor-pointer shadow"
+            >
+              <span>2. Buka Supabase SQL Editor</span>
+              <ExternalLink className="w-3.5 h-3.5" />
+            </a>
           </div>
         </div>
 
