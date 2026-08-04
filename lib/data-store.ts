@@ -649,6 +649,9 @@ export class DataStore {
     if (this.isClient()) {
       localStorage.setItem(STORAGE_KEYS.NEWS, JSON.stringify(news));
     }
+    if (isSupabaseConfigured() && supabase) {
+      supabase.from('news').upsert(news).then(undefined, () => {});
+    }
   }
 
   // --- STAFF ---
@@ -669,6 +672,9 @@ export class DataStore {
   static saveStaff(staff: StaffItem[]): void {
     if (this.isClient()) {
       localStorage.setItem(STORAGE_KEYS.STAFF, JSON.stringify(staff));
+    }
+    if (isSupabaseConfigured() && supabase) {
+      supabase.from('staff').upsert(staff).then(undefined, () => {});
     }
   }
 
@@ -691,6 +697,9 @@ export class DataStore {
     if (this.isClient()) {
       localStorage.setItem(STORAGE_KEYS.GALLERY, JSON.stringify(gallery));
     }
+    if (isSupabaseConfigured() && supabase) {
+      supabase.from('gallery').upsert(gallery).then(undefined, () => {});
+    }
   }
 
   // --- MESSAGES ---
@@ -711,6 +720,9 @@ export class DataStore {
   static saveMessages(messages: ContactMessage[]): void {
     if (this.isClient()) {
       localStorage.setItem(STORAGE_KEYS.MESSAGES, JSON.stringify(messages));
+    }
+    if (isSupabaseConfigured() && supabase) {
+      supabase.from('messages').upsert(messages).then(undefined, () => {});
     }
   }
 
@@ -733,6 +745,9 @@ export class DataStore {
     if (this.isClient()) {
       localStorage.setItem(STORAGE_KEYS.PAGES, JSON.stringify(pages));
     }
+    if (isSupabaseConfigured() && supabase) {
+      supabase.from('pages').upsert({ id: 'main_pages', content: pages, updated_at: new Date().toISOString() }).then(undefined, () => {});
+    }
   }
 
   // --- SETTINGS ---
@@ -754,6 +769,9 @@ export class DataStore {
     if (this.isClient()) {
       localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(settings));
     }
+    if (isSupabaseConfigured() && supabase) {
+      supabase.from('settings').upsert({ id: 'main_settings', ...settings }).then(undefined, () => {});
+    }
   }
 
   // --- PPDB REGISTRATIONS ---
@@ -774,6 +792,9 @@ export class DataStore {
   static savePpdbList(list: PpdbRegistration[]): void {
     if (this.isClient()) {
       localStorage.setItem(STORAGE_KEYS.PPDB, JSON.stringify(list));
+    }
+    if (isSupabaseConfigured() && supabase) {
+      supabase.from('ppdb').upsert(list).then(undefined, () => {});
     }
   }
 
@@ -825,6 +846,9 @@ export class DataStore {
     if (this.isClient()) {
       localStorage.setItem(STORAGE_KEYS.TESTIMONIALS, JSON.stringify(list));
     }
+    if (isSupabaseConfigured() && supabase) {
+      supabase.from('testimonials').upsert(list).then(undefined, () => {});
+    }
   }
 
   // --- ACHIEVEMENTS (PRESTASI) ---
@@ -846,6 +870,9 @@ export class DataStore {
     if (this.isClient()) {
       localStorage.setItem(STORAGE_KEYS.ACHIEVEMENTS, JSON.stringify(list));
     }
+    if (isSupabaseConfigured() && supabase) {
+      supabase.from('achievements').upsert(list).then(undefined, () => {});
+    }
   }
 
   // --- DOWNLOAD DOCUMENTS ---
@@ -866,6 +893,9 @@ export class DataStore {
   static saveDocuments(list: DownloadDocument[]): void {
     if (this.isClient()) {
       localStorage.setItem(STORAGE_KEYS.DOCUMENTS, JSON.stringify(list));
+    }
+    if (isSupabaseConfigured() && supabase) {
+      supabase.from('documents').upsert(list).then(undefined, () => {});
     }
   }
 
@@ -895,6 +925,9 @@ export class DataStore {
   static saveAdminUsers(list: AdminUser[]): void {
     if (this.isClient()) {
       localStorage.setItem(STORAGE_KEYS.ADMIN_USERS, JSON.stringify(list));
+    }
+    if (isSupabaseConfigured() && supabase) {
+      supabase.from('admin_users').upsert(list).then(undefined, () => {});
     }
   }
 
@@ -1042,14 +1075,183 @@ export class DataStore {
     }
   }
 
+  // --- REAL-TIME SUPABASE SYNC & HYDRATION ---
+  static async syncAllToSupabase(): Promise<{ success: boolean; details: string[] }> {
+    if (!isSupabaseConfigured() || !supabase) {
+      return {
+        success: false,
+        details: ['Database Supabase belum dikonfigurasi. Periksa environment variable.'],
+      };
+    }
+
+    const logs: string[] = [];
+    try {
+      // 1. Settings
+      const settings = this.getSettings();
+      const { error: errSettings } = await supabase
+        .from('settings')
+        .upsert({ id: 'main_settings', ...settings });
+      if (errSettings) logs.push(`❌ Settings: ${errSettings.message}`);
+      else logs.push('✅ Settings: Berhasil diunggah ke Supabase');
+
+      // 2. Pages
+      const pages = this.getPagesContent();
+      const { error: errPages } = await supabase
+        .from('pages')
+        .upsert({ id: 'main_pages', content: pages, updated_at: new Date().toISOString() });
+      if (errPages) logs.push(`❌ Pages: ${errPages.message}`);
+      else logs.push('✅ Pages Content: Berhasil diunggah ke Supabase');
+
+      // 3. News
+      const news = this.getNews();
+      if (news.length > 0) {
+        const { error: errNews } = await supabase.from('news').upsert(news);
+        if (errNews) logs.push(`❌ News: ${errNews.message}`);
+        else logs.push(`✅ News (${news.length} item): Berhasil diunggah ke Supabase`);
+      }
+
+      // 4. Staff
+      const staff = this.getStaff();
+      if (staff.length > 0) {
+        const { error: errStaff } = await supabase.from('staff').upsert(staff);
+        if (errStaff) logs.push(`❌ Staff: ${errStaff.message}`);
+        else logs.push(`✅ Staff (${staff.length} orang): Berhasil diunggah ke Supabase`);
+      }
+
+      // 5. Gallery
+      const gallery = this.getGallery();
+      if (gallery.length > 0) {
+        const { error: errGallery } = await supabase.from('gallery').upsert(gallery);
+        if (errGallery) logs.push(`❌ Gallery: ${errGallery.message}`);
+        else logs.push(`✅ Gallery (${gallery.length} foto): Berhasil diunggah ke Supabase`);
+      }
+
+      // 6. Messages
+      const messages = this.getMessages();
+      if (messages.length > 0) {
+        const { error: errMsg } = await supabase.from('messages').upsert(messages);
+        if (errMsg) logs.push(`❌ Messages: ${errMsg.message}`);
+        else logs.push(`✅ Messages (${messages.length} pesan): Berhasil diunggah ke Supabase`);
+      }
+
+      // 7. PPDB
+      const ppdb = this.getPpdbList();
+      if (ppdb.length > 0) {
+        const { error: errPpdb } = await supabase.from('ppdb').upsert(ppdb);
+        if (errPpdb) logs.push(`❌ PPDB: ${errPpdb.message}`);
+        else logs.push(`✅ PPDB (${ppdb.length} pendaftar): Berhasil diunggah ke Supabase`);
+      }
+
+      // 8. Testimonials
+      const testimonials = this.getTestimonials();
+      if (testimonials.length > 0) {
+        const { error: errTesti } = await supabase.from('testimonials').upsert(testimonials);
+        if (errTesti) logs.push(`❌ Testimonials: ${errTesti.message}`);
+        else logs.push(`✅ Testimonials (${testimonials.length} ulasan): Berhasil diunggah ke Supabase`);
+      }
+
+      // 9. Achievements
+      const achievements = this.getAchievements();
+      if (achievements.length > 0) {
+        const { error: errAch } = await supabase.from('achievements').upsert(achievements);
+        if (errAch) logs.push(`❌ Achievements: ${errAch.message}`);
+        else logs.push(`✅ Achievements (${achievements.length} prestasi): Berhasil diunggah ke Supabase`);
+      }
+
+      // 10. Documents
+      const documents = this.getDocuments();
+      if (documents.length > 0) {
+        const { error: errDocs } = await supabase.from('documents').upsert(documents);
+        if (errDocs) logs.push(`❌ Documents: ${errDocs.message}`);
+        else logs.push(`✅ Documents (${documents.length} berkas): Berhasil diunggah ke Supabase`);
+      }
+
+      // 11. Admin Users
+      const adminUsers = this.getAdminUsers();
+      if (adminUsers.length > 0) {
+        const { error: errUsers } = await supabase.from('admin_users').upsert(adminUsers);
+        if (errUsers) logs.push(`❌ Admin Users: ${errUsers.message}`);
+        else logs.push(`✅ Admin Users (${adminUsers.length} user): Berhasil diunggah ke Supabase`);
+      }
+
+      const hasError = logs.some((l) => l.startsWith('❌'));
+      return { success: !hasError, details: logs };
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      return { success: false, details: [...logs, `❌ Gagal sinkronisasi: ${msg}`] };
+    }
+  }
+
+  static async fetchFromSupabase(): Promise<boolean> {
+    if (!isSupabaseConfigured() || !supabase) return false;
+
+    try {
+      const { data: sData } = await supabase.from('settings').select('*').single();
+      if (sData) {
+        const { id, created_at, ...cleanSettings } = sData;
+        this.saveSettings(cleanSettings as SchoolSettings);
+      }
+
+      const { data: pData } = await supabase.from('pages').select('content').single();
+      if (pData?.content) {
+        this.savePagesContent(pData.content as StaticPagesContent);
+      }
+
+      const { data: nData } = await supabase.from('news').select('*').order('created_at', { ascending: false });
+      if (nData && nData.length > 0) {
+        this.saveNews(nData as NewsItem[]);
+      }
+
+      const { data: stData } = await supabase.from('staff').select('*').order('order_index', { ascending: true });
+      if (stData && stData.length > 0) {
+        this.saveStaff(stData as StaffItem[]);
+      }
+
+      const { data: gData } = await supabase.from('gallery').select('*').order('created_at', { ascending: false });
+      if (gData && gData.length > 0) {
+        this.saveGallery(gData as GalleryItem[]);
+      }
+
+      const { data: mData } = await supabase.from('messages').select('*').order('created_at', { ascending: false });
+      if (mData && mData.length > 0) {
+        this.saveMessages(mData as ContactMessage[]);
+      }
+
+      const { data: ppData } = await supabase.from('ppdb').select('*').order('created_at', { ascending: false });
+      if (ppData && ppData.length > 0) {
+        this.savePpdbList(ppData as PpdbRegistration[]);
+      }
+
+      const { data: tData } = await supabase.from('testimonials').select('*').order('created_at', { ascending: false });
+      if (tData && tData.length > 0) {
+        this.saveTestimonials(tData as Testimonial[]);
+      }
+
+      const { data: aData } = await supabase.from('achievements').select('*').order('created_at', { ascending: false });
+      if (aData && aData.length > 0) {
+        this.saveAchievements(aData as Achievement[]);
+      }
+
+      const { data: dData } = await supabase.from('documents').select('*').order('created_at', { ascending: false });
+      if (dData && dData.length > 0) {
+        this.saveDocuments(dData as DownloadDocument[]);
+      }
+
+      return true;
+    } catch (e) {
+      console.error('Failed fetching from Supabase:', e);
+      return false;
+    }
+  }
+
   // --- SUPABASE FULL SQL SCHEMA GENERATOR ---
   static generateSupabaseSqlSchema(): string {
     return `-- =========================================================
--- SCHEME DATABASE SUPABASE UNTUK MI SYURIYAH PEBATAN
--- TAHAP 2: PPDB ONLINE, OPERATOR ROLE, TESTIMONI, PRESTASI, DOKUMEN
+-- SKEMA DATABASE SUPABASE DENGAN AUTO-SEED DATA
+-- MI SYURIYAH PEBATAN (TA 2026/2027)
 -- =========================================================
 
--- 1. TABEL SETTINGS (Pengaturan Branding & Kontak Sekolah)
+-- 1. TABEL SETTINGS
 CREATE TABLE IF NOT EXISTS public.settings (
   id TEXT PRIMARY KEY DEFAULT 'main_settings',
   school_name TEXT NOT NULL,
@@ -1070,24 +1272,29 @@ CREATE TABLE IF NOT EXISTS public.settings (
   hero_banner_url TEXT,
   ppdb_year TEXT,
   primary_theme_color TEXT,
+  total_siswa_aktif TEXT,
+  total_siswi_aktif TEXT,
+  tingkat_kelulusan TEXT,
+  total_guru_staf TEXT,
+  nilai_akreditasi_bansm TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 2. TABEL PAGES (Konten Halaman Statis: Sejarah, Visi Misi, Sambutan)
+-- 2. TABEL PAGES
 CREATE TABLE IF NOT EXISTS public.pages (
   id TEXT PRIMARY KEY DEFAULT 'main_pages',
   content JSONB NOT NULL,
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 3. TABEL NEWS (Berita & Pengumuman Sekolah)
+-- 3. TABEL NEWS
 CREATE TABLE IF NOT EXISTS public.news (
   id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
   title TEXT NOT NULL,
   slug TEXT UNIQUE NOT NULL,
   excerpt TEXT,
   content TEXT NOT NULL,
-  category TEXT NOT NULL CHECK (category IN ('Pengumuman', 'Berita', 'Prestasi', 'PPDB', 'Kegiatan')),
+  category TEXT NOT NULL,
   image_url TEXT,
   author TEXT DEFAULT 'Admin Sekolah',
   created_at TIMESTAMPTZ DEFAULT NOW(),
@@ -1095,7 +1302,7 @@ CREATE TABLE IF NOT EXISTS public.news (
   views INT DEFAULT 0
 );
 
--- 4. TABEL STAFF (Data Guru & Tenaga Kependidikan)
+-- 4. TABEL STAFF
 CREATE TABLE IF NOT EXISTS public.staff (
   id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
   name TEXT NOT NULL,
@@ -1109,18 +1316,18 @@ CREATE TABLE IF NOT EXISTS public.staff (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 5. TABEL GALLERY (Galeri Foto Kegiatan)
+-- 5. TABEL GALLERY
 CREATE TABLE IF NOT EXISTS public.gallery (
   id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
   title TEXT NOT NULL,
-  category TEXT NOT NULL CHECK (category IN ('Keagamaan', 'Prestasi', 'Pembelajaran', 'Ekstrakurikuler', 'Fasilitas', 'PHBI')),
+  category TEXT NOT NULL,
   image_url TEXT NOT NULL,
   date DATE DEFAULT CURRENT_DATE,
   description TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 6. TABEL MESSAGES (Pesan Masuk dari Form Kontak)
+-- 6. TABEL MESSAGES
 CREATE TABLE IF NOT EXISTS public.messages (
   id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
   name TEXT NOT NULL,
@@ -1132,13 +1339,13 @@ CREATE TABLE IF NOT EXISTS public.messages (
   replied BOOLEAN DEFAULT false
 );
 
--- 7. TABEL PPDB (Pendaftaran Peserta Didik Baru Terpadu)
+-- 7. TABEL PPDB
 CREATE TABLE IF NOT EXISTS public.ppdb (
   id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
   reg_number TEXT UNIQUE NOT NULL,
   student_name TEXT NOT NULL,
   nisn_nik TEXT,
-  gender CHAR(1) CHECK (gender IN ('L', 'P')),
+  gender CHAR(1),
   birth_place TEXT,
   birth_date DATE,
   previous_school TEXT,
@@ -1154,7 +1361,7 @@ CREATE TABLE IF NOT EXISTS public.ppdb (
   doc_akta_url TEXT,
   doc_foto_url TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW(),
-  status TEXT DEFAULT 'Pending' CHECK (status IN ('Pending', 'Diproses', 'Diterima', 'Perlu Perbaikan', 'Ditolak')),
+  status TEXT DEFAULT 'Pending',
   admin_notes TEXT
 );
 
@@ -1170,20 +1377,20 @@ CREATE TABLE IF NOT EXISTS public.testimonials (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 9. TABEL ACHIEVEMENTS (Prestasi Siswa & Madrasah)
+-- 9. TABEL ACHIEVEMENTS
 CREATE TABLE IF NOT EXISTS public.achievements (
   id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
   title TEXT NOT NULL,
-  category TEXT NOT NULL CHECK (category IN ('Akademik', 'Keagamaan', 'Seni & Olahraga', 'Pramuka')),
+  category TEXT NOT NULL,
   winner_name TEXT NOT NULL,
-  level TEXT CHECK (level IN ('Kecamatan', 'Kabupaten', 'Provinsi', 'Nasional')),
+  level TEXT,
   date DATE DEFAULT CURRENT_DATE,
   image_url TEXT,
   description TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 10. TABEL DOCUMENTS (Pusat Unduhan Publik)
+-- 10. TABEL DOCUMENTS
 CREATE TABLE IF NOT EXISTS public.documents (
   id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
   title TEXT NOT NULL,
@@ -1195,12 +1402,12 @@ CREATE TABLE IF NOT EXISTS public.documents (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 11. TABEL ADMIN_USERS & ACTIVITY LOGS
+-- 11. TABEL ADMIN_USERS & LOGS
 CREATE TABLE IF NOT EXISTS public.admin_users (
   id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
   name TEXT NOT NULL,
   email TEXT UNIQUE NOT NULL,
-  role TEXT NOT NULL CHECK (role IN ('superadmin', 'operator_berita', 'operator_ppdb')),
+  role TEXT NOT NULL,
   status TEXT DEFAULT 'Active',
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -1215,7 +1422,7 @@ CREATE TABLE IF NOT EXISTS public.activity_logs (
   timestamp TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 12. ROW LEVEL SECURITY (RLS) POLICIES
+-- 12. ROW LEVEL SECURITY (AKSES PUBLIC & ANON)
 ALTER TABLE public.settings ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.pages ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.news ENABLE ROW LEVEL SECURITY;
@@ -1229,33 +1436,41 @@ ALTER TABLE public.documents ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.admin_users ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.activity_logs ENABLE ROW LEVEL SECURITY;
 
--- Read policies for public
-CREATE POLICY "Public read settings" ON public.settings FOR SELECT USING (true);
-CREATE POLICY "Public read pages" ON public.pages FOR SELECT USING (true);
-CREATE POLICY "Public read news" ON public.news FOR SELECT USING (is_published = true OR auth.role() = 'authenticated');
-CREATE POLICY "Public read staff" ON public.staff FOR SELECT USING (true);
-CREATE POLICY "Public read gallery" ON public.gallery FOR SELECT USING (true);
-CREATE POLICY "Public read testimonials" ON public.testimonials FOR SELECT USING (true);
-CREATE POLICY "Public read achievements" ON public.achievements FOR SELECT USING (true);
-CREATE POLICY "Public read documents" ON public.documents FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Allow all settings" ON public.settings;
+CREATE POLICY "Allow all settings" ON public.settings FOR ALL USING (true) WITH CHECK (true);
 
--- Public form inserts
-CREATE POLICY "Public insert messages" ON public.messages FOR INSERT WITH CHECK (true);
-CREATE POLICY "Public insert ppdb" ON public.ppdb FOR INSERT WITH CHECK (true);
+DROP POLICY IF EXISTS "Allow all pages" ON public.pages;
+CREATE POLICY "Allow all pages" ON public.pages FOR ALL USING (true) WITH CHECK (true);
 
--- Full authenticated admin access
-CREATE POLICY "Admin full access settings" ON public.settings FOR ALL TO authenticated USING (true);
-CREATE POLICY "Admin full access pages" ON public.pages FOR ALL TO authenticated USING (true);
-CREATE POLICY "Admin full access news" ON public.news FOR ALL TO authenticated USING (true);
-CREATE POLICY "Admin full access staff" ON public.staff FOR ALL TO authenticated USING (true);
-CREATE POLICY "Admin full access gallery" ON public.gallery FOR ALL TO authenticated USING (true);
-CREATE POLICY "Admin full access messages" ON public.messages FOR ALL TO authenticated USING (true);
-CREATE POLICY "Admin full access ppdb" ON public.ppdb FOR ALL TO authenticated USING (true);
-CREATE POLICY "Admin full access testimonials" ON public.testimonials FOR ALL TO authenticated USING (true);
-CREATE POLICY "Admin full access achievements" ON public.achievements FOR ALL TO authenticated USING (true);
-CREATE POLICY "Admin full access documents" ON public.documents FOR ALL TO authenticated USING (true);
-CREATE POLICY "Admin full access admin_users" ON public.admin_users FOR ALL TO authenticated USING (true);
-CREATE POLICY "Admin full access activity_logs" ON public.activity_logs FOR ALL TO authenticated USING (true);
+DROP POLICY IF EXISTS "Allow all news" ON public.news;
+CREATE POLICY "Allow all news" ON public.news FOR ALL USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Allow all staff" ON public.staff;
+CREATE POLICY "Allow all staff" ON public.staff FOR ALL USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Allow all gallery" ON public.gallery;
+CREATE POLICY "Allow all gallery" ON public.gallery FOR ALL USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Allow all messages" ON public.messages;
+CREATE POLICY "Allow all messages" ON public.messages FOR ALL USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Allow all ppdb" ON public.ppdb;
+CREATE POLICY "Allow all ppdb" ON public.ppdb FOR ALL USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Allow all testimonials" ON public.testimonials;
+CREATE POLICY "Allow all testimonials" ON public.testimonials FOR ALL USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Allow all achievements" ON public.achievements;
+CREATE POLICY "Allow all achievements" ON public.achievements FOR ALL USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Allow all documents" ON public.documents;
+CREATE POLICY "Allow all documents" ON public.documents FOR ALL USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Allow all admin_users" ON public.admin_users;
+CREATE POLICY "Allow all admin_users" ON public.admin_users FOR ALL USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Allow all activity_logs" ON public.activity_logs;
+CREATE POLICY "Allow all activity_logs" ON public.activity_logs FOR ALL USING (true) WITH CHECK (true);
 `;
   }
 }
