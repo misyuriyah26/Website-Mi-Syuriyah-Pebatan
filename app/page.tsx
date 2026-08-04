@@ -224,6 +224,7 @@ export default function Home() {
             {activeSection === 'kontak' && (
               <KontakSection
                 settings={settings}
+                pages={pagesContent}
                 onMessageSubmitted={() => setMessages(DataStore.getMessages())}
               />
             )}

@@ -80,6 +80,21 @@ export interface StrukturOrganisasiInfo {
   pengelola_tambahan?: OrgMemberItem[];
 }
 
+export interface KontakPageInfo {
+  badge_kontak?: string;
+  judul_kontak?: string;
+  deskripsi_kontak?: string;
+  judul_info_kantor?: string;
+  jam_pelayanan?: string;
+  teks_tombol_wa?: string;
+  judul_form_pesan?: string;
+  teks_tombol_kirim?: string;
+  pesan_sukses?: string;
+  judul_peta?: string;
+  deskripsi_peta?: string;
+  maps_iframe_url?: string;
+}
+
 export interface StaticPagesContent {
   sambutan_kepala: {
     nama: string;
@@ -110,6 +125,7 @@ export interface StaticPagesContent {
   ekstrakurikuler?: EkstrakurikulerItem[];
   jadwal_kbm?: ScheduleItem[];
   struktur_organisasi?: StrukturOrganisasiInfo;
+  kontak_info?: KontakPageInfo;
   ppdb_info?: {
     judul: string;
     deskripsi: string;

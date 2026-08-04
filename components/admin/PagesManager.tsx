@@ -22,6 +22,8 @@ import {
   Clock,
   Layers,
   Users,
+  PhoneCall,
+  MapPin,
 } from 'lucide-react';
 import { ImageUploadInput } from '@/components/ui/ImageUploadInput';
 
@@ -120,6 +122,24 @@ export const PagesManager: React.FC<PagesManagerProps> = ({
           { id: 'org-4', jabatan: 'Koordinator Tahfidz', nama: 'Ust. M. Ridwan, S.Th.I' },
           { id: 'org-5', jabatan: 'Kepala Tata Usaha', nama: 'Ustadzah Khadijah, A.Md' },
         ],
+      },
+      kontak_info: {
+        badge_kontak: formData.kontak_info?.badge_kontak || 'LAYANAN INFORMASI SEKOLAH',
+        judul_kontak: formData.kontak_info?.judul_kontak || 'Hubungi MI Syuriyah Pebatan',
+        deskripsi_kontak:
+          formData.kontak_info?.deskripsi_kontak ||
+          'Silakan kirimkan pertanyaan, kritik, saran, atau konsultasi pendaftaran PPDB kepada sekretariat madrasah kami.',
+        judul_info_kantor: formData.kontak_info?.judul_info_kantor || 'Informasi Kantor Madrasah',
+        jam_pelayanan: formData.kontak_info?.jam_pelayanan || 'Senin - Sabtu: 07.00 - 13.30 WIB',
+        teks_tombol_wa: formData.kontak_info?.teks_tombol_wa || 'Chat WhatsApp Admin Madrasah',
+        judul_form_pesan: formData.kontak_info?.judul_form_pesan || 'Kirim Pesan / Pertanyaan',
+        teks_tombol_kirim: formData.kontak_info?.teks_tombol_kirim || 'Kirimkan Pesan Ke Admin',
+        pesan_sukses: formData.kontak_info?.pesan_sukses || 'Alhamdulillah, Pesan Anda Berhasil Terkirim!',
+        judul_peta: formData.kontak_info?.judul_peta || 'Peta Lokasi MI Syuriyah Pebatan Wanasari Brebes',
+        deskripsi_peta:
+          formData.kontak_info?.deskripsi_peta ||
+          'Jl. Raya Pebatan No. 45, Desa Pebatan, Kec. Wanasari, Kab. Brebes, Jawa Tengah.',
+        maps_iframe_url: formData.kontak_info?.maps_iframe_url || '',
       },
     };
 
@@ -1272,6 +1292,279 @@ export const PagesManager: React.FC<PagesManagerProps> = ({
               value={ppdbPersyaratanText}
               onChange={(e) => setPpdbPersyaratanText(e.target.value)}
               className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs focus:ring-2 focus:ring-emerald-600 focus:outline-none"
+            />
+          </div>
+        </div>
+
+        {/* 9. HALAMAN KONTAK & LOKASI */}
+        <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+          <div className="border-b border-slate-100 dark:border-slate-800 pb-3">
+            <h3 className="text-base font-bold text-emerald-950 dark:text-emerald-400 flex items-center gap-2">
+              <PhoneCall className="w-4 h-4 text-amber-600" /> Tampilan Halaman Kontak & Lokasi
+            </h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+              Atur judul banner, deskripsi layanan, jam pelayanan TU, pesan konfirmasi, dan judul peta lokasi pada halaman menu Kontak.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                Badge / Tagline Banner Kontak
+              </label>
+              <input
+                type="text"
+                value={formData.kontak_info?.badge_kontak || ''}
+                placeholder="LAYANAN INFORMASI SEKOLAH"
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    kontak_info: {
+                      ...(formData.kontak_info || {}),
+                      badge_kontak: e.target.value,
+                    },
+                  })
+                }
+                className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs focus:ring-2 focus:ring-emerald-600 focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                Judul Utama Banner Kontak
+              </label>
+              <input
+                type="text"
+                value={formData.kontak_info?.judul_kontak || ''}
+                placeholder="Hubungi MI Syuriyah Pebatan"
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    kontak_info: {
+                      ...(formData.kontak_info || {}),
+                      judul_kontak: e.target.value,
+                    },
+                  })
+                }
+                className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs focus:ring-2 focus:ring-emerald-600 focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                Jam Pelayanan Kantor TU
+              </label>
+              <input
+                type="text"
+                value={formData.kontak_info?.jam_pelayanan || ''}
+                placeholder="Senin - Sabtu: 07.00 - 13.30 WIB"
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    kontak_info: {
+                      ...(formData.kontak_info || {}),
+                      jam_pelayanan: e.target.value,
+                    },
+                  })
+                }
+                className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs focus:ring-2 focus:ring-emerald-600 focus:outline-none"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+              Deskripsi Sub-banner Kontak
+            </label>
+            <textarea
+              rows={2}
+              value={formData.kontak_info?.deskripsi_kontak || ''}
+              placeholder="Silakan kirimkan pertanyaan, kritik, saran, atau konsultasi pendaftaran PPDB..."
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  kontak_info: {
+                    ...(formData.kontak_info || {}),
+                    deskripsi_kontak: e.target.value,
+                  },
+                })
+              }
+              className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs focus:ring-2 focus:ring-emerald-600 focus:outline-none"
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                Judul Kartu Informasi Kantor
+              </label>
+              <input
+                type="text"
+                value={formData.kontak_info?.judul_info_kantor || ''}
+                placeholder="Informasi Kantor Madrasah"
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    kontak_info: {
+                      ...(formData.kontak_info || {}),
+                      judul_info_kantor: e.target.value,
+                    },
+                  })
+                }
+                className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs focus:ring-2 focus:ring-emerald-600 focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                Teks Tombol WhatsApp Admin
+              </label>
+              <input
+                type="text"
+                value={formData.kontak_info?.teks_tombol_wa || ''}
+                placeholder="Chat WhatsApp Admin Madrasah"
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    kontak_info: {
+                      ...(formData.kontak_info || {}),
+                      teks_tombol_wa: e.target.value,
+                    },
+                  })
+                }
+                className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs focus:ring-2 focus:ring-emerald-600 focus:outline-none"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                Judul Form Kirim Pesan
+              </label>
+              <input
+                type="text"
+                value={formData.kontak_info?.judul_form_pesan || ''}
+                placeholder="Kirim Pesan / Pertanyaan"
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    kontak_info: {
+                      ...(formData.kontak_info || {}),
+                      judul_form_pesan: e.target.value,
+                    },
+                  })
+                }
+                className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs focus:ring-2 focus:ring-emerald-600 focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                Teks Tombol Kirim Pesan
+              </label>
+              <input
+                type="text"
+                value={formData.kontak_info?.teks_tombol_kirim || ''}
+                placeholder="Kirimkan Pesan Ke Admin"
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    kontak_info: {
+                      ...(formData.kontak_info || {}),
+                      teks_tombol_kirim: e.target.value,
+                    },
+                  })
+                }
+                className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs focus:ring-2 focus:ring-emerald-600 focus:outline-none"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+              Notifikasi Pesan Berhasil Terkirim
+            </label>
+            <input
+              type="text"
+              value={formData.kontak_info?.pesan_sukses || ''}
+              placeholder="Alhamdulillah, Pesan Anda Berhasil Terkirim!"
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  kontak_info: {
+                    ...(formData.kontak_info || {}),
+                    pesan_sukses: e.target.value,
+                  },
+                })
+              }
+              className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs focus:ring-2 focus:ring-emerald-600 focus:outline-none"
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                Judul Bagian Peta Lokasi
+              </label>
+              <input
+                type="text"
+                value={formData.kontak_info?.judul_peta || ''}
+                placeholder="Peta Lokasi MI Syuriyah Pebatan Wanasari Brebes"
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    kontak_info: {
+                      ...(formData.kontak_info || {}),
+                      judul_peta: e.target.value,
+                    },
+                  })
+                }
+                className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs focus:ring-2 focus:ring-emerald-600 focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                Keterangan Alamat Peta Lokasi
+              </label>
+              <input
+                type="text"
+                value={formData.kontak_info?.deskripsi_peta || ''}
+                placeholder="Jl. Raya Pebatan No. 45, Desa Pebatan, Kec. Wanasari..."
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    kontak_info: {
+                      ...(formData.kontak_info || {}),
+                      deskripsi_peta: e.target.value,
+                    },
+                  })
+                }
+                className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs focus:ring-2 focus:ring-emerald-600 focus:outline-none"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1 flex items-center justify-between">
+              <span>Link URL Embed Google Maps (Iframe Peta Lokasi)</span>
+              <span className="text-[10px] font-normal text-amber-600 dark:text-amber-400">Salin URL dari Google Maps (Bagikan -&gt; Sematkan Peta -&gt; atribut src)</span>
+            </label>
+            <textarea
+              rows={2}
+              value={formData.kontak_info?.maps_iframe_url || ''}
+              placeholder="https://www.google.com/maps/embed?pb=..."
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  kontak_info: {
+                    ...(formData.kontak_info || {}),
+                    maps_iframe_url: e.target.value,
+                  },
+                })
+              }
+              className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-mono focus:ring-2 focus:ring-emerald-600 focus:outline-none"
             />
           </div>
         </div>
