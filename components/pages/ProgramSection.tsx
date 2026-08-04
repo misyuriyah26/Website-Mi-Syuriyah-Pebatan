@@ -15,9 +15,51 @@ import {
   Code,
   Flame,
 } from 'lucide-react';
+import { StaticPagesContent, SchoolSettings } from '@/lib/types';
 import { IslamicDivider, IslamicStarOrnament } from '../IslamicPattern';
 
-export const ProgramSection: React.FC = () => {
+interface ProgramSectionProps {
+  pages?: StaticPagesContent;
+  settings?: SchoolSettings;
+}
+
+export const ProgramSection: React.FC<ProgramSectionProps> = ({ pages, settings }) => {
+  const schoolName = settings?.school_name || 'MI Syuriyah Pebatan';
+  const programs = pages?.program_unggulan && pages.program_unggulan.length > 0
+    ? pages.program_unggulan
+    : [
+        {
+          id: '1',
+          title: 'Program Tahfidz Al-Qur\'an',
+          description: 'Target hafalan Juz 30 dengan tajwid & makhroj yang benar menggunakan metode Yanbu\'a.',
+        },
+        {
+          id: '2',
+          title: 'Pembiasaan Akhlak & Karakter',
+          description: 'Sholat Dhuha dan Dzuhur berjamaah, pembacaan Asmaul Husna, Mudarosah, serta 5S.',
+        },
+        {
+          id: '3',
+          title: 'Smart Digital Classroom',
+          description: 'Pembelajaran berbasis CBT online, laboratorium komputer multimedia, serta ujian berbasis tablet.',
+        },
+        {
+          id: '4',
+          title: 'Seni Keagamaan Hadroh & Rebana',
+          description: 'Ekstrakurikuler seni sholawat rebana modern yang aktif tampil di ajang Porseni.',
+        },
+        {
+          id: '5',
+          title: 'Prestasi Sains & Kaligrafi',
+          description: 'Bimbingan intensif Kompetisi Sains Madrasah (KSM) serta Sanggar Kaligrafi.',
+        },
+        {
+          id: '6',
+          title: 'Tenaga Pendidik Profesional',
+          description: 'Guru-guru berijazah S1/S2 lulusan Perguruan Tinggi Islam terkemuka.',
+        },
+      ];
+
   const scheduleData = [
     { time: '07.00 - 07.30 WIB', activity: 'Sholat Dhuha Berjamaah, Mudarosah Al-Qur\'an & Asmaul Husna', type: 'Pembiasaan' },
     { time: '07.30 - 09.30 WIB', activity: 'Kegiatan Belajar Mengajar (KBM) Jam ke 1 - 3', type: 'Akademik' },
@@ -48,7 +90,7 @@ export const ProgramSection: React.FC = () => {
             <span>KURIKULUM & PROGRAM PENDIDIKAN</span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
-            Program & Kurikulum MI Syuriyah Pebatan
+            Program & Kurikulum {schoolName}
           </h1>
           <p className="text-emerald-100/90 text-sm sm:text-base mt-2 leading-relaxed">
             Struktur Kurikulum Merdeka Terpadu KMA 183 & 184 Kementerian Agama RI, dikombinasikan dengan Program Unggulan Keagamaan dan Ekstrakurikuler.
@@ -56,8 +98,31 @@ export const ProgramSection: React.FC = () => {
         </div>
       </div>
 
+      {/* 0. PROGRAM UNGGULAN DARI KELOLA HALAMAN STATIS */}
+      <section className="space-y-6">
+        <IslamicDivider
+          title="Program Unggulan Utama"
+          subtitle="Program Pilihan Terpadu Pembentukan Karakter & Prestasi Santri"
+        />
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {programs.map((item, idx) => (
+            <div
+              key={item.id || idx}
+              className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition-all group hover:border-amber-400 space-y-3"
+            >
+              <div className="w-12 h-12 rounded-xl bg-emerald-800 text-amber-300 flex items-center justify-center group-hover:bg-amber-500 group-hover:text-emerald-950 transition-colors shadow">
+                <BookOpen className="w-6 h-6" />
+              </div>
+              <h3 className="text-base font-bold text-emerald-950 dark:text-emerald-400">{item.title}</h3>
+              <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">{item.description}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* 1. KURIKULUM PENGAJARAN */}
-      <section className="bg-white rounded-2xl p-6 sm:p-10 border border-slate-200 shadow-md space-y-8">
+      <section className="bg-white dark:bg-slate-900 rounded-2xl p-6 sm:p-10 border border-slate-200 dark:border-slate-800 shadow-md space-y-8">
         <div>
           <span className="text-xs font-bold text-amber-600 uppercase tracking-wider bg-amber-50 px-3 py-1 rounded-full border border-amber-200">
             Standar Nasional & Kemenag

@@ -28,6 +28,9 @@ import {
   StaticPagesContent,
   PpdbRegistration,
   SchoolSettings,
+  Achievement,
+  Testimonial,
+  DownloadDocument,
 } from '@/lib/types';
 import { DataStore } from '@/lib/data-store';
 import { DashboardTab } from './DashboardTab';
@@ -53,6 +56,9 @@ interface AdminLayoutProps {
   pagesContent: StaticPagesContent;
   ppdbList: PpdbRegistration[];
   settings: SchoolSettings;
+  achievements?: Achievement[];
+  testimonials?: Testimonial[];
+  documents?: DownloadDocument[];
   onSaveNews: (newList: NewsItem[]) => void;
   onSaveStaff: (newList: StaffItem[]) => void;
   onSaveGallery: (newList: GalleryItem[]) => void;
@@ -60,6 +66,9 @@ interface AdminLayoutProps {
   onSavePagesContent: (newPages: StaticPagesContent) => void;
   onSavePpdbList: (newList: PpdbRegistration[]) => void;
   onSaveSettings: (newSettings: SchoolSettings) => void;
+  onSaveAchievements?: (newList: Achievement[]) => void;
+  onSaveTestimonials?: (newList: Testimonial[]) => void;
+  onSaveDocuments?: (newList: DownloadDocument[]) => void;
   onExitAdmin: () => void;
 }
 
@@ -71,6 +80,9 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
   pagesContent,
   ppdbList,
   settings,
+  achievements,
+  testimonials,
+  documents,
   onSaveNews,
   onSaveStaff,
   onSaveGallery,
@@ -78,6 +90,9 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
   onSavePagesContent,
   onSavePpdbList,
   onSaveSettings,
+  onSaveAchievements,
+  onSaveTestimonials,
+  onSaveDocuments,
   onExitAdmin,
 }) => {
   const [activeTab, setActiveTab] = useState<string>('DASHBOARD');
@@ -254,11 +269,17 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
             <GaleriManager galleryList={galleryList} onSaveGallery={onSaveGallery} />
           )}
 
-          {activeTab === 'PRESTASI' && <AchievementsManager />}
+          {activeTab === 'PRESTASI' && (
+            <AchievementsManager achievements={achievements} onSaveAchievements={onSaveAchievements} />
+          )}
 
-          {activeTab === 'TESTIMONI' && <TestimonialsManager />}
+          {activeTab === 'TESTIMONI' && (
+            <TestimonialsManager testimonials={testimonials} onSaveTestimonials={onSaveTestimonials} />
+          )}
 
-          {activeTab === 'DOCUMENTS' && <DocumentsManager />}
+          {activeTab === 'DOCUMENTS' && (
+            <DocumentsManager documents={documents} onSaveDocuments={onSaveDocuments} />
+          )}
 
           {activeTab === 'PAGES' && (
             <PagesManager

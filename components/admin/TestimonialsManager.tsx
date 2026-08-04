@@ -6,8 +6,18 @@ import { Testimonial } from '@/lib/types';
 import { DataStore } from '@/lib/data-store';
 import { ImageUploadInput } from '@/components/ui/ImageUploadInput';
 
-export const TestimonialsManager: React.FC = () => {
-  const [testimonials, setTestimonials] = useState<Testimonial[]>(() => DataStore.getTestimonials());
+interface TestimonialsManagerProps {
+  testimonials?: Testimonial[];
+  onSaveTestimonials?: (newList: Testimonial[]) => void;
+}
+
+export const TestimonialsManager: React.FC<TestimonialsManagerProps> = ({
+  testimonials: initialPropsTestimonials,
+  onSaveTestimonials,
+}) => {
+  const [testimonials, setTestimonials] = useState<Testimonial[]>(
+    () => initialPropsTestimonials || DataStore.getTestimonials()
+  );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<Testimonial | null>(null);
 
@@ -51,6 +61,7 @@ export const TestimonialsManager: React.FC = () => {
       const updated = testimonials.filter((t) => t.id !== id);
       setTestimonials(updated);
       DataStore.saveTestimonials(updated);
+      if (onSaveTestimonials) onSaveTestimonials(updated);
       DataStore.addActivityLog('Hapus Testimoni', 'Testimoni', `Menghapus testimoni ID: ${id}`);
     }
   };
@@ -65,6 +76,7 @@ export const TestimonialsManager: React.FC = () => {
       );
       setTestimonials(updated);
       DataStore.saveTestimonials(updated);
+      if (onSaveTestimonials) onSaveTestimonials(updated);
       DataStore.addActivityLog('Edit Testimoni', 'Testimoni', `Memperbarui testimoni oleh: ${formData.name}`);
     } else {
       const newItem: Testimonial = {
@@ -74,6 +86,7 @@ export const TestimonialsManager: React.FC = () => {
       const updated = [newItem, ...testimonials];
       setTestimonials(updated);
       DataStore.saveTestimonials(updated);
+      if (onSaveTestimonials) onSaveTestimonials(updated);
       DataStore.addActivityLog('Tambah Testimoni', 'Testimoni', `Menambahkan testimoni baru oleh: ${formData.name}`);
     }
 

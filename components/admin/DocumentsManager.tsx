@@ -5,8 +5,18 @@ import { FileDown, Plus, Trash2, Edit3, Download, FileText } from 'lucide-react'
 import { DownloadDocument } from '@/lib/types';
 import { DataStore } from '@/lib/data-store';
 
-export const DocumentsManager: React.FC = () => {
-  const [documents, setDocuments] = useState<DownloadDocument[]>(() => DataStore.getDocuments());
+interface DocumentsManagerProps {
+  documents?: DownloadDocument[];
+  onSaveDocuments?: (newList: DownloadDocument[]) => void;
+}
+
+export const DocumentsManager: React.FC<DocumentsManagerProps> = ({
+  documents: initialPropsDocuments,
+  onSaveDocuments,
+}) => {
+  const [documents, setDocuments] = useState<DownloadDocument[]>(
+    () => initialPropsDocuments || DataStore.getDocuments()
+  );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<DownloadDocument | null>(null);
 
@@ -37,6 +47,7 @@ export const DocumentsManager: React.FC = () => {
       const updated = documents.filter((d) => d.id !== id);
       setDocuments(updated);
       DataStore.saveDocuments(updated);
+      if (onSaveDocuments) onSaveDocuments(updated);
       DataStore.addActivityLog('Hapus Dokumen', 'Pusat Unduhan', `Menghapus dokumen ID: ${id}`);
     }
   };
@@ -51,6 +62,7 @@ export const DocumentsManager: React.FC = () => {
       );
       setDocuments(updated);
       DataStore.saveDocuments(updated);
+      if (onSaveDocuments) onSaveDocuments(updated);
       DataStore.addActivityLog('Edit Dokumen', 'Pusat Unduhan', `Memperbarui dokumen: ${formData.title}`);
     } else {
       const newItem: DownloadDocument = {
@@ -61,6 +73,7 @@ export const DocumentsManager: React.FC = () => {
       const updated = [newItem, ...documents];
       setDocuments(updated);
       DataStore.saveDocuments(updated);
+      if (onSaveDocuments) onSaveDocuments(updated);
       DataStore.addActivityLog('Tambah Dokumen', 'Pusat Unduhan', `Upload dokumen baru: ${formData.title}`);
     }
 

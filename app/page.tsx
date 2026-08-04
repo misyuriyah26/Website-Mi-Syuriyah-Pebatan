@@ -119,6 +119,21 @@ export default function Home() {
     DataStore.saveSettings(newSettings);
   };
 
+  const handleSaveAchievements = (newList: Achievement[]) => {
+    setAchievements(newList);
+    DataStore.saveAchievements(newList);
+  };
+
+  const handleSaveTestimonials = (newList: Testimonial[]) => {
+    setTestimonials(newList);
+    DataStore.saveTestimonials(newList);
+  };
+
+  const handleSaveDocuments = (newList: DownloadDocument[]) => {
+    setDocuments(newList);
+    DataStore.saveDocuments(newList);
+  };
+
   return (
     <ThemeProvider>
       {isAdminView ? (
@@ -130,6 +145,9 @@ export default function Home() {
           pagesContent={pagesContent}
           ppdbList={ppdbList}
           settings={settings}
+          achievements={achievements}
+          testimonials={testimonials}
+          documents={documents}
           onSaveNews={handleSaveNews}
           onSaveStaff={handleSaveStaff}
           onSaveGallery={handleSaveGallery}
@@ -137,6 +155,9 @@ export default function Home() {
           onSavePagesContent={handleSavePagesContent}
           onSavePpdbList={handleSavePpdbList}
           onSaveSettings={handleSaveSettings}
+          onSaveAchievements={handleSaveAchievements}
+          onSaveTestimonials={handleSaveTestimonials}
+          onSaveDocuments={handleSaveDocuments}
           onExitAdmin={() => setIsAdminView(false)}
         />
       ) : (
@@ -181,7 +202,9 @@ export default function Home() {
               />
             )}
 
-            {activeSection === 'program' && <ProgramSection />}
+            {activeSection === 'program' && (
+              <ProgramSection pages={pagesContent} settings={settings} />
+            )}
 
             {activeSection === 'prestasi' && <PrestasiSection achievements={achievements} />}
 

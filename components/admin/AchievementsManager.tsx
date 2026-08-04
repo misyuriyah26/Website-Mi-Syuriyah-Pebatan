@@ -6,8 +6,18 @@ import { Achievement } from '@/lib/types';
 import { DataStore } from '@/lib/data-store';
 import { ImageUploadInput } from '@/components/ui/ImageUploadInput';
 
-export const AchievementsManager: React.FC = () => {
-  const [achievements, setAchievements] = useState<Achievement[]>(() => DataStore.getAchievements());
+interface AchievementsManagerProps {
+  achievements?: Achievement[];
+  onSaveAchievements?: (newList: Achievement[]) => void;
+}
+
+export const AchievementsManager: React.FC<AchievementsManagerProps> = ({
+  achievements: initialPropsAchievements,
+  onSaveAchievements,
+}) => {
+  const [achievements, setAchievements] = useState<Achievement[]>(
+    () => initialPropsAchievements || DataStore.getAchievements()
+  );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<Achievement | null>(null);
 
@@ -54,6 +64,7 @@ export const AchievementsManager: React.FC = () => {
       const updated = achievements.filter((a) => a.id !== id);
       setAchievements(updated);
       DataStore.saveAchievements(updated);
+      if (onSaveAchievements) onSaveAchievements(updated);
       DataStore.addActivityLog('Hapus Prestasi', 'Prestasi', `Menghapus prestasi ID: ${id}`);
     }
   };
@@ -68,6 +79,7 @@ export const AchievementsManager: React.FC = () => {
       );
       setAchievements(updated);
       DataStore.saveAchievements(updated);
+      if (onSaveAchievements) onSaveAchievements(updated);
       DataStore.addActivityLog('Edit Prestasi', 'Prestasi', `Memperbarui prestasi: ${formData.title}`);
     } else {
       const newItem: Achievement = {
@@ -77,6 +89,7 @@ export const AchievementsManager: React.FC = () => {
       const updated = [newItem, ...achievements];
       setAchievements(updated);
       DataStore.saveAchievements(updated);
+      if (onSaveAchievements) onSaveAchievements(updated);
       DataStore.addActivityLog('Tambah Prestasi', 'Prestasi', `Menambahkan prestasi baru: ${formData.title}`);
     }
 
