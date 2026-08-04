@@ -150,17 +150,24 @@ export const PpdbModal: React.FC<PpdbModalProps> = ({
       <div className="bg-white dark:bg-slate-900 w-full max-w-4xl rounded-3xl overflow-hidden shadow-2xl border-2 border-amber-400 my-4 flex flex-col max-h-[92vh]">
         {/* Header Modal */}
         <div className="bg-gradient-to-r from-emerald-950 via-emerald-900 to-emerald-950 text-white p-5 sm:p-6 relative flex justify-between items-start border-b-2 border-amber-400 shrink-0">
-          <div className="space-y-1 pr-8">
-            <div className="inline-flex items-center gap-1.5 bg-amber-500 text-emerald-950 px-2.5 py-0.5 rounded font-bold text-[10px] uppercase tracking-wider">
-              <IslamicStarOrnament className="w-3 h-3 text-emerald-950" />
-              <span>PPDB TA {settings.ppdb_year || '2026/2027'}</span>
+          <div className="flex items-center gap-3.5 pr-8">
+            {settings.logo_url && (
+              <div className="w-12 h-12 rounded-full bg-emerald-900 border-2 border-amber-400 p-0.5 overflow-hidden shrink-0 hidden sm:block">
+                <img src={settings.logo_url} alt="Logo Sekolah" className="w-full h-full object-cover rounded-full" />
+              </div>
+            )}
+            <div className="space-y-1">
+              <div className="inline-flex items-center gap-1.5 bg-amber-500 text-emerald-950 px-2.5 py-0.5 rounded font-bold text-[10px] uppercase tracking-wider">
+                <IslamicStarOrnament className="w-3 h-3 text-emerald-950" />
+                <span>PPDB TA {settings.ppdb_year || '2026/2027'}</span>
+              </div>
+              <h2 className="text-lg sm:text-2xl font-bold text-white">
+                Pendaftaran & Cek Status PPDB {settings.school_name}
+              </h2>
+              <p className="text-xs text-emerald-200">
+                Sistem Pendaftaran Peserta Didik Baru Terpadu Online & Terverifikasi
+              </p>
             </div>
-            <h2 className="text-lg sm:text-2xl font-bold text-white">
-              Pendaftaran & Cek Status PPDB {settings.school_name}
-            </h2>
-            <p className="text-xs text-emerald-200">
-              Sistem Pendaftaran Peserta Didik Baru Terpadu Online & Terverifikasi
-            </p>
           </div>
 
           <button

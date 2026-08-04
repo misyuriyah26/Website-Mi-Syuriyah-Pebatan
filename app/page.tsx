@@ -228,6 +228,7 @@ export default function Home() {
 
           {/* Admin Operator Login Modal */}
           <AdminLoginModal
+            settings={settings}
             isOpen={isAdminLoginOpen}
             onClose={() => setIsAdminLoginOpen(false)}
             onLoginSuccess={() => {

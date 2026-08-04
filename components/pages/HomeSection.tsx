@@ -53,7 +53,7 @@ export const HomeSection: React.FC<HomeSectionProps> = ({
         <div
           className="absolute inset-0 bg-cover bg-center opacity-25 mix-blend-overlay scale-105 transition-transform duration-1000"
           style={{
-            backgroundImage: `url('https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&q=80&w=1600')`,
+            backgroundImage: `url('${settings.hero_banner_url || 'https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&q=80&w=1600'}')`,
           }}
         />
         {/* Radial Gradient overlay */}

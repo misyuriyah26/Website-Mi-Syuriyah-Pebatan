@@ -45,8 +45,12 @@ export const Footer: React.FC<FooterProps> = ({
           {/* Col 1: School Profile & Motto */}
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-full bg-emerald-900 border-2 border-amber-400 p-1 flex items-center justify-center shrink-0">
-                <IslamicStarOrnament className="w-6 h-6 text-amber-400" />
+              <div className="w-12 h-12 rounded-full bg-emerald-900 border-2 border-amber-400 p-0.5 flex items-center justify-center shrink-0 overflow-hidden">
+                {settings.logo_url ? (
+                  <img src={settings.logo_url} alt="Logo Sekolah" className="w-full h-full object-cover rounded-full" />
+                ) : (
+                  <IslamicStarOrnament className="w-6 h-6 text-amber-400" />
+                )}
               </div>
               <div>
                 <h3 className="text-lg font-bold text-white tracking-wide">{settings.school_name}</h3>

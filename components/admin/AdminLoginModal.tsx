@@ -4,18 +4,21 @@ import React, { useState } from 'react';
 import { Lock, Mail, Key, X, AlertCircle, Eye, EyeOff, ShieldCheck, Sparkles } from 'lucide-react';
 import { DataStore } from '@/lib/data-store';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
+import { SchoolSettings } from '@/lib/types';
 import { IslamicStarOrnament } from '../IslamicPattern';
 
 interface AdminLoginModalProps {
   isOpen: boolean;
   onClose: () => void;
   onLoginSuccess: () => void;
+  settings?: SchoolSettings;
 }
 
 export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
   isOpen,
   onClose,
   onLoginSuccess,
+  settings,
 }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -71,8 +74,12 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
         {/* Header */}
         <div className="bg-gradient-to-r from-emerald-950 via-emerald-900 to-emerald-950 text-white p-6 relative flex justify-between items-center border-b-2 border-amber-400">
           <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-2xl bg-emerald-800/80 text-amber-300 border border-amber-400/50 flex items-center justify-center font-bold shadow-inner">
-              <ShieldCheck className="w-6 h-6 text-amber-400" />
+            <div className="w-11 h-11 rounded-2xl bg-emerald-800/80 text-amber-300 border border-amber-400/50 flex items-center justify-center font-bold shadow-inner overflow-hidden shrink-0">
+              {settings?.logo_url ? (
+                <img src={settings.logo_url} alt="Logo Sekolah" className="w-full h-full object-cover rounded-2xl" />
+              ) : (
+                <ShieldCheck className="w-6 h-6 text-amber-400" />
+              )}
             </div>
             <div>
               <h3 className="text-base font-extrabold text-white flex items-center gap-1.5">

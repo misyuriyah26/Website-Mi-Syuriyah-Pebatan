@@ -126,8 +126,12 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
           </button>
 
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-full bg-emerald-900 border border-amber-400 flex items-center justify-center text-amber-400 font-bold shrink-0">
-              <IslamicStarOrnament className="w-4 h-4" />
+            <div className="w-9 h-9 rounded-full bg-emerald-900 border border-amber-400 flex items-center justify-center text-amber-400 font-bold shrink-0 overflow-hidden">
+              {settings.logo_url ? (
+                <img src={settings.logo_url} alt="Logo Operator" className="w-full h-full object-cover rounded-full" />
+              ) : (
+                <IslamicStarOrnament className="w-4 h-4" />
+              )}
             </div>
             <div>
               <h1 className="text-xs sm:text-sm font-extrabold text-white tracking-wide leading-tight">
