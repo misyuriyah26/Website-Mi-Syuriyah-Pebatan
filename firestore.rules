@@ -1,0 +1,101 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // Default deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // 1. Settings Collection
+    match /settings/{settingId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // 2. Pages Collection
+    match /pages/{pageId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // 3. News Collection
+    match /news/{newsId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // 4. Staff Collection
+    match /staff/{staffId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // 5. Gallery Collection
+    match /gallery/{galleryId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // 6. Messages Collection (Contact Form)
+    match /messages/{messageId} {
+      allow read: if true;
+      allow create: if true;
+      allow update, delete: if true;
+    }
+
+    // 7. PPDB Registrations
+    match /ppdb/{ppdbId} {
+      allow read: if true;
+      allow create: if true;
+      allow update, delete: if true;
+    }
+
+    // 8. Testimonials Collection
+    match /testimonials/{testimonialId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // 9. Achievements Collection
+    match /achievements/{achievementId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // 10. Documents Collection
+    match /documents/{documentId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // 11. Admin Users Collection
+    match /admin_users/{adminUserId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // 12. Activity Logs
+    match /activity_logs/{logId} {
+      allow read: if true;
+      allow write: if true;
+    }
+  }
+}

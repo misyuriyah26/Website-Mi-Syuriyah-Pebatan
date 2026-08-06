@@ -1,0 +1,269 @@
+{
+  "entities": {
+    "Setting": {
+      "title": "Setting",
+      "description": "School general settings and metadata",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "school_name": { "type": "string" },
+        "school_tagline": { "type": "string" },
+        "npsn": { "type": "string" },
+        "nsm": { "type": "string" },
+        "akreditasi": { "type": "string" },
+        "address": { "type": "string" },
+        "phone": { "type": "string" },
+        "email": { "type": "string" },
+        "headmaster_name": { "type": "string" },
+        "headmaster_nip": { "type": "string" },
+        "headmaster_welcome": { "type": "string" },
+        "headmaster_photo": { "type": "string" },
+        "logo_url": { "type": "string" },
+        "hero_image_url": { "type": "string" },
+        "facebook_url": { "type": "string" },
+        "instagram_url": { "type": "string" },
+        "youtube_url": { "type": "string" },
+        "whatsapp_number": { "type": "string" },
+        "total_siswa_aktif": { "type": "string" },
+        "total_siswi_aktif": { "type": "string" },
+        "tingkat_kelulusan": { "type": "string" },
+        "total_guru_staf": { "type": "string" },
+        "nilai_akreditasi_bansm": { "type": "string" },
+        "maps_iframe_url": { "type": "string" }
+      }
+    },
+    "Page": {
+      "title": "Page",
+      "description": "Static page content for home, profile, and history",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "home_hero_title": { "type": "string" },
+        "home_hero_subtitle": { "type": "string" },
+        "profil_sejarah": { "type": "string" },
+        "profil_visi": { "type": "string" },
+        "profil_misi": { "type": "string" },
+        "profil_tujuan": { "type": "string" },
+        "profil_fasilitas": { "type": "string" },
+        "ppdb_info_title": { "type": "string" },
+        "ppdb_info_content": { "type": "string" },
+        "ppdb_is_open": { "type": "boolean" },
+        "ppdb_year": { "type": "string" }
+      }
+    },
+    "News": {
+      "title": "News",
+      "description": "News and article items published by the school",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "slug": { "type": "string" },
+        "excerpt": { "type": "string" },
+        "content": { "type": "string" },
+        "category": { "type": "string" },
+        "image_url": { "type": "string" },
+        "author": { "type": "string" },
+        "created_at": { "type": "string" },
+        "is_published": { "type": "boolean" },
+        "views": { "type": "number" }
+      },
+      "required": ["title", "content"]
+    },
+    "Staff": {
+      "title": "Staff",
+      "description": "Teachers and school staff members",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "nip": { "type": "string" },
+        "position": { "type": "string" },
+        "subject": { "type": "string" },
+        "photo_url": { "type": "string" },
+        "order_index": { "type": "number" },
+        "education": { "type": "string" },
+        "status": { "type": "string" }
+      },
+      "required": ["name", "position"]
+    },
+    "Gallery": {
+      "title": "Gallery",
+      "description": "Photo and video gallery items",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "category": { "type": "string" },
+        "image_url": { "type": "string" },
+        "created_at": { "type": "string" }
+      },
+      "required": ["title", "image_url"]
+    },
+    "Message": {
+      "title": "Message",
+      "description": "Contact form submissions from visitors",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "subject": { "type": "string" },
+        "message": { "type": "string" },
+        "created_at": { "type": "string" },
+        "is_read": { "type": "boolean" }
+      },
+      "required": ["name", "message"]
+    },
+    "Ppdb": {
+      "title": "Ppdb",
+      "description": "Online student registrations",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "registration_number": { "type": "string" },
+        "student_name": { "type": "string" },
+        "gender": { "type": "string" },
+        "birth_place": { "type": "string" },
+        "birth_date": { "type": "string" },
+        "nisn": { "type": "string" },
+        "parent_name": { "type": "string" },
+        "parent_phone": { "type": "string" },
+        "address": { "type": "string" },
+        "previous_school": { "type": "string" },
+        "status": { "type": "string" },
+        "created_at": { "type": "string" }
+      },
+      "required": ["student_name", "parent_phone"]
+    },
+    "Testimonial": {
+      "title": "Testimonial",
+      "description": "Parent and alumni testimonials",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "role": { "type": "string" },
+        "photo_url": { "type": "string" },
+        "content": { "type": "string" },
+        "rating": { "type": "number" },
+        "created_at": { "type": "string" },
+        "is_active": { "type": "boolean" }
+      },
+      "required": ["name", "content"]
+    },
+    "Achievement": {
+      "title": "Achievement",
+      "description": "School and student achievements",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "student_name": { "type": "string" },
+        "level": { "type": "string" },
+        "category": { "type": "string" },
+        "year": { "type": "string" },
+        "description": { "type": "string" },
+        "photo_url": { "type": "string" },
+        "created_at": { "type": "string" }
+      },
+      "required": ["title"]
+    },
+    "Document": {
+      "title": "Document",
+      "description": "Downloadable school documents and forms",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "file_url": { "type": "string" },
+        "category": { "type": "string" },
+        "file_size": { "type": "string" },
+        "created_at": { "type": "string" }
+      },
+      "required": ["title", "file_url"]
+    },
+    "AdminUser": {
+      "title": "AdminUser",
+      "description": "System administrator user accounts",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "username": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "role": { "type": "string" },
+        "status": { "type": "string" },
+        "created_at": { "type": "string" }
+      },
+      "required": ["email", "username"]
+    },
+    "ActivityLog": {
+      "title": "ActivityLog",
+      "description": "Audit trail logs for admin actions",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "user_email": { "type": "string" },
+        "user_name": { "type": "string" },
+        "action": { "type": "string" },
+        "details": { "type": "string" },
+        "timestamp": { "type": "string" }
+      },
+      "required": ["action", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/settings/{settingId}": {
+      "schema": { "$ref": "#/entities/Setting" },
+      "description": "Collection storing school setting document"
+    },
+    "/pages/{pageId}": {
+      "schema": { "$ref": "#/entities/Page" },
+      "description": "Collection storing static page content document"
+    },
+    "/news/{newsId}": {
+      "schema": { "$ref": "#/entities/News" },
+      "description": "Collection storing news articles"
+    },
+    "/staff/{staffId}": {
+      "schema": { "$ref": "#/entities/Staff" },
+      "description": "Collection storing school staff members"
+    },
+    "/gallery/{galleryId}": {
+      "schema": { "$ref": "#/entities/Gallery" },
+      "description": "Collection storing photo/video gallery items"
+    },
+    "/messages/{messageId}": {
+      "schema": { "$ref": "#/entities/Message" },
+      "description": "Collection storing contact form messages"
+    },
+    "/ppdb/{ppdbId}": {
+      "schema": { "$ref": "#/entities/Ppdb" },
+      "description": "Collection storing PPDB student registration submissions"
+    },
+    "/testimonials/{testimonialId}": {
+      "schema": { "$ref": "#/entities/Testimonial" },
+      "description": "Collection storing parent/alumni testimonials"
+    },
+    "/achievements/{achievementId}": {
+      "schema": { "$ref": "#/entities/Achievement" },
+      "description": "Collection storing school and student achievements"
+    },
+    "/documents/{documentId}": {
+      "schema": { "$ref": "#/entities/Document" },
+      "description": "Collection storing public school documents"
+    },
+    "/admin_users/{adminUserId}": {
+      "schema": { "$ref": "#/entities/AdminUser" },
+      "description": "Collection storing admin account records"
+    },
+    "/activity_logs/{logId}": {
+      "schema": { "$ref": "#/entities/ActivityLog" },
+      "description": "Collection storing activity audit logs"
+    }
+  }
+}

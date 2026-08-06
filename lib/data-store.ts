@@ -14,6 +14,9 @@ import {
   VisitorStats,
 } from './types';
 import { supabase, isSupabaseConfigured } from './supabase';
+import { db, isFirebaseConfigured } from './firebase';
+import { doc, setDoc, getDoc, getDocs, collection } from 'firebase/firestore';
+import { handleFirestoreError, OperationType } from './firebase-error';
 
 const STORAGE_KEYS = {
   NEWS: 'misyuriyah_news',
@@ -652,6 +655,11 @@ export class DataStore {
     if (isSupabaseConfigured() && supabase) {
       supabase.from('news').upsert(news).then(undefined, () => {});
     }
+    if (isFirebaseConfigured()) {
+      for (const item of news) {
+        setDoc(doc(db, 'news', item.id), item).catch(() => {});
+      }
+    }
   }
 
   // --- STAFF ---
@@ -675,6 +683,11 @@ export class DataStore {
     }
     if (isSupabaseConfigured() && supabase) {
       supabase.from('staff').upsert(staff).then(undefined, () => {});
+    }
+    if (isFirebaseConfigured()) {
+      for (const item of staff) {
+        setDoc(doc(db, 'staff', item.id), item).catch(() => {});
+      }
     }
   }
 
@@ -700,6 +713,11 @@ export class DataStore {
     if (isSupabaseConfigured() && supabase) {
       supabase.from('gallery').upsert(gallery).then(undefined, () => {});
     }
+    if (isFirebaseConfigured()) {
+      for (const item of gallery) {
+        setDoc(doc(db, 'gallery', item.id), item).catch(() => {});
+      }
+    }
   }
 
   // --- MESSAGES ---
@@ -723,6 +741,11 @@ export class DataStore {
     }
     if (isSupabaseConfigured() && supabase) {
       supabase.from('messages').upsert(messages).then(undefined, () => {});
+    }
+    if (isFirebaseConfigured()) {
+      for (const item of messages) {
+        setDoc(doc(db, 'messages', item.id), item).catch(() => {});
+      }
     }
   }
 
@@ -748,6 +771,9 @@ export class DataStore {
     if (isSupabaseConfigured() && supabase) {
       supabase.from('pages').upsert({ id: 'main_pages', content: pages, updated_at: new Date().toISOString() }).then(undefined, () => {});
     }
+    if (isFirebaseConfigured()) {
+      setDoc(doc(db, 'pages', 'main_pages'), { content: pages, updated_at: new Date().toISOString() }).catch(() => {});
+    }
   }
 
   // --- SETTINGS ---
@@ -772,6 +798,9 @@ export class DataStore {
     if (isSupabaseConfigured() && supabase) {
       supabase.from('settings').upsert({ id: 'main_settings', ...settings }).then(undefined, () => {});
     }
+    if (isFirebaseConfigured()) {
+      setDoc(doc(db, 'settings', 'main_settings'), settings).catch(() => {});
+    }
   }
 
   // --- PPDB REGISTRATIONS ---
@@ -795,6 +824,11 @@ export class DataStore {
     }
     if (isSupabaseConfigured() && supabase) {
       supabase.from('ppdb').upsert(list).then(undefined, () => {});
+    }
+    if (isFirebaseConfigured()) {
+      for (const item of list) {
+        setDoc(doc(db, 'ppdb', item.id), item).catch(() => {});
+      }
     }
   }
 
@@ -849,6 +883,11 @@ export class DataStore {
     if (isSupabaseConfigured() && supabase) {
       supabase.from('testimonials').upsert(list).then(undefined, () => {});
     }
+    if (isFirebaseConfigured()) {
+      for (const item of list) {
+        setDoc(doc(db, 'testimonials', item.id), item).catch(() => {});
+      }
+    }
   }
 
   // --- ACHIEVEMENTS (PRESTASI) ---
@@ -873,6 +912,11 @@ export class DataStore {
     if (isSupabaseConfigured() && supabase) {
       supabase.from('achievements').upsert(list).then(undefined, () => {});
     }
+    if (isFirebaseConfigured()) {
+      for (const item of list) {
+        setDoc(doc(db, 'achievements', item.id), item).catch(() => {});
+      }
+    }
   }
 
   // --- DOWNLOAD DOCUMENTS ---
@@ -896,6 +940,11 @@ export class DataStore {
     }
     if (isSupabaseConfigured() && supabase) {
       supabase.from('documents').upsert(list).then(undefined, () => {});
+    }
+    if (isFirebaseConfigured()) {
+      for (const item of list) {
+        setDoc(doc(db, 'documents', item.id), item).catch(() => {});
+      }
     }
   }
 
@@ -928,6 +977,11 @@ export class DataStore {
     }
     if (isSupabaseConfigured() && supabase) {
       supabase.from('admin_users').upsert(list).then(undefined, () => {});
+    }
+    if (isFirebaseConfigured()) {
+      for (const item of list) {
+        setDoc(doc(db, 'admin_users', item.id), item).catch(() => {});
+      }
     }
   }
 
@@ -1244,6 +1298,261 @@ export class DataStore {
     }
   }
 
+  // --- REAL-TIME FIREBASE FIRESTORE SYNC & HYDRATION ---
+  static async syncAllToFirebase(): Promise<{ success: boolean; details: string[] }> {
+    if (!isFirebaseConfigured()) {
+      return {
+        success: false,
+        details: ['Firebase belum dikonfigurasi.'],
+      };
+    }
+
+    const logs: string[] = [];
+    try {
+      // 1. Settings
+      try {
+        const settings = this.getSettings();
+        await setDoc(doc(db, 'settings', 'main_settings'), settings);
+        logs.push('✅ Settings: Berhasil diunggah ke Firebase Firestore');
+      } catch (err) {
+        logs.push(`❌ Settings Firebase: ${err instanceof Error ? err.message : String(err)}`);
+      }
+
+      // 2. Pages
+      try {
+        const pages = this.getPagesContent();
+        await setDoc(doc(db, 'pages', 'main_pages'), { content: pages, updated_at: new Date().toISOString() });
+        logs.push('✅ Pages: Berhasil diunggah ke Firebase Firestore');
+      } catch (err) {
+        logs.push(`❌ Pages Firebase: ${err instanceof Error ? err.message : String(err)}`);
+      }
+
+      // 3. News
+      try {
+        const news = this.getNews();
+        for (const item of news) {
+          await setDoc(doc(db, 'news', item.id), item);
+        }
+        logs.push(`✅ News (${news.length} item): Berhasil diunggah ke Firebase Firestore`);
+      } catch (err) {
+        logs.push(`❌ News Firebase: ${err instanceof Error ? err.message : String(err)}`);
+      }
+
+      // 4. Staff
+      try {
+        const staff = this.getStaff();
+        for (const item of staff) {
+          await setDoc(doc(db, 'staff', item.id), item);
+        }
+        logs.push(`✅ Staff (${staff.length} orang): Berhasil diunggah ke Firebase Firestore`);
+      } catch (err) {
+        logs.push(`❌ Staff Firebase: ${err instanceof Error ? err.message : String(err)}`);
+      }
+
+      // 5. Gallery
+      try {
+        const gallery = this.getGallery();
+        for (const item of gallery) {
+          await setDoc(doc(db, 'gallery', item.id), item);
+        }
+        logs.push(`✅ Gallery (${gallery.length} foto): Berhasil diunggah ke Firebase Firestore`);
+      } catch (err) {
+        logs.push(`❌ Gallery Firebase: ${err instanceof Error ? err.message : String(err)}`);
+      }
+
+      // 6. Messages
+      try {
+        const messages = this.getMessages();
+        for (const item of messages) {
+          await setDoc(doc(db, 'messages', item.id), item);
+        }
+        logs.push(`✅ Messages (${messages.length} pesan): Berhasil diunggah ke Firebase Firestore`);
+      } catch (err) {
+        logs.push(`❌ Messages Firebase: ${err instanceof Error ? err.message : String(err)}`);
+      }
+
+      // 7. PPDB
+      try {
+        const ppdb = this.getPpdbList();
+        for (const item of ppdb) {
+          await setDoc(doc(db, 'ppdb', item.id), item);
+        }
+        logs.push(`✅ PPDB (${ppdb.length} pendaftar): Berhasil diunggah ke Firebase Firestore`);
+      } catch (err) {
+        logs.push(`❌ PPDB Firebase: ${err instanceof Error ? err.message : String(err)}`);
+      }
+
+      // 8. Testimonials
+      try {
+        const testimonials = this.getTestimonials();
+        for (const item of testimonials) {
+          await setDoc(doc(db, 'testimonials', item.id), item);
+        }
+        logs.push(`✅ Testimonials (${testimonials.length} ulasan): Berhasil diunggah ke Firebase Firestore`);
+      } catch (err) {
+        logs.push(`❌ Testimonials Firebase: ${err instanceof Error ? err.message : String(err)}`);
+      }
+
+      // 9. Achievements
+      try {
+        const achievements = this.getAchievements();
+        for (const item of achievements) {
+          await setDoc(doc(db, 'achievements', item.id), item);
+        }
+        logs.push(`✅ Achievements (${achievements.length} prestasi): Berhasil diunggah ke Firebase Firestore`);
+      } catch (err) {
+        logs.push(`❌ Achievements Firebase: ${err instanceof Error ? err.message : String(err)}`);
+      }
+
+      // 10. Documents
+      try {
+        const documents = this.getDocuments();
+        for (const item of documents) {
+          await setDoc(doc(db, 'documents', item.id), item);
+        }
+        logs.push(`✅ Documents (${documents.length} berkas): Berhasil diunggah ke Firebase Firestore`);
+      } catch (err) {
+        logs.push(`❌ Documents Firebase: ${err instanceof Error ? err.message : String(err)}`);
+      }
+
+      // 11. Admin Users
+      try {
+        const adminUsers = this.getAdminUsers();
+        for (const item of adminUsers) {
+          await setDoc(doc(db, 'admin_users', item.id), item);
+        }
+        logs.push(`✅ Admin Users (${adminUsers.length} user): Berhasil diunggah ke Firebase Firestore`);
+      } catch (err) {
+        logs.push(`❌ Admin Users Firebase: ${err instanceof Error ? err.message : String(err)}`);
+      }
+
+      const hasError = logs.some((l) => l.startsWith('❌'));
+      return { success: !hasError, details: logs };
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      return { success: false, details: [...logs, `❌ Gagal sinkronisasi Firebase: ${msg}`] };
+    }
+  }
+
+  static async fetchFromFirebase(): Promise<boolean> {
+    if (!isFirebaseConfigured()) return false;
+
+    try {
+      // 1. Settings
+      try {
+        const sSnap = await getDoc(doc(db, 'settings', 'main_settings'));
+        if (sSnap.exists()) {
+          this.saveSettings(sSnap.data() as SchoolSettings);
+        }
+      } catch (e) {
+        handleFirestoreError(e, OperationType.GET, 'settings');
+      }
+
+      // 2. Pages
+      try {
+        const pSnap = await getDoc(doc(db, 'pages', 'main_pages'));
+        if (pSnap.exists() && pSnap.data()?.content) {
+          this.savePagesContent(pSnap.data().content as StaticPagesContent);
+        }
+      } catch (e) {
+        handleFirestoreError(e, OperationType.GET, 'pages');
+      }
+
+      // 3. News
+      try {
+        const nSnap = await getDocs(collection(db, 'news'));
+        if (!nSnap.empty) {
+          const list = nSnap.docs.map(d => d.data() as NewsItem);
+          this.saveNews(list);
+        }
+      } catch (e) {
+        handleFirestoreError(e, OperationType.GET, 'news');
+      }
+
+      // 4. Staff
+      try {
+        const stSnap = await getDocs(collection(db, 'staff'));
+        if (!stSnap.empty) {
+          const list = stSnap.docs.map(d => d.data() as StaffItem);
+          this.saveStaff(list);
+        }
+      } catch (e) {
+        handleFirestoreError(e, OperationType.GET, 'staff');
+      }
+
+      // 5. Gallery
+      try {
+        const gSnap = await getDocs(collection(db, 'gallery'));
+        if (!gSnap.empty) {
+          const list = gSnap.docs.map(d => d.data() as GalleryItem);
+          this.saveGallery(list);
+        }
+      } catch (e) {
+        handleFirestoreError(e, OperationType.GET, 'gallery');
+      }
+
+      // 6. Messages
+      try {
+        const mSnap = await getDocs(collection(db, 'messages'));
+        if (!mSnap.empty) {
+          const list = mSnap.docs.map(d => d.data() as ContactMessage);
+          this.saveMessages(list);
+        }
+      } catch (e) {
+        handleFirestoreError(e, OperationType.GET, 'messages');
+      }
+
+      // 7. PPDB
+      try {
+        const ppSnap = await getDocs(collection(db, 'ppdb'));
+        if (!ppSnap.empty) {
+          const list = ppSnap.docs.map(d => d.data() as PpdbRegistration);
+          this.savePpdbList(list);
+        }
+      } catch (e) {
+        handleFirestoreError(e, OperationType.GET, 'ppdb');
+      }
+
+      // 8. Testimonials
+      try {
+        const tSnap = await getDocs(collection(db, 'testimonials'));
+        if (!tSnap.empty) {
+          const list = tSnap.docs.map(d => d.data() as Testimonial);
+          this.saveTestimonials(list);
+        }
+      } catch (e) {
+        handleFirestoreError(e, OperationType.GET, 'testimonials');
+      }
+
+      // 9. Achievements
+      try {
+        const aSnap = await getDocs(collection(db, 'achievements'));
+        if (!aSnap.empty) {
+          const list = aSnap.docs.map(d => d.data() as Achievement);
+          this.saveAchievements(list);
+        }
+      } catch (e) {
+        handleFirestoreError(e, OperationType.GET, 'achievements');
+      }
+
+      // 10. Documents
+      try {
+        const dSnap = await getDocs(collection(db, 'documents'));
+        if (!dSnap.empty) {
+          const list = dSnap.docs.map(d => d.data() as DownloadDocument);
+          this.saveDocuments(list);
+        }
+      } catch (e) {
+        handleFirestoreError(e, OperationType.GET, 'documents');
+      }
+
+      return true;
+    } catch (e) {
+      console.error('Failed fetching from Firebase Firestore:', e);
+      return false;
+    }
+  }
+
   // --- SUPABASE FULL SQL SCHEMA GENERATOR ---
   static generateSupabaseSqlSchema(): string {
     return `-- =========================================================
@@ -1435,19 +1744,56 @@ CREATE TABLE IF NOT EXISTS public.activity_logs (
   timestamp TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 12. ROW LEVEL SECURITY (MATIKAN RLS / BUKA AKSES PUBLIC UNTUK APLIKASI WEB)
-ALTER TABLE public.settings DISABLE ROW LEVEL SECURITY;
-ALTER TABLE public.pages DISABLE ROW LEVEL SECURITY;
-ALTER TABLE public.news DISABLE ROW LEVEL SECURITY;
-ALTER TABLE public.staff DISABLE ROW LEVEL SECURITY;
-ALTER TABLE public.gallery DISABLE ROW LEVEL SECURITY;
-ALTER TABLE public.messages DISABLE ROW LEVEL SECURITY;
-ALTER TABLE public.ppdb DISABLE ROW LEVEL SECURITY;
-ALTER TABLE public.testimonials DISABLE ROW LEVEL SECURITY;
-ALTER TABLE public.achievements DISABLE ROW LEVEL SECURITY;
-ALTER TABLE public.documents DISABLE ROW LEVEL SECURITY;
-ALTER TABLE public.admin_users DISABLE ROW LEVEL SECURITY;
-ALTER TABLE public.activity_logs DISABLE ROW LEVEL SECURITY;
+-- 12. ROW LEVEL SECURITY (AKTIFKAN RLS DENGAN IZIN AKSES PUBLIK ANON & AUTHENTICATED)
+ALTER TABLE public.settings ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.pages ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.news ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.staff ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.gallery ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.messages ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.ppdb ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.testimonials ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.achievements ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.documents ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.admin_users ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.activity_logs ENABLE ROW LEVEL SECURITY;
+
+-- BUAT POLICY PERMISSIVE AGAR APLIKASI WEB BERJALAN LANCAR TANPA ERROR SECURITY
+DROP POLICY IF EXISTS "Public access settings" ON public.settings;
+CREATE POLICY "Public access settings" ON public.settings FOR ALL TO anon, authenticated USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Public access pages" ON public.pages;
+CREATE POLICY "Public access pages" ON public.pages FOR ALL TO anon, authenticated USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Public access news" ON public.news;
+CREATE POLICY "Public access news" ON public.news FOR ALL TO anon, authenticated USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Public access staff" ON public.staff;
+CREATE POLICY "Public access staff" ON public.staff FOR ALL TO anon, authenticated USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Public access gallery" ON public.gallery;
+CREATE POLICY "Public access gallery" ON public.gallery FOR ALL TO anon, authenticated USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Public access messages" ON public.messages;
+CREATE POLICY "Public access messages" ON public.messages FOR ALL TO anon, authenticated USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Public access ppdb" ON public.ppdb;
+CREATE POLICY "Public access ppdb" ON public.ppdb FOR ALL TO anon, authenticated USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Public access testimonials" ON public.testimonials;
+CREATE POLICY "Public access testimonials" ON public.testimonials FOR ALL TO anon, authenticated USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Public access achievements" ON public.achievements;
+CREATE POLICY "Public access achievements" ON public.achievements FOR ALL TO anon, authenticated USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Public access documents" ON public.documents;
+CREATE POLICY "Public access documents" ON public.documents FOR ALL TO anon, authenticated USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Public access admin_users" ON public.admin_users;
+CREATE POLICY "Public access admin_users" ON public.admin_users FOR ALL TO anon, authenticated USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Public access activity_logs" ON public.activity_logs;
+CREATE POLICY "Public access activity_logs" ON public.activity_logs FOR ALL TO anon, authenticated USING (true) WITH CHECK (true);
 
 -- KELOLA HAK AKSES PERMISSIONS SCHEMA PUBLIC
 GRANT ALL ON ALL TABLES IN SCHEMA public TO anon, authenticated, postgres, service_role;

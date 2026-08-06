@@ -62,6 +62,22 @@ export const SupabaseExporter: React.FC = () => {
     }
   };
 
+  const handleSyncToFirebase = async () => {
+    setIsSyncing(true);
+    setSyncLogs(['Sedang memproses upload seluruh data ke Firebase Firestore...']);
+    try {
+      const res = await DataStore.syncAllToFirebase();
+      setSyncLogs(res.details);
+      if (res.success) {
+        setTestResult('Alhamdulillah! Seluruh data lokal berhasil tersimpan di Firebase Firestore!');
+      }
+    } catch (e) {
+      setSyncLogs([`❌ Terjadi kesalahan: ${String(e)}`]);
+    } finally {
+      setIsSyncing(false);
+    }
+  };
+
   const handleFetchFromSupabase = async () => {
     setIsFetching(true);
     try {
@@ -70,6 +86,22 @@ export const SupabaseExporter: React.FC = () => {
         setTestResult('Alhamdulillah! Data dari Supabase berhasil ditarik & diperbarui ke aplikasi!');
       } else {
         setTestResult('Gagal menarik data dari Supabase. Pastikan tabel di Supabase tidak kosong.');
+      }
+    } catch (e) {
+      setTestResult(`Gagal menarik data: ${String(e)}`);
+    } finally {
+      setIsFetching(false);
+    }
+  };
+
+  const handleFetchFromFirebase = async () => {
+    setIsFetching(true);
+    try {
+      const ok = await DataStore.fetchFromFirebase();
+      if (ok) {
+        setTestResult('Alhamdulillah! Data dari Firebase Firestore berhasil ditarik & diperbarui ke aplikasi!');
+      } else {
+        setTestResult('Gagal menarik data dari Firebase Firestore.');
       }
     } catch (e) {
       setTestResult(`Gagal menarik data: ${String(e)}`);
@@ -97,6 +129,23 @@ export const SupabaseExporter: React.FC = () => {
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
+            <button
+              onClick={handleSyncToFirebase}
+              disabled={isSyncing}
+              className="px-5 py-2.5 rounded-xl bg-orange-500 hover:bg-orange-400 text-white font-black text-xs shadow-md transition-all flex items-center gap-2 border border-orange-400 disabled:opacity-50 cursor-pointer"
+            >
+              <Database className="w-4 h-4" />
+              <span>{isSyncing ? 'Mengirim Firebase...' : 'Upload Data ke Firebase'}</span>
+            </button>
+
+            <button
+              onClick={handleFetchFromFirebase}
+              disabled={isFetching}
+              className="px-4 py-2.5 rounded-xl bg-orange-950 hover:bg-orange-900 text-orange-200 font-bold text-xs transition-all border border-orange-700 disabled:opacity-50 cursor-pointer"
+            >
+              <span>{isFetching ? 'Mengambil Firebase...' : 'Tarik dari Firebase'}</span>
+            </button>
+
             <button
               onClick={handleSyncToSupabase}
               disabled={isSyncing}

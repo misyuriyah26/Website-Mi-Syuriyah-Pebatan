@@ -60,9 +60,9 @@ export default function Home() {
   const [testimonials, setTestimonials] = useState<Testimonial[]>(initialTestimonials);
   const [documents, setDocuments] = useState<DownloadDocument[]>(initialDocuments);
 
-  // Sync from localStorage after mounting on client
+  // Sync from localStorage and Cloud (Firebase) after mounting on client
   useEffect(() => {
-    const timer = setTimeout(() => {
+    const loadState = () => {
       setIsAdminView(DataStore.isAdminLoggedIn());
       setNewsList(DataStore.getNews());
       setStaffList(DataStore.getStaff());
@@ -74,8 +74,25 @@ export default function Home() {
       setAchievements(DataStore.getAchievements());
       setTestimonials(DataStore.getTestimonials());
       setDocuments(DataStore.getDocuments());
-    }, 0);
-    return () => clearTimeout(timer);
+    };
+
+    // 1. Load immediately from local cache
+    loadState();
+
+    // 2. Fetch latest synced data from Firebase Firestore & Supabase in background
+    let isMounted = true;
+    Promise.all([
+      DataStore.fetchFromFirebase(),
+      DataStore.fetchFromSupabase()
+    ]).then(([fbUpdated, sbUpdated]) => {
+      if ((fbUpdated || sbUpdated) && isMounted) {
+        loadState();
+      }
+    });
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   // Modals state
