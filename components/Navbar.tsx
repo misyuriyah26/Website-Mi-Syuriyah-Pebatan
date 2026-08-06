@@ -128,7 +128,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         >
           {/* Emblem / Logo */}
           <div className="relative w-11 h-11 rounded-full bg-gradient-to-br from-emerald-800 to-emerald-950 p-0.5 shadow-md border-2 border-amber-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform overflow-hidden">
-            {settings.logo_url ? (
+            {settings.logo_url && settings.logo_url.trim() !== '' ? (
               <img src={settings.logo_url} alt="Logo Sekolah" className="w-full h-full object-cover rounded-full" />
             ) : (
               <div className="w-full h-full rounded-full bg-emerald-900 border border-amber-300/40 flex flex-col items-center justify-center text-amber-400">

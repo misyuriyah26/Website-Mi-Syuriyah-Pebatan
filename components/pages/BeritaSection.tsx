@@ -102,7 +102,7 @@ export const BeritaSection: React.FC<BeritaSectionProps> = ({
           >
             <div className="relative h-48 overflow-hidden bg-slate-100 dark:bg-slate-800">
               <img
-                src={item.image_url}
+                src={item.image_url || 'https://images.unsplash.com/photo-1546410531-bb4caa6b424d?auto=format&fit=crop&q=80&w=800'}
                 alt={item.title}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
@@ -212,7 +212,7 @@ export const BeritaSection: React.FC<BeritaSectionProps> = ({
             <div className="p-6 overflow-y-auto space-y-6 text-slate-800 dark:text-slate-200 text-sm sm:text-base leading-relaxed font-normal">
               <div className="w-full h-64 sm:h-80 rounded-2xl overflow-hidden shadow-md">
                 <img
-                  src={selectedNews.image_url}
+                  src={selectedNews.image_url || 'https://images.unsplash.com/photo-1546410531-bb4caa6b424d?auto=format&fit=crop&q=80&w=800'}
                   alt={selectedNews.title}
                   className="w-full h-full object-cover"
                 />

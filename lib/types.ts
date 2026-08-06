@@ -147,6 +147,7 @@ export interface SchoolSettings {
   maps_iframe_url: string;
   headmaster_name: string;
   npsn: string;
+  nsm?: string;
   akreditasi: string;
   facebook_url?: string;
   instagram_url?: string;

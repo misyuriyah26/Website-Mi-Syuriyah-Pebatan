@@ -124,14 +124,14 @@ export const HomeSection: React.FC<HomeSectionProps> = ({
 
       {/* 2. SAMBUTAN KEPALA MADRASAH */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white rounded-2xl p-6 sm:p-10 border border-emerald-800/15 shadow-xl relative overflow-hidden">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 sm:p-10 border border-slate-200 dark:border-slate-800 shadow-xl relative overflow-hidden">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             {/* Photo Column */}
             <div className="lg:col-span-4 text-center">
               <div className="relative inline-block">
                 <div className="w-48 h-60 sm:w-56 sm:h-72 rounded-2xl overflow-hidden border-4 border-amber-400 shadow-xl bg-emerald-900 mx-auto">
                   <img
-                    src={pages.sambutan_kepala.foto_url}
+                    src={pages.sambutan_kepala.foto_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=600'}
                     alt={pages.sambutan_kepala.nama}
                     className="w-full h-full object-cover"
                   />
@@ -142,26 +142,26 @@ export const HomeSection: React.FC<HomeSectionProps> = ({
                   <span>{pages.sambutan_kepala.gelar}</span>
                 </div>
               </div>
-              <h3 className="text-lg font-bold text-emerald-950 mt-6">{pages.sambutan_kepala.nama}</h3>
-              <p className="text-xs text-amber-700 font-semibold">{settings.school_name}</p>
+              <h3 className="text-lg font-bold text-emerald-950 dark:text-emerald-300 mt-6">{pages.sambutan_kepala.nama}</h3>
+              <p className="text-xs text-amber-700 dark:text-amber-400 font-semibold">{settings.school_name}</p>
             </div>
 
             {/* Content Column */}
             <div className="lg:col-span-8 space-y-4">
-              <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-600 bg-amber-50 px-3 py-1 rounded-full border border-amber-200">
-                <Quote className="w-3.5 h-3.5 text-amber-600" /> Sambutan Resmi
+              <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/60 px-3 py-1 rounded-full border border-amber-200 dark:border-amber-800">
+                <Quote className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" /> Sambutan Resmi
               </div>
 
-              <h2 className="text-2xl sm:text-3xl font-bold text-emerald-950 leading-tight">
+              <h2 className="text-2xl sm:text-3xl font-bold text-emerald-950 dark:text-white leading-tight">
                 {pages.sambutan_kepala.judul}
               </h2>
 
-              <div className="text-slate-700 text-sm sm:text-base leading-relaxed whitespace-pre-line space-y-3 font-normal">
+              <div className="text-slate-700 dark:text-slate-300 text-sm sm:text-base leading-relaxed whitespace-pre-line space-y-3 font-normal">
                 {pages.sambutan_kepala.isi}
               </div>
 
-              <div className="pt-4 flex items-center justify-between border-t border-slate-100">
-                <div className="text-xs text-slate-500">
+              <div className="pt-4 flex items-center justify-between border-t border-slate-100 dark:border-slate-800">
+                <div className="text-xs text-slate-500 dark:text-slate-400">
                   Brebes, Jawa Tengah • Indonesia
                 </div>
                 <button
@@ -169,7 +169,7 @@ export const HomeSection: React.FC<HomeSectionProps> = ({
                     setActiveSection('profil');
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
-                  className="text-xs font-bold text-emerald-800 hover:text-amber-600 flex items-center gap-1 transition-colors"
+                  className="text-xs font-bold text-emerald-800 dark:text-emerald-400 hover:text-amber-600 dark:hover:text-amber-300 flex items-center gap-1 transition-colors"
                 >
                   <span>Selengkapnya Profil Sekolah</span>
                   <ArrowRight className="w-3.5 h-3.5" />
@@ -181,7 +181,7 @@ export const HomeSection: React.FC<HomeSectionProps> = ({
       </section>
 
       {/* 3. KEUNGGULAN / PROGRAM UNGGULAN */}
-      <section className="bg-slate-50 py-12 border-y border-slate-200/60">
+      <section className="bg-slate-50 dark:bg-slate-950/60 py-12 border-y border-slate-200/60 dark:border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <IslamicDivider
             title="Keunggulan & Program Utama"
@@ -226,9 +226,9 @@ export const HomeSection: React.FC<HomeSectionProps> = ({
             ).map((item, idx) => (
               <div
                 key={item.id || idx}
-                className="bg-white p-6 rounded-2xl border border-emerald-800/10 shadow-sm hover:shadow-md transition-all group hover:border-amber-400"
+                className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition-all group hover:border-amber-400 space-y-3"
               >
-                <div className="w-12 h-12 rounded-xl bg-emerald-800 text-amber-300 flex items-center justify-center mb-4 group-hover:bg-amber-500 group-hover:text-emerald-950 transition-colors shadow-md">
+                <div className="w-12 h-12 rounded-xl bg-emerald-800 dark:bg-emerald-700 text-amber-300 flex items-center justify-center mb-4 group-hover:bg-amber-500 group-hover:text-emerald-950 transition-colors shadow-md">
                   {idx % 6 === 0 ? (
                     <BookOpen className="w-6 h-6" />
                   ) : idx % 6 === 1 ? (
@@ -243,8 +243,8 @@ export const HomeSection: React.FC<HomeSectionProps> = ({
                     <Heart className="w-6 h-6" />
                   )}
                 </div>
-                <h3 className="text-lg font-bold text-emerald-950 mb-2">{item.title}</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">{item.description}</p>
+                <h3 className="text-lg font-bold text-emerald-950 dark:text-emerald-300 mb-2">{item.title}</h3>
+                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">{item.description}</p>
               </div>
             ))}
           </div>
@@ -252,11 +252,11 @@ export const HomeSection: React.FC<HomeSectionProps> = ({
       </section>
 
       {/* 4. STATISTIK RINGKAS */}
-      <section className="bg-emerald-900 text-white py-12 rounded-3xl mx-2 sm:mx-6 shadow-xl relative overflow-hidden border-2 border-amber-500/20">
+      <section className="bg-emerald-900 dark:bg-slate-900 text-white py-12 rounded-3xl mx-2 sm:mx-6 shadow-xl relative overflow-hidden border-2 border-amber-500/20 dark:border-slate-800">
         <div className="absolute inset-0 bg-islamic-pattern opacity-10" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-            <div className="p-4 bg-emerald-950/40 rounded-2xl border border-emerald-700/50 flex flex-col justify-center items-center">
+            <div className="p-4 bg-emerald-950/40 dark:bg-slate-950/60 rounded-2xl border border-emerald-700/50 dark:border-slate-800 flex flex-col justify-center items-center">
               <Users className="w-8 h-8 text-amber-400 mx-auto mb-2" />
               <div className="text-2xl sm:text-3xl font-extrabold text-amber-300">
                 {settings.total_siswa_aktif || '350+'}
@@ -271,7 +271,7 @@ export const HomeSection: React.FC<HomeSectionProps> = ({
               )}
             </div>
 
-            <div className="p-4 bg-emerald-950/40 rounded-2xl border border-emerald-700/50 flex flex-col justify-center items-center">
+            <div className="p-4 bg-emerald-950/40 dark:bg-slate-950/60 rounded-2xl border border-emerald-700/50 dark:border-slate-800 flex flex-col justify-center items-center">
               <Award className="w-8 h-8 text-amber-400 mx-auto mb-2" />
               <div className="text-2xl sm:text-3xl font-extrabold text-amber-300">
                 {settings.total_guru_staf || '24'}
@@ -281,7 +281,7 @@ export const HomeSection: React.FC<HomeSectionProps> = ({
               </div>
             </div>
 
-            <div className="p-4 bg-emerald-950/40 rounded-2xl border border-emerald-700/50 flex flex-col justify-center items-center">
+            <div className="p-4 bg-emerald-950/40 dark:bg-slate-950/60 rounded-2xl border border-emerald-700/50 dark:border-slate-800 flex flex-col justify-center items-center">
               <Building className="w-8 h-8 text-amber-400 mx-auto mb-2" />
               <div className="text-2xl sm:text-3xl font-extrabold text-amber-300">
                 {settings.tingkat_kelulusan || '100%'}
@@ -291,7 +291,7 @@ export const HomeSection: React.FC<HomeSectionProps> = ({
               </div>
             </div>
 
-            <div className="p-4 bg-emerald-950/40 rounded-2xl border border-emerald-700/50 flex flex-col justify-center items-center">
+            <div className="p-4 bg-emerald-950/40 dark:bg-slate-950/60 rounded-2xl border border-emerald-700/50 dark:border-slate-800 flex flex-col justify-center items-center">
               <Sparkles className="w-8 h-8 text-amber-400 mx-auto mb-2" />
               <div className="text-2xl sm:text-3xl font-extrabold text-amber-300">
                 {settings.nilai_akreditasi_bansm || 'A (Unggul 94)'}
@@ -306,12 +306,12 @@ export const HomeSection: React.FC<HomeSectionProps> = ({
 
       {/* 5. BERITA & PENGUMUMAN TERBARU */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 border-b border-slate-200 pb-4 gap-4">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 border-b border-slate-200 dark:border-slate-800 pb-4 gap-4">
           <div>
-            <span className="text-xs font-bold text-amber-600 uppercase tracking-wider bg-amber-50 px-3 py-1 rounded-full border border-amber-200">
+            <span className="text-xs font-bold text-amber-600 dark:text-amber-300 uppercase tracking-wider bg-amber-50 dark:bg-amber-950/60 px-3 py-1 rounded-full border border-amber-200 dark:border-amber-800">
               Informasi Terkini
             </span>
-            <h2 className="text-2xl sm:text-3xl font-bold text-emerald-950 mt-2">
+            <h2 className="text-2xl sm:text-3xl font-bold text-emerald-950 dark:text-white mt-2">
               Berita & Pengumuman Sekolah
             </h2>
           </div>
@@ -321,7 +321,7 @@ export const HomeSection: React.FC<HomeSectionProps> = ({
               setActiveSection('berita');
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
-            className="text-sm font-bold text-emerald-800 hover:text-amber-600 flex items-center gap-1 transition-colors"
+            className="text-sm font-bold text-emerald-800 dark:text-amber-400 hover:text-amber-600 dark:hover:text-amber-300 flex items-center gap-1 transition-colors"
           >
             <span>Lihat Semua Berita</span>
             <ArrowRight className="w-4 h-4" />
@@ -336,7 +336,7 @@ export const HomeSection: React.FC<HomeSectionProps> = ({
             >
               <div className="relative h-48 overflow-hidden bg-slate-100">
                 <img
-                  src={item.image_url}
+                  src={item.image_url || 'https://images.unsplash.com/photo-1546410531-bb4caa6b424d?auto=format&fit=crop&q=80&w=800'}
                   alt={item.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
@@ -391,14 +391,14 @@ export const HomeSection: React.FC<HomeSectionProps> = ({
       </section>
 
       {/* 6. GALERI HIGHLIGHTS */}
-      <section className="bg-slate-50 py-12 border-t border-slate-200">
+      <section className="bg-slate-50 dark:bg-slate-950/60 py-12 border-t border-slate-200 dark:border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 gap-4">
             <div>
-              <span className="text-xs font-bold text-amber-600 uppercase tracking-wider bg-amber-50 px-3 py-1 rounded-full border border-amber-200">
+              <span className="text-xs font-bold text-amber-600 dark:text-amber-300 uppercase tracking-wider bg-amber-50 dark:bg-amber-950/60 px-3 py-1 rounded-full border border-amber-200 dark:border-amber-800">
                 Dokumentasi Kegiatan
               </span>
-              <h2 className="text-2xl sm:text-3xl font-bold text-emerald-950 mt-2">
+              <h2 className="text-2xl sm:text-3xl font-bold text-emerald-950 dark:text-white mt-2">
                 Galeri Foto MI Syuriyah
               </h2>
             </div>
@@ -408,7 +408,7 @@ export const HomeSection: React.FC<HomeSectionProps> = ({
                 setActiveSection('galeri');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              className="text-sm font-bold text-emerald-800 hover:text-amber-600 flex items-center gap-1 transition-colors"
+              className="text-sm font-bold text-emerald-800 dark:text-amber-400 hover:text-amber-600 dark:hover:text-amber-300 flex items-center gap-1 transition-colors"
             >
               <span>Lihat Semua Foto</span>
               <ArrowRight className="w-4 h-4" />
@@ -423,10 +423,10 @@ export const HomeSection: React.FC<HomeSectionProps> = ({
                   setActiveSection('galeri');
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
-                className="relative h-48 sm:h-56 rounded-2xl overflow-hidden group cursor-pointer border border-slate-200 shadow-sm"
+                className="relative h-48 sm:h-56 rounded-2xl overflow-hidden group cursor-pointer border border-slate-200 dark:border-slate-800 shadow-sm"
               >
                 <img
-                  src={img.image_url}
+                  src={img.image_url || 'https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&q=80&w=800'}
                   alt={img.title}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                 />

@@ -122,3 +122,53 @@ html {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* Print Media Styles - Fixes print preview stuck/freezing */
+@media print {
+  /* Hide all default web elements when printing */
+  body > * {
+    display: none !important;
+  }
+
+  /* Only display the dedicated printable container */
+  body > #ppdb-printable-area,
+  body > #ppdb-printable-area * {
+    display: block !important;
+  }
+
+  #ppdb-printable-area {
+    display: block !important;
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 20px !important;
+    background: #ffffff !important;
+    color: #1e293b !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  /* Ensure background colors and fonts render clearly */
+  html, body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    animation: none !important;
+    transition: none !important;
+    backdrop-filter: none !important;
+    box-shadow: none !important;
+  }
+
+  @page {
+    size: A4 portrait;
+    margin: 10mm;
+  }
+}

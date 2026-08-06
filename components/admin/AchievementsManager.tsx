@@ -126,7 +126,7 @@ export const AchievementsManager: React.FC<AchievementsManagerProps> = ({
           >
             <div className="space-y-2">
               <div className="relative h-36 rounded-xl overflow-hidden bg-slate-200 dark:bg-slate-700">
-                <img src={item.image_url} alt={item.title} className="w-full h-full object-cover" />
+                <img src={item.image_url || 'https://images.unsplash.com/photo-1567427017947-545c5f8d16ad?auto=format&fit=crop&q=80&w=800'} alt={item.title} className="w-full h-full object-cover" />
                 <span className="absolute top-2 left-2 bg-emerald-950 text-amber-300 font-extrabold text-[10px] px-2.5 py-0.5 rounded-full border border-amber-400/40">
                   {item.level}
                 </span>

@@ -213,7 +213,7 @@ export const ImageUploadInput: React.FC<ImageUploadInputProps> = ({
       )}
 
       {/* Image Preview */}
-      {value && (
+      {Boolean(value && value.trim() !== '') && (
         <div className="relative inline-block mt-2 group border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden bg-slate-900/5 dark:bg-slate-800">
           <img
             src={value}

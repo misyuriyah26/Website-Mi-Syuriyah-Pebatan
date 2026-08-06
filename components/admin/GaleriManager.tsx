@@ -71,7 +71,7 @@ export const GaleriManager: React.FC<GaleriManagerProps> = ({ galleryList, onSav
             className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col justify-between"
           >
             <div className="relative h-48 bg-slate-100">
-              <img src={img.image_url} alt={img.title} className="w-full h-full object-cover" />
+              <img src={img.image_url || 'https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&q=80&w=800'} alt={img.title} className="w-full h-full object-cover" />
               <span className="absolute top-3 left-3 bg-emerald-900 text-amber-300 font-bold text-[10px] px-2.5 py-1 rounded shadow uppercase">
                 {img.category}
               </span>

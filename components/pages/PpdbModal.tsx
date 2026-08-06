@@ -73,6 +73,126 @@ export const PpdbModal: React.FC<PpdbModalProps> = ({
   const [lastSubmitTime, setLastSubmitTime] = useState<number>(0);
   const [submitError, setSubmitError] = useState<string>('');
 
+  // Clean printable card builder for instant browser print preview
+  const handlePrintCard = (item: PpdbRegistration) => {
+    const existing = document.getElementById('ppdb-printable-area');
+    if (existing) existing.remove();
+
+    const container = document.createElement('div');
+    container.id = 'ppdb-printable-area';
+    container.innerHTML = `
+      <div style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 25px; border: 2px solid #065f46; background: #ffffff; color: #0f172a;">
+        <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 3px double #065f46; padding-bottom: 12px; margin-bottom: 20px;">
+          <div style="width: 75px; text-align: center;">
+            <img src="${settings.logo_url || '/logo-misyuriyah.png'}" alt="Logo" style="max-width: 70px; max-height: 70px; object-fit: contain;" />
+          </div>
+          <div style="text-align: center; flex: 1; padding: 0 10px;">
+            <h4 style="margin: 0; font-size: 11pt; font-weight: bold; color: #047857; letter-spacing: 0.5px;">YAYASAN PENDIDIKAN ISLAM MISYURIYAH</h4>
+            <h2 style="margin: 2px 0; font-size: 15pt; font-weight: 900; color: #065f46;">MADRASAH IBTIDAIYAH SWASTA (MIS) MISYURIYAH</h2>
+            <p style="margin: 0; font-size: 8.5pt; color: #475569;">
+              NSM: ${settings.nsm || '111233290089'} | NPSN: ${settings.npsn || '60710893'} | Akreditasi ${settings.akreditasi || 'B'}
+            </p>
+            <p style="margin: 2px 0 0 0; font-size: 8pt; color: #64748b;">
+              ${settings.address || 'Jl. KH. Misyuri No. 26 Desa Pebatan, Kec. Wanasari, Kab. Brebes 52252'}
+            </p>
+          </div>
+          <div style="width: 75px; text-align: right;">
+            <div style="border: 2px solid #d97706; padding: 5px; font-size: 8pt; font-weight: bold; color: #b45309; text-align: center; border-radius: 6px;">
+              PPDB<br/>${settings.ppdb_year || '2026/2027'}
+            </div>
+          </div>
+        </div>
+
+        <div style="text-align: center; margin-bottom: 20px;">
+          <h3 style="margin: 0; font-size: 12pt; font-weight: bold; text-decoration: underline; color: #0f172a; text-transform: uppercase;">
+            KARTU BUKTI PENDAFTARAN PPDB ONLINE
+          </h3>
+          <p style="margin: 4px 0 0 0; font-size: 10pt; font-family: monospace; font-weight: bold; color: #047857;">
+            NOMOR REGISTRASI: ${item.reg_number}
+          </p>
+        </div>
+
+        <table style="width: 100%; border-collapse: collapse; font-size: 9.5pt; margin-bottom: 20px;">
+          <tbody>
+            <tr style="background-color: #f8fafc;">
+              <td style="padding: 8px 12px; border: 1px solid #cbd5e1; font-weight: bold; width: 35%;">Nama Lengkap Siswa</td>
+              <td style="padding: 8px 12px; border: 1px solid #cbd5e1; font-weight: bold; color: #065f46; font-size: 10.5pt;">${item.student_name}</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px 12px; border: 1px solid #cbd5e1; font-weight: bold;">Jenis Kelamin</td>
+              <td style="padding: 8px 12px; border: 1px solid #cbd5e1;">${item.gender === 'L' ? 'Laki-Laki (L)' : 'Perempuan (P)'}</td>
+            </tr>
+            <tr style="background-color: #f8fafc;">
+              <td style="padding: 8px 12px; border: 1px solid #cbd5e1; font-weight: bold;">Tempat, Tanggal Lahir</td>
+              <td style="padding: 8px 12px; border: 1px solid #cbd5e1;">${item.birth_place || 'Brebes'}, ${item.birth_date ? new Date(item.birth_date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '-'}</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px 12px; border: 1px solid #cbd5e1; font-weight: bold;">NISN / NIK Siswa</td>
+              <td style="padding: 8px 12px; border: 1px solid #cbd5e1; font-family: monospace;">${item.nisn_nik || '-'}</td>
+            </tr>
+            <tr style="background-color: #f8fafc;">
+              <td style="padding: 8px 12px; border: 1px solid #cbd5e1; font-weight: bold;">Asal Sekolah (TK/RA/PAUD)</td>
+              <td style="padding: 8px 12px; border: 1px solid #cbd5e1;">${item.previous_school || '-'}</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px 12px; border: 1px solid #cbd5e1; font-weight: bold;">Nama Orang Tua / Wali</td>
+              <td style="padding: 8px 12px; border: 1px solid #cbd5e1;">${item.parent_name}</td>
+            </tr>
+            <tr style="background-color: #f8fafc;">
+              <td style="padding: 8px 12px; border: 1px solid #cbd5e1; font-weight: bold;">No. WhatsApp Aktif</td>
+              <td style="padding: 8px 12px; border: 1px solid #cbd5e1; font-family: monospace;">${item.phone_number}</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px 12px; border: 1px solid #cbd5e1; font-weight: bold;">Alamat Domisili</td>
+              <td style="padding: 8px 12px; border: 1px solid #cbd5e1;">${item.address || '-'}</td>
+            </tr>
+            <tr style="background-color: #f8fafc;">
+              <td style="padding: 8px 12px; border: 1px solid #cbd5e1; font-weight: bold;">Tanggal Mendaftar</td>
+              <td style="padding: 8px 12px; border: 1px solid #cbd5e1;">${new Date(item.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })} WIB</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px 12px; border: 1px solid #cbd5e1; font-weight: bold;">Status Verifikasi</td>
+              <td style="padding: 8px 12px; border: 1px solid #cbd5e1; font-weight: bold; color: ${item.status === 'Diterima' ? '#15803d' : '#b45309'};">
+                ${item.status === 'Diterima' ? '✓ DITERIMA' : item.status === 'Diproses' ? '⏳ SEDANG DIPROSES PANITIA' : '📌 MENUNGGU VERIFIKASI BERKAS'}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div style="background-color: #f0fdf4; border: 1px solid #bbf7d0; padding: 10px 14px; border-radius: 6px; margin-bottom: 20px; font-size: 8.5pt; color: #166534;">
+          <strong>Petunjuk Verifikasi & Daftar Ulang:</strong>
+          <ul style="margin: 4px 0 0 16px; padding: 0;">
+            <li>Cetak atau simpan kartu ini sebagai bukti resmi pendaftaran online.</li>
+            <li>Bawa kartu pendaftaran ini beserta fotokopi KK, Akta Kelahiran, dan Pas Photo saat verifikasi ulang di sekolah.</li>
+            <li>Kontak Informasi Panitia WhatsApp: <strong>${settings.whatsapp || '0812-2565-1975'}</strong></li>
+          </ul>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 25px; font-size: 9pt;">
+          <div style="text-align: center; width: 200px;">
+            <p style="margin: 0;">Orang Tua / Wali Siswa,</p>
+            <div style="height: 50px;"></div>
+            <p style="margin: 0; font-weight: bold; text-decoration: underline;">( ${item.parent_name} )</p>
+          </div>
+          <div style="text-align: center; width: 220px;">
+            <p style="margin: 0;">Brebes, ${new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+            <p style="margin: 2px 0 0 0; font-weight: bold;">Panitia PPDB MIS Misyuriyah,</p>
+            <div style="height: 45px; display: flex; align-items: center; justify-content: center; font-size: 8pt; color: #047857; font-weight: bold;">
+              [ STEMPEL VERIFIKASI ]
+            </div>
+            <p style="margin: 0; font-weight: bold; text-decoration: underline;">( Panitia PPDB 2026 )</p>
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(container);
+
+    setTimeout(() => {
+      window.print();
+    }, 150);
+  };
+
   if (!isOpen) return null;
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -151,7 +271,7 @@ export const PpdbModal: React.FC<PpdbModalProps> = ({
         {/* Header Modal */}
         <div className="bg-gradient-to-r from-emerald-950 via-emerald-900 to-emerald-950 text-white p-5 sm:p-6 relative flex justify-between items-start border-b-2 border-amber-400 shrink-0">
           <div className="flex items-center gap-3.5 pr-8">
-            {settings.logo_url && (
+            {Boolean(settings.logo_url && settings.logo_url.trim() !== '') && (
               <div className="w-12 h-12 rounded-full bg-emerald-900 border-2 border-amber-400 p-0.5 overflow-hidden shrink-0 hidden sm:block">
                 <img src={settings.logo_url} alt="Logo Sekolah" className="w-full h-full object-cover rounded-full" />
               </div>
@@ -279,6 +399,12 @@ export const PpdbModal: React.FC<PpdbModalProps> = ({
                     className="px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold text-xs hover:bg-slate-200 transition-colors"
                   >
                     Daftar Calon Siswa Lain
+                  </button>
+                  <button
+                    onClick={() => handlePrintCard(submittedReg)}
+                    className="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-emerald-950 font-bold text-xs shadow transition-colors flex items-center gap-1.5"
+                  >
+                    <Printer className="w-4 h-4" /> Cetak Kartu Bukti Pendaftaran
                   </button>
                   <button
                     onClick={() => {
@@ -581,8 +707,8 @@ export const PpdbModal: React.FC<PpdbModalProps> = ({
 
                       <div className="pt-2 flex justify-end">
                         <button
-                          onClick={() => window.print()}
-                          className="px-3.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-200 text-slate-800 text-xs font-bold flex items-center gap-1.5 transition-colors"
+                          onClick={() => handlePrintCard(item)}
+                          className="px-3.5 py-1.5 rounded-lg bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-bold flex items-center gap-1.5 transition-colors shadow-sm"
                         >
                           <Printer className="w-3.5 h-3.5" /> Cetak Kartu Pendaftaran
                         </button>

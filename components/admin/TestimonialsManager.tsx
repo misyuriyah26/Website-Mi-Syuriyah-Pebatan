@@ -149,7 +149,7 @@ export const TestimonialsManager: React.FC<TestimonialsManagerProps> = ({
 
             <div className="flex items-center gap-2.5 pt-2 border-t border-slate-200 dark:border-slate-700">
               <img
-                src={item.avatar_url}
+                src={(item.avatar_url && item.avatar_url.trim() !== '') ? item.avatar_url : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200'}
                 alt={item.name}
                 className="w-9 h-9 rounded-full object-cover border border-amber-400"
               />

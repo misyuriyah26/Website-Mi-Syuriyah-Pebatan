@@ -259,7 +259,7 @@ export const ProfilSection: React.FC<ProfilSectionProps> = ({
             >
               <div className="w-20 h-24 rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-800 shrink-0 border-2 border-emerald-800/20 group-hover:border-amber-400 transition-colors">
                 <img
-                  src={staff.image_url}
+                  src={staff.image_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400'}
                   alt={staff.name}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />

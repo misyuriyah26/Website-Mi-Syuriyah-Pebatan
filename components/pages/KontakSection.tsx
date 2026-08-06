@@ -249,7 +249,7 @@ export const KontakSection: React.FC<KontakSectionProps> = ({
         </p>
         <div className="w-full h-80 rounded-xl overflow-hidden border border-slate-300 shadow-inner bg-slate-100">
           <iframe
-            src={kontak.maps_iframe_url || settings.maps_iframe_url}
+            src={kontak.maps_iframe_url || settings.maps_iframe_url || 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3961.018937666224!2d109.0225102!3d-6.8883656!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e6fb02fa3f2ec49%3A0xb355ee03efeb0a72!2sMIS%20Misyuriyah%20Pebatan!5e0!3m2!1sid!2sid!4v1700000000000'}
             width="100%"
             height="100%"
             style={{ border: 0 }}

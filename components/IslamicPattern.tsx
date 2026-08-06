@@ -18,17 +18,17 @@ export const IslamicDivider: React.FC<{ title?: string; subtitle?: string; light
   return (
     <div className="text-center my-6">
       {title && (
-        <h2 className={`text-2xl sm:text-3xl font-bold tracking-tight mb-2 ${light ? 'text-white' : 'text-emerald-950'}`}>
+        <h2 className={`text-2xl sm:text-3xl font-bold tracking-tight mb-2 ${light ? 'text-white' : 'text-emerald-950 dark:text-emerald-300'}`}>
           {title}
         </h2>
       )}
       <div className="flex items-center justify-center gap-3 my-2">
-        <div className={`h-[1px] w-12 sm:w-20 ${light ? 'bg-amber-400/40' : 'bg-emerald-800/30'}`} />
-        <IslamicStarOrnament className={`w-4 h-4 ${light ? 'text-amber-300' : 'text-amber-600'}`} />
-        <div className={`h-[1px] w-12 sm:w-20 ${light ? 'bg-amber-400/40' : 'bg-emerald-800/30'}`} />
+        <div className={`h-[1px] w-12 sm:w-20 ${light ? 'bg-amber-400/40' : 'bg-emerald-800/30 dark:bg-amber-500/30'}`} />
+        <IslamicStarOrnament className={`w-4 h-4 ${light ? 'text-amber-300' : 'text-amber-600 dark:text-amber-400'}`} />
+        <div className={`h-[1px] w-12 sm:w-20 ${light ? 'bg-amber-400/40' : 'bg-emerald-800/30 dark:bg-amber-500/30'}`} />
       </div>
       {subtitle && (
-        <p className={`text-sm sm:text-base max-w-2xl mx-auto ${light ? 'text-emerald-100/80' : 'text-slate-600'}`}>
+        <p className={`text-sm sm:text-base max-w-2xl mx-auto ${light ? 'text-emerald-100/80' : 'text-slate-600 dark:text-slate-300'}`}>
           {subtitle}
         </p>
       )}
@@ -41,7 +41,7 @@ export const IslamicArchFrame: React.FC<{ children: React.ReactNode; className?:
   className = '',
 }) => {
   return (
-    <div className={`relative border border-amber-500/30 rounded-2xl p-6 bg-white shadow-sm overflow-hidden ${className}`}>
+    <div className={`relative border border-amber-500/30 dark:border-slate-800 rounded-2xl p-6 bg-white dark:bg-slate-900 shadow-sm overflow-hidden ${className}`}>
       <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-amber-500 rounded-tl-xl pointer-events-none" />
       <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-amber-500 rounded-tr-xl pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-amber-500 rounded-bl-xl pointer-events-none" />

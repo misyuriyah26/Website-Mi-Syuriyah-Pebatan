@@ -1548,7 +1548,12 @@ export class DataStore {
 
       return true;
     } catch (e) {
-      console.error('Failed fetching from Firebase Firestore:', e);
+      const msg = e instanceof Error ? e.message : String(e);
+      if (!msg.toLowerCase().includes('offline') && !msg.toLowerCase().includes("didn't respond")) {
+        console.error('Failed fetching from Firebase Firestore:', e);
+      } else {
+        console.warn('Firebase Firestore is offline. Continuing with local storage cache.');
+      }
       return false;
     }
   }

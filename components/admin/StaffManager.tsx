@@ -133,7 +133,7 @@ export const StaffManager: React.FC<StaffManagerProps> = ({ staffList, onSaveSta
             <div className="flex gap-4 items-center">
               <div className="w-16 h-20 rounded-xl overflow-hidden bg-slate-100 shrink-0 border-2 border-emerald-800/20">
                 <img
-                  src={staff.image_url}
+                  src={staff.image_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400'}
                   alt={staff.name}
                   className="w-full h-full object-cover"
                 />

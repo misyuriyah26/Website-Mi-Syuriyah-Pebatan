@@ -47,7 +47,7 @@ export const GaleriSection: React.FC<GaleriSectionProps> = ({ galleryList }) => 
       </div>
 
       {/* Category Tabs */}
-      <div className="flex items-center justify-center gap-2 flex-wrap bg-white p-3 rounded-2xl border border-slate-200 shadow-sm">
+      <div className="flex items-center justify-center gap-2 flex-wrap bg-white dark:bg-slate-900 p-3 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
         {categories.map((cat) => (
           <button
             key={cat}
@@ -55,7 +55,7 @@ export const GaleriSection: React.FC<GaleriSectionProps> = ({ galleryList }) => 
             className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
               activeCategory === cat
                 ? 'bg-emerald-800 text-amber-300 shadow border border-amber-400/40'
-                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
             }`}
           >
             {cat}
@@ -69,11 +69,11 @@ export const GaleriSection: React.FC<GaleriSectionProps> = ({ galleryList }) => 
           <div
             key={img.id}
             onClick={() => setSelectedImage(img)}
-            className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all group cursor-pointer flex flex-col"
+            className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-xl transition-all group cursor-pointer flex flex-col"
           >
-            <div className="relative h-60 overflow-hidden bg-slate-100">
+            <div className="relative h-60 overflow-hidden bg-slate-100 dark:bg-slate-800">
               <img
-                src={img.image_url}
+                src={img.image_url || 'https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&q=80&w=800'}
                 alt={img.title}
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
               />
@@ -88,13 +88,13 @@ export const GaleriSection: React.FC<GaleriSectionProps> = ({ galleryList }) => 
             </div>
 
             <div className="p-4 flex-1 flex flex-col justify-between space-y-2">
-              <h3 className="text-sm font-bold text-emerald-950 group-hover:text-amber-600 transition-colors line-clamp-2">
+              <h3 className="text-sm font-bold text-emerald-950 dark:text-emerald-300 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors line-clamp-2">
                 {img.title}
               </h3>
               {img.description && (
-                <p className="text-xs text-slate-600 line-clamp-2">{img.description}</p>
+                <p className="text-xs text-slate-600 dark:text-slate-300 line-clamp-2">{img.description}</p>
               )}
-              <div className="pt-2 border-t border-slate-100 flex items-center gap-1.5 text-[11px] text-slate-400 font-mono">
+              <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center gap-1.5 text-[11px] text-slate-400 font-mono">
                 <Calendar className="w-3.5 h-3.5 text-amber-600" />
                 {img.date}
               </div>
@@ -104,8 +104,8 @@ export const GaleriSection: React.FC<GaleriSectionProps> = ({ galleryList }) => 
       </div>
 
       {filteredGallery.length === 0 && (
-        <div className="text-center py-16 bg-white rounded-2xl border border-slate-200">
-          <p className="text-slate-500 text-sm">Belum ada foto dalam kategori ini.</p>
+        <div className="text-center py-16 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800">
+          <p className="text-slate-500 dark:text-slate-400 text-sm">Belum ada foto dalam kategori ini.</p>
         </div>
       )}
 
@@ -128,7 +128,7 @@ export const GaleriSection: React.FC<GaleriSectionProps> = ({ galleryList }) => 
 
             <div className="max-h-[70vh] bg-black flex items-center justify-center">
               <img
-                src={selectedImage.image_url}
+                src={selectedImage.image_url || 'https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&q=80&w=800'}
                 alt={selectedImage.title}
                 className="max-h-[70vh] w-auto max-w-full object-contain"
               />

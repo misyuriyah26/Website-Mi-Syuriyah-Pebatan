@@ -20,8 +20,11 @@ export async function testFirebaseConnection() {
     console.log('Firebase Firestore connected successfully.');
     return true;
   } catch (error) {
-    if (error instanceof Error && error.message.includes('offline')) {
+    const msg = error instanceof Error ? error.message : String(error);
+    if (msg.toLowerCase().includes('offline') || msg.toLowerCase().includes("didn't respond") || msg.toLowerCase().includes('could not reach')) {
       console.warn('Firebase Firestore client is offline or not reachable.');
+    } else {
+      console.warn('Firebase Firestore connection check:', msg);
     }
     return false;
   }
