@@ -179,14 +179,14 @@ export const StaffManager: React.FC<StaffManagerProps> = ({ staffList, onSaveSta
       {/* Editor Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white w-full max-w-xl rounded-3xl overflow-hidden shadow-2xl border-2 border-amber-400 my-6 animate-fadeIn">
+          <div className="bg-white dark:bg-slate-900 w-full max-w-xl rounded-3xl overflow-hidden shadow-2xl border-2 border-amber-400 my-6 animate-fadeIn">
             <div className="bg-emerald-950 text-white p-5 flex justify-between items-center border-b-2 border-amber-400">
               <h3 className="font-bold text-lg">
                 {editingItem ? 'Edit Data Guru' : 'Tambah Guru/Staff Baru'}
               </h3>
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="p-1 rounded-full bg-emerald-900 text-emerald-200"
+                className="p-1 rounded-full bg-emerald-900 text-emerald-200 hover:bg-emerald-800"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -194,62 +194,62 @@ export const StaffManager: React.FC<StaffManagerProps> = ({ staffList, onSaveSta
 
             <form onSubmit={handleSubmit} className="p-6 space-y-4 text-xs sm:text-sm">
               <div>
-                <label className="block font-bold text-slate-700 mb-1">Nama Lengkap & Gelar *</label>
+                <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">Nama Lengkap & Gelar *</label>
                 <input
                   type="text"
                   required
                   placeholder="Contoh: Ust. Ahmad Fauzi, S.Pd.I"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-emerald-600 focus:outline-none"
+                  className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:ring-2 focus:ring-emerald-600 focus:outline-none"
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Jabatan / Posisi *</label>
+                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">Jabatan / Posisi *</label>
                   <input
                     type="text"
                     required
                     placeholder="Contoh: Guru Kelas 5 / Kepala TU"
                     value={formData.title}
                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-emerald-600 focus:outline-none"
+                    className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:ring-2 focus:ring-emerald-600 focus:outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">NIP / NTP (Opsional)</label>
+                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">NIP / NTP (Opsional)</label>
                   <input
                     type="text"
                     placeholder="19820512..."
                     value={formData.nip_ntp}
                     onChange={(e) => setFormData({ ...formData, nip_ntp: e.target.value })}
-                    className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-emerald-600 focus:outline-none"
+                    className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:ring-2 focus:ring-emerald-600 focus:outline-none"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Mata Pelajaran Utama</label>
+                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">Mata Pelajaran Utama</label>
                   <input
                     type="text"
                     placeholder="Contoh: Fiqih & Tahfidz"
                     value={formData.subject}
                     onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                    className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-emerald-600 focus:outline-none"
+                    className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:ring-2 focus:ring-emerald-600 focus:outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Pendidikan Terakhir</label>
+                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">Pendidikan Terakhir</label>
                   <input
                     type="text"
                     placeholder="Contoh: S1 PAI UIN"
                     value={formData.education}
                     onChange={(e) => setFormData({ ...formData, education: e.target.value })}
-                    className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-emerald-600 focus:outline-none"
+                    className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:ring-2 focus:ring-emerald-600 focus:outline-none"
                   />
                 </div>
               </div>
@@ -261,17 +261,17 @@ export const StaffManager: React.FC<StaffManagerProps> = ({ staffList, onSaveSta
                 aspectRatio="square"
               />
 
-              <div className="pt-4 flex justify-end gap-3 border-t border-slate-200">
+              <div className="pt-4 flex justify-end gap-3 border-t border-slate-200 dark:border-slate-800">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 rounded-xl bg-slate-100 text-slate-700 font-bold text-xs"
+                  className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-emerald-800 text-white font-bold text-xs shadow"
+                  className="px-5 py-2 rounded-xl bg-emerald-800 text-white font-bold text-xs shadow hover:bg-emerald-700"
                 >
                   Simpan Data
                 </button>

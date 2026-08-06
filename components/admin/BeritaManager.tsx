@@ -187,14 +187,14 @@ export const BeritaManager: React.FC<BeritaManagerProps> = ({ newsList, onSaveNe
       {/* Editor Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white w-full max-w-2xl rounded-3xl overflow-hidden shadow-2xl border-2 border-amber-400 my-6 animate-fadeIn">
+          <div className="bg-white dark:bg-slate-900 w-full max-w-2xl rounded-3xl overflow-hidden shadow-2xl border-2 border-amber-400 my-6 animate-fadeIn">
             <div className="bg-emerald-950 text-white p-5 flex justify-between items-center border-b-2 border-amber-400">
               <h3 className="font-bold text-lg">
                 {editingItem ? 'Edit Berita' : 'Tambah Berita Baru'}
               </h3>
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="p-1 rounded-full bg-emerald-900 text-emerald-200"
+                className="p-1 rounded-full bg-emerald-900 text-emerald-200 hover:bg-emerald-800"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -202,25 +202,25 @@ export const BeritaManager: React.FC<BeritaManagerProps> = ({ newsList, onSaveNe
 
             <form onSubmit={handleSubmit} className="p-6 space-y-4 text-xs sm:text-sm">
               <div>
-                <label className="block font-bold text-slate-700 mb-1">Judul Berita *</label>
+                <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">Judul Berita *</label>
                 <input
                   type="text"
                   required
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-emerald-600 focus:outline-none"
+                  className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:ring-2 focus:ring-emerald-600 focus:outline-none"
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Kategori *</label>
+                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">Kategori *</label>
                   <select
                     value={formData.category}
                     onChange={(e) =>
                       setFormData({ ...formData, category: e.target.value as NewsItem['category'] })
                     }
-                    className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-emerald-600 focus:outline-none bg-white"
+                    className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-emerald-600 focus:outline-none"
                   >
                     <option value="Berita">Berita</option>
                     <option value="Pengumuman">Pengumuman</option>
@@ -231,12 +231,12 @@ export const BeritaManager: React.FC<BeritaManagerProps> = ({ newsList, onSaveNe
                 </div>
 
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Penulis / Sumber</label>
+                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">Penulis / Sumber</label>
                   <input
                     type="text"
                     value={formData.author}
                     onChange={(e) => setFormData({ ...formData, author: e.target.value })}
-                    className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-emerald-600 focus:outline-none"
+                    className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:ring-2 focus:ring-emerald-600 focus:outline-none"
                   />
                 </div>
               </div>
@@ -249,25 +249,25 @@ export const BeritaManager: React.FC<BeritaManagerProps> = ({ newsList, onSaveNe
               />
 
               <div>
-                <label className="block font-bold text-slate-700 mb-1">
+                <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
                   Ringkasan Singkat (Excerpt)
                 </label>
                 <textarea
                   rows={2}
                   value={formData.excerpt}
                   onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
-                  className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-emerald-600 focus:outline-none"
+                  className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:ring-2 focus:ring-emerald-600 focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="block font-bold text-slate-700 mb-1">Isi Berita Lengkap *</label>
+                <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">Isi Berita Lengkap *</label>
                 <textarea
                   rows={6}
                   required
                   value={formData.content}
                   onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                  className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-emerald-600 focus:outline-none"
+                  className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:ring-2 focus:ring-emerald-600 focus:outline-none"
                 />
               </div>
 
@@ -279,22 +279,22 @@ export const BeritaManager: React.FC<BeritaManagerProps> = ({ newsList, onSaveNe
                   onChange={(e) => setFormData({ ...formData, is_published: e.target.checked })}
                   className="w-4 h-4 text-emerald-800 rounded"
                 />
-                <label htmlFor="published" className="text-xs font-bold text-slate-700">
+                <label htmlFor="published" className="text-xs font-bold text-slate-700 dark:text-slate-300">
                   Publikasikan Berita Ini Langsung (Published)
                 </label>
               </div>
 
-              <div className="pt-4 flex justify-end gap-3 border-t border-slate-200">
+              <div className="pt-4 flex justify-end gap-3 border-t border-slate-200 dark:border-slate-800">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 rounded-xl bg-slate-100 text-slate-700 font-bold text-xs"
+                  className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-emerald-800 text-white font-bold text-xs shadow"
+                  className="px-5 py-2 rounded-xl bg-emerald-800 text-white font-bold text-xs shadow hover:bg-emerald-700"
                 >
                   Simpan Berita
                 </button>
