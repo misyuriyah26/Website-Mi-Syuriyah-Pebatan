@@ -108,7 +108,7 @@ export const SocialMediaManager: React.FC<SocialMediaManagerProps> = ({
             </div>
             <div>
               <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
-                Panel Admin & Pengaturan Pengaturan Sosial Media
+                Kelola & Pengaturan Media Sosial Madrasah
                 <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-300">
                   {activePlatforms} Platform Ditampilkan
                 </span>

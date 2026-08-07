@@ -9,6 +9,7 @@ export const UsersAndRolesManager: React.FC = () => {
   const [activeSubTab, setActiveSubTab] = useState<'USERS' | 'LOGS'>('USERS');
   const [adminUsers, setAdminUsers] = useState<AdminUser[]>(() => DataStore.getAdminUsers());
   const [activityLogs, setActivityLogs] = useState<ActivityLog[]>(() => DataStore.getActivityLogs());
+  const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
   // Form state for adding user
   const [newUser, setNewUser] = useState({
@@ -36,7 +37,8 @@ export const UsersAndRolesManager: React.FC = () => {
     DataStore.addActivityLog('Tambah Operator', 'Manajemen Pengguna', `Menambahkan operator baru: ${userObj.email} (${userObj.role})`);
     
     setNewUser({ name: '', email: '', role: 'operator_berita' });
-    alert(`Operator baru ${userObj.name} berhasil ditambahkan!`);
+    setSuccessMsg(`Operator baru ${userObj.name} (${userObj.email}) berhasil ditambahkan!`);
+    setTimeout(() => setSuccessMsg(null), 3500);
   };
 
   const handleDeleteUser = (id: string) => {
@@ -45,6 +47,8 @@ export const UsersAndRolesManager: React.FC = () => {
       setAdminUsers(updated);
       DataStore.saveAdminUsers(updated);
       DataStore.addActivityLog('Hapus Operator', 'Manajemen Pengguna', `Menghapus ID operator: ${id}`);
+      setSuccessMsg('Operator berhasil dihapus!');
+      setTimeout(() => setSuccessMsg(null), 3500);
     }
   };
 
@@ -85,6 +89,13 @@ export const UsersAndRolesManager: React.FC = () => {
           </button>
         </div>
       </div>
+
+      {successMsg && (
+        <div className="p-3 bg-emerald-50 dark:bg-emerald-950/80 border border-emerald-300 dark:border-emerald-700 text-emerald-800 dark:text-emerald-200 rounded-xl text-xs font-semibold flex items-center gap-2 animate-fadeIn">
+          <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+          <span>{successMsg}</span>
+        </div>
+      )}
 
       {activeSubTab === 'USERS' ? (
         <div className="space-y-6">
