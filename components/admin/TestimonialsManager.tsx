@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Quote, Plus, Trash2, Edit3, Star, CheckCircle2, UserCheck } from 'lucide-react';
 import { Testimonial } from '@/lib/types';
 import { DataStore } from '@/lib/data-store';
@@ -19,6 +19,12 @@ export const TestimonialsManager: React.FC<TestimonialsManagerProps> = ({
   const [testimonials, setTestimonials] = useState<Testimonial[]>(
     () => initialPropsTestimonials || DataStore.getTestimonials()
   );
+
+  useEffect(() => {
+    if (initialPropsTestimonials) {
+      setTestimonials(initialPropsTestimonials);
+    }
+  }, [initialPropsTestimonials]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<Testimonial | null>(null);
 

@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Trophy, Plus, Trash2, Edit3, Award, Calendar } from 'lucide-react';
 import { Achievement } from '@/lib/types';
 import { DataStore } from '@/lib/data-store';
@@ -19,6 +19,12 @@ export const AchievementsManager: React.FC<AchievementsManagerProps> = ({
   const [achievements, setAchievements] = useState<Achievement[]>(
     () => initialPropsAchievements || DataStore.getAchievements()
   );
+
+  useEffect(() => {
+    if (initialPropsAchievements) {
+      setAchievements(initialPropsAchievements);
+    }
+  }, [initialPropsAchievements]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<Achievement | null>(null);
 

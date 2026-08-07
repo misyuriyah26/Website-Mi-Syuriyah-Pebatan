@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Palette, Save, Upload, CheckCircle2, Image as ImageIcon, School, Globe, Phone, Mail, MapPin } from 'lucide-react';
 import { SchoolSettings } from '@/lib/types';
 import { DataStore } from '@/lib/data-store';
@@ -14,6 +14,10 @@ interface BrandingManagerProps {
 export const BrandingManager: React.FC<BrandingManagerProps> = ({ settings, onSaveSettings }) => {
   const [formData, setFormData] = useState<SchoolSettings>({ ...settings });
   const [savedSuccess, setSavedSuccess] = useState(false);
+
+  useEffect(() => {
+    setFormData({ ...settings });
+  }, [settings]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

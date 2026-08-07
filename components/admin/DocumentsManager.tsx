@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FileDown, Plus, Trash2, Edit3, Download, FileText } from 'lucide-react';
 import { DownloadDocument } from '@/lib/types';
 import { DataStore } from '@/lib/data-store';
@@ -18,6 +18,12 @@ export const DocumentsManager: React.FC<DocumentsManagerProps> = ({
   const [documents, setDocuments] = useState<DownloadDocument[]>(
     () => initialPropsDocuments || DataStore.getDocuments()
   );
+
+  useEffect(() => {
+    if (initialPropsDocuments) {
+      setDocuments(initialPropsDocuments);
+    }
+  }, [initialPropsDocuments]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<DownloadDocument | null>(null);
 

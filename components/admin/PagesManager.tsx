@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StaticPagesContent,
   ProgramUnggulanItem,
@@ -68,6 +68,35 @@ export const PagesManager: React.FC<PagesManagerProps> = ({
   );
 
   const [savedSuccess, setSavedSuccess] = useState(false);
+
+  useEffect(() => {
+    setFormData(pagesContent);
+    setMisiText((pagesContent.visi_misi?.misi || []).join('\n'));
+    setTujuanText((pagesContent.visi_misi?.tujuan || []).join('\n'));
+    setPpdbPersyaratanText((pagesContent.ppdb_info?.persyaratan || []).join('\n'));
+    setMatpelAgamaText(
+      (
+        pagesContent.kurikulum_info?.matpel_agama || [
+          'Al-Qur\'an Hadits (Membaca, Menghafal, Memahami)',
+          'Aqidah Akhlaq (Pembentukan Karakter Terpuji)',
+          'Fiqih & Praktek Ibadah Harian',
+          'Sejarah Kebudayaan Islam (SKI)',
+          'Bahasa Arab Dasar & Muhadatsah',
+        ]
+      ).join('\n')
+    );
+    setMatpelAkademikText(
+      (
+        pagesContent.kurikulum_info?.matpel_akademik || [
+          'Pendidikan Pancasila & Kewarganegaraan',
+          'Bahasa Indonesia & Literasi Digital',
+          'Matematika Logis & Numerasi',
+          'Ilmu Pengetahuan Alam & Sosial (IPAS)',
+          'Bahasa Inggris & Muatan Lokal TIK/Komputer',
+        ]
+      ).join('\n')
+    );
+  }, [pagesContent]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
