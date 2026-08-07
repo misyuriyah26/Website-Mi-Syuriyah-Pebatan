@@ -3,8 +3,8 @@ import { getAuth } from 'firebase/auth';
 import { getFirestore, doc, getDocFromServer } from 'firebase/firestore';
 import firebaseConfig from '../firebase-applet-config.json';
 
-// Flag connection database Firebase (Dinonaktifkan / Diputuskan atas permintaan)
-const IS_FIREBASE_CONNECTED = false;
+// Flag connection database Firebase (Diaktifkan untuk sinkronisasi antar perangkat)
+const IS_FIREBASE_CONNECTED = true;
 
 const app = IS_FIREBASE_CONNECTED && !getApps().length ? initializeApp(firebaseConfig) : (getApps().length ? getApp() : null);
 export const db = app ? getFirestore(app, firebaseConfig.firestoreDatabaseId) : (null as any);
