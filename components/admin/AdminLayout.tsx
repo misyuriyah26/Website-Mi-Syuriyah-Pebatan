@@ -20,6 +20,7 @@ import {
   Trophy,
   Quote,
   FileDown,
+  Share2,
 } from 'lucide-react';
 import {
   NewsItem,
@@ -47,6 +48,7 @@ import { UsersAndRolesManager } from './UsersAndRolesManager';
 import { AchievementsManager } from './AchievementsManager';
 import { TestimonialsManager } from './TestimonialsManager';
 import { DocumentsManager } from './DocumentsManager';
+import { SocialMediaManager } from './SocialMediaManager';
 import { IslamicStarOrnament } from '../IslamicPattern';
 
 interface AdminLayoutProps {
@@ -108,6 +110,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
     { id: 'PRESTASI', label: 'Prestasi Siswa', icon: Trophy },
     { id: 'TESTIMONI', label: 'Testimoni Wali', icon: Quote },
     { id: 'DOCUMENTS', label: 'Pusat Unduhan PDF', icon: FileDown },
+    { id: 'SOSMED', label: 'Media Sosial & Channel', icon: Share2 },
     { id: 'PAGES', label: 'Halaman Statis', icon: FileText },
     {
       id: 'MESSAGES',
@@ -280,6 +283,10 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
 
           {activeTab === 'DOCUMENTS' && (
             <DocumentsManager documents={documents} onSaveDocuments={onSaveDocuments} />
+          )}
+
+          {activeTab === 'SOSMED' && (
+            <SocialMediaManager settings={settings} onSaveSettings={onSaveSettings} />
           )}
 
           {activeTab === 'PAGES' && (

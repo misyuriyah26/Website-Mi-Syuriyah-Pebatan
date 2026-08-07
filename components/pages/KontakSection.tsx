@@ -11,6 +11,12 @@ import {
   Clock,
   Sparkles,
   Building,
+  Facebook,
+  Instagram,
+  Youtube,
+  Radio,
+  Share2,
+  Video,
 } from 'lucide-react';
 import { ContactMessage, SchoolSettings, StaticPagesContent } from '@/lib/types';
 import { DataStore } from '@/lib/data-store';
@@ -143,7 +149,7 @@ export const KontakSection: React.FC<KontakSectionProps> = ({
             </div>
 
             {/* Direct WhatsApp Action Button */}
-            <div className="pt-2">
+            <div className="pt-2 space-y-3">
               <a
                 href={`https://wa.me/62${settings.whatsapp.replace(/[^0-9]/g, '').replace(/^0/, '')}`}
                 target="_blank"
@@ -153,6 +159,75 @@ export const KontakSection: React.FC<KontakSectionProps> = ({
                 <MessageCircle className="w-5 h-5 text-amber-300" />
                 <span>{kontak.teks_tombol_wa || 'Chat WhatsApp Admin Madrasah'}</span>
               </a>
+
+              {/* Social Media Quick Bar */}
+              <div className="p-3 bg-emerald-50/70 dark:bg-slate-800/60 rounded-xl border border-emerald-100 dark:border-slate-700 space-y-2">
+                <div className="text-[11px] font-bold text-emerald-900 dark:text-emerald-300 flex items-center gap-1.5 uppercase tracking-wide">
+                  <Share2 className="w-3.5 h-3.5 text-amber-500" />
+                  <span>Media Sosial Resmi Madrasah:</span>
+                </div>
+                <div className="flex flex-wrap items-center gap-2">
+                  {settings.facebook_url && settings.show_facebook !== false && (
+                    <a
+                      href={settings.facebook_url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="p-2 rounded-lg bg-blue-600 text-white hover:opacity-90 text-xs font-bold flex items-center gap-1"
+                      title="Facebook"
+                    >
+                      <Facebook className="w-3.5 h-3.5" />
+                      <span>FB</span>
+                    </a>
+                  )}
+                  {settings.instagram_url && settings.show_instagram !== false && (
+                    <a
+                      href={settings.instagram_url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="p-2 rounded-lg bg-gradient-to-r from-purple-600 via-rose-500 to-amber-500 text-white hover:opacity-90 text-xs font-bold flex items-center gap-1"
+                      title="Instagram"
+                    >
+                      <Instagram className="w-3.5 h-3.5" />
+                      <span>IG</span>
+                    </a>
+                  )}
+                  {settings.youtube_url && settings.show_youtube !== false && (
+                    <a
+                      href={settings.youtube_url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="p-2 rounded-lg bg-red-600 text-white hover:opacity-90 text-xs font-bold flex items-center gap-1"
+                      title="YouTube"
+                    >
+                      <Video className="w-3.5 h-3.5" />
+                      <span>YouTube</span>
+                    </a>
+                  )}
+                  {settings.tiktok_url && settings.show_tiktok !== false && (
+                    <a
+                      href={settings.tiktok_url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="p-2 rounded-lg bg-slate-900 dark:bg-slate-700 text-white hover:opacity-90 text-xs font-bold flex items-center gap-1"
+                      title="TikTok"
+                    >
+                      <span>TikTok</span>
+                    </a>
+                  )}
+                  {settings.whatsapp_channel_url && settings.show_whatsapp_channel !== false && (
+                    <a
+                      href={settings.whatsapp_channel_url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="p-2 rounded-lg bg-emerald-600 text-white hover:opacity-90 text-xs font-bold flex items-center gap-1"
+                      title="WhatsApp Channel"
+                    >
+                      <Radio className="w-3.5 h-3.5" />
+                      <span>WA Channel</span>
+                    </a>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         </div>

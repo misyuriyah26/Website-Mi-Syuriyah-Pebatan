@@ -9,6 +9,9 @@ import {
   Facebook,
   Instagram,
   Youtube,
+  Radio,
+  Send,
+  Video,
   Lock,
   ChevronRight,
   HeartHandshake,
@@ -163,9 +166,11 @@ export const Footer: React.FC<FooterProps> = ({
 
             {/* Social Media Links */}
             <div className="pt-4">
-              <p className="text-[11px] font-semibold text-emerald-300 uppercase tracking-wider mb-2">Ikuti Media Sosial:</p>
-              <div className="flex items-center gap-2">
-                {settings.facebook_url && (
+              <p className="text-[11px] font-semibold text-emerald-300 uppercase tracking-wider mb-2">
+                {settings.social_media_title || 'IKUTI MEDIA SOSIAL:'}
+              </p>
+              <div className="flex flex-wrap items-center gap-2">
+                {settings.facebook_url && settings.show_facebook !== false && (
                   <a
                     href={settings.facebook_url}
                     target="_blank"
@@ -176,7 +181,7 @@ export const Footer: React.FC<FooterProps> = ({
                     <Facebook className="w-4 h-4" />
                   </a>
                 )}
-                {settings.instagram_url && (
+                {settings.instagram_url && settings.show_instagram !== false && (
                   <a
                     href={settings.instagram_url}
                     target="_blank"
@@ -187,7 +192,7 @@ export const Footer: React.FC<FooterProps> = ({
                     <Instagram className="w-4 h-4" />
                   </a>
                 )}
-                {settings.youtube_url && (
+                {settings.youtube_url && settings.show_youtube !== false && (
                   <a
                     href={settings.youtube_url}
                     target="_blank"
@@ -196,6 +201,61 @@ export const Footer: React.FC<FooterProps> = ({
                     title="YouTube"
                   >
                     <Youtube className="w-4 h-4" />
+                  </a>
+                )}
+                {settings.tiktok_url && settings.show_tiktok !== false && (
+                  <a
+                    href={settings.tiktok_url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="w-8 h-8 rounded-full bg-emerald-900 border border-amber-500/30 flex items-center justify-center text-amber-400 hover:bg-amber-500 hover:text-emerald-950 font-bold text-xs transition-colors"
+                    title="TikTok"
+                  >
+                    TT
+                  </a>
+                )}
+                {settings.whatsapp_channel_url && settings.show_whatsapp_channel !== false && (
+                  <a
+                    href={settings.whatsapp_channel_url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="w-8 h-8 rounded-full bg-emerald-900 border border-amber-500/30 flex items-center justify-center text-amber-400 hover:bg-amber-500 hover:text-emerald-950 transition-colors"
+                    title="WhatsApp Channel"
+                  >
+                    <Radio className="w-4 h-4" />
+                  </a>
+                )}
+                {settings.telegram_url && settings.show_telegram !== false && (
+                  <a
+                    href={settings.telegram_url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="w-8 h-8 rounded-full bg-emerald-900 border border-amber-500/30 flex items-center justify-center text-amber-400 hover:bg-amber-500 hover:text-emerald-950 transition-colors"
+                    title="Telegram"
+                  >
+                    <Send className="w-4 h-4" />
+                  </a>
+                )}
+                {settings.twitter_url && settings.show_twitter !== false && (
+                  <a
+                    href={settings.twitter_url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="w-8 h-8 rounded-full bg-emerald-900 border border-amber-500/30 flex items-center justify-center text-amber-400 hover:bg-amber-500 hover:text-emerald-950 font-bold text-xs transition-colors"
+                    title="Twitter / X"
+                  >
+                    X
+                  </a>
+                )}
+                {settings.threads_url && settings.show_threads !== false && (
+                  <a
+                    href={settings.threads_url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="w-8 h-8 rounded-full bg-emerald-900 border border-amber-500/30 flex items-center justify-center text-amber-400 hover:bg-amber-500 hover:text-emerald-950 font-bold text-xs transition-colors"
+                    title="Threads"
+                  >
+                    @
                   </a>
                 )}
               </div>

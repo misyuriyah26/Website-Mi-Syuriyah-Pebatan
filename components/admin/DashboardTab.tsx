@@ -13,6 +13,7 @@ import {
   CheckCircle2,
   FileText,
   Lock,
+  Share2,
 } from 'lucide-react';
 import { isSupabaseConfigured } from '@/lib/supabase';
 
@@ -209,6 +210,23 @@ export const DashboardTab: React.FC<DashboardTabProps> = ({
           </div>
           <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-900 flex items-center justify-center font-bold group-hover:bg-amber-500 group-hover:text-emerald-950 transition-colors">
             <FileText className="w-6 h-6" />
+          </div>
+        </div>
+
+        {/* Card 7: Media Sosial & Channel */}
+        <div
+          onClick={() => setActiveTab('SOSMED')}
+          className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all cursor-pointer group flex items-center justify-between"
+        >
+          <div className="space-y-1">
+            <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Medsos & Channel</p>
+            <h3 className="text-base font-bold text-emerald-950">FB, IG, YT, TikTok, WA</h3>
+            <p className="text-[11px] text-emerald-700 font-medium group-hover:underline flex items-center gap-1">
+              Kelola Akun Medsos <ArrowUpRight className="w-3 h-3" />
+            </p>
+          </div>
+          <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-900 flex items-center justify-center font-bold group-hover:bg-amber-500 group-hover:text-emerald-950 transition-colors">
+            <Share2 className="w-6 h-6" />
           </div>
         </div>
       </div>
