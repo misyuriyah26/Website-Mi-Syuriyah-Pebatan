@@ -215,7 +215,7 @@ export interface DownloadDocument {
   title: string;
   category: 'Brosur & PPDB' | 'Kalender Akademik' | 'Formulir' | 'Kurikulum & Modul' | 'Kitab & Panduan';
   file_url: string;
-  file_type: 'PDF' | 'DOCX' | 'ZIP' | 'XLSX';
+  file_type: string;
   file_size: string;
   download_count: number;
   created_at: string;

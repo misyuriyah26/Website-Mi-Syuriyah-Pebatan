@@ -206,7 +206,7 @@ export default function Home() {
                   setActiveSection={setActiveSection}
                 />
                 <PrestasiSection achievements={achievements} />
-                <TestimoniSection testimonials={testimonials} />
+                <TestimoniSection testimonials={testimonials} onSaveTestimonials={handleSaveTestimonials} />
                 <DokumenSection documents={documents} />
               </>
             )}

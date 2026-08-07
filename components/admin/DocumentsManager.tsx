@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { FileDown, Plus, Trash2, Edit3, Download, FileText } from 'lucide-react';
 import { DownloadDocument } from '@/lib/types';
 import { DataStore } from '@/lib/data-store';
+import { FileUploadInput } from '@/components/ui/FileUploadInput';
 
 interface DocumentsManagerProps {
   documents?: DownloadDocument[];
@@ -190,15 +191,21 @@ export const DocumentsManager: React.FC<DocumentsManagerProps> = ({
                 </div>
               </div>
 
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">URL File Download (PDF/Doc)</label>
-                <input
-                  type="text"
-                  value={formData.file_url}
-                  onChange={(e) => setFormData({ ...formData, file_url: e.target.value })}
-                  className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs text-slate-900 dark:text-slate-100"
-                />
-              </div>
+              <FileUploadInput
+                label="File Dokumen (Upload dari Perangkat / Drag & Drop / Link URL)"
+                fileUrl={formData.file_url}
+                fileSize={formData.file_size}
+                fileType={formData.file_type}
+                onFileSelect={({ fileUrl, fileSize, fileType, fileName }) => {
+                  setFormData((prev) => ({
+                    ...prev,
+                    file_url: fileUrl,
+                    file_size: fileSize || prev.file_size,
+                    file_type: fileType || prev.file_type,
+                    title: prev.title.trim() === '' && fileName ? fileName : prev.title,
+                  }));
+                }}
+              />
 
               <div className="flex justify-end gap-2 pt-3">
                 <button

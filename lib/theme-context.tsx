@@ -33,9 +33,9 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
         } else {
           document.documentElement.classList.remove('dark');
         }
-      } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        setThemeState('dark');
-        document.documentElement.classList.add('dark');
+      } else {
+        setThemeState('light');
+        document.documentElement.classList.remove('dark');
       }
     }, 0);
     return () => clearTimeout(timer);

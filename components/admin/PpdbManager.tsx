@@ -89,70 +89,90 @@ export const PpdbManager: React.FC<PpdbManagerProps> = ({ ppdbList, onSavePpdbLi
 
   return (
     <div className="space-y-6">
-      <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-wrap gap-4 justify-between items-center">
+      <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-wrap gap-4 justify-between items-center">
         <div>
-          <h2 className="text-xl font-bold text-emerald-950">Kelola Pendaftaran PPDB Online</h2>
-          <p className="text-xs text-slate-500">
+          <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">Kelola Pendaftaran PPDB Online</h2>
+          <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">
             Daftar calon siswa baru yang mendaftar secara online ({ppdbList.length} Pendaftar)
           </p>
         </div>
         {ppdbList.length > 0 && (
           <button
             onClick={handlePrintRekap}
-            className="px-4 py-2 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-xs shadow flex items-center gap-1.5 transition-colors"
+            className="px-4 py-2 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-xs shadow flex items-center gap-1.5 transition-colors border border-emerald-700"
           >
-            <Printer className="w-4 h-4" /> Cetak Rekap PPDB
+            <Printer className="w-4 h-4 text-amber-300" /> Cetak Rekap PPDB
           </button>
         )}
       </div>
 
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs sm:text-sm">
-            <thead className="bg-emerald-900 text-amber-300 border-b border-emerald-800">
+            <thead className="bg-emerald-950 text-amber-300 border-b border-emerald-800">
               <tr>
-                <th className="p-3 font-bold">Nama Calon Siswa</th>
-                <th className="p-3 font-bold">L/P</th>
-                <th className="p-3 font-bold">Nama Orang Tua</th>
-                <th className="p-3 font-bold">No. HP/WA</th>
-                <th className="p-3 font-bold">Asal TK/RA</th>
-                <th className="p-3 font-bold">Status</th>
-                <th className="p-3 font-bold text-right">Aksi</th>
+                <th className="p-3.5 font-bold">Nama Calon Siswa</th>
+                <th className="p-3.5 font-bold">L/P</th>
+                <th className="p-3.5 font-bold">Nama Orang Tua</th>
+                <th className="p-3.5 font-bold">No. HP/WA</th>
+                <th className="p-3.5 font-bold">Asal TK/RA</th>
+                <th className="p-3.5 font-bold">Status</th>
+                <th className="p-3.5 font-bold text-right">Aksi</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
               {ppdbList.map((item) => (
-                <tr key={item.id} className="hover:bg-slate-50">
-                  <td className="p-3 font-bold text-emerald-950">{item.student_name}</td>
-                  <td className="p-3 font-bold">{item.gender}</td>
-                  <td className="p-3 text-slate-700">{item.parent_name}</td>
-                  <td className="p-3 font-mono text-xs">{item.phone_number}</td>
-                  <td className="p-3 text-slate-600">{item.previous_school}</td>
-                  <td className="p-3">
+                <tr key={item.id} className="hover:bg-emerald-50/40 dark:hover:bg-slate-800/60 transition-colors">
+                  <td className="p-3.5 font-extrabold text-slate-900 dark:text-slate-100">{item.student_name}</td>
+                  <td className="p-3.5 font-bold text-slate-800 dark:text-slate-200">{item.gender}</td>
+                  <td className="p-3.5 text-slate-800 dark:text-slate-200 font-medium">{item.parent_name}</td>
+                  <td className="p-3.5 font-mono text-xs font-bold text-slate-900 dark:text-slate-100">{item.phone_number}</td>
+                  <td className="p-3.5 text-slate-800 dark:text-slate-200">{item.previous_school || '-'}</td>
+                  <td className="p-3.5">
                     <select
                       value={item.status}
                       onChange={(e) =>
                         handleStatusChange(item.id, e.target.value as PpdbRegistration['status'])
                       }
-                      className="px-2 py-1 rounded border text-xs font-bold bg-white"
+                      className={`px-3 py-1.5 rounded-lg border text-xs font-extrabold cursor-pointer focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm ${
+                        item.status === 'Diterima'
+                          ? 'bg-emerald-100 text-emerald-950 border-emerald-400 dark:bg-emerald-950/80 dark:text-emerald-200 dark:border-emerald-700'
+                          : item.status === 'Diproses'
+                          ? 'bg-blue-100 text-blue-950 border-blue-400 dark:bg-blue-950/80 dark:text-blue-200 dark:border-blue-700'
+                          : item.status === 'Ditolak'
+                          ? 'bg-red-100 text-red-950 border-red-400 dark:bg-red-950/80 dark:text-red-200 dark:border-red-700'
+                          : 'bg-amber-100 text-amber-950 border-amber-400 dark:bg-amber-950/80 dark:text-amber-200 dark:border-amber-700'
+                      }`}
                     >
-                      <option value="Pending">Pending</option>
-                      <option value="Proses">Proses</option>
-                      <option value="Diterima">Diterima</option>
+                      <option value="Pending" className="bg-white text-slate-900 dark:bg-slate-800 dark:text-slate-100">
+                        Pending
+                      </option>
+                      <option value="Diproses" className="bg-white text-slate-900 dark:bg-slate-800 dark:text-slate-100">
+                        Diproses
+                      </option>
+                      <option value="Diterima" className="bg-white text-slate-900 dark:bg-slate-800 dark:text-slate-100">
+                        Diterima
+                      </option>
+                      <option value="Perlu Perbaikan" className="bg-white text-slate-900 dark:bg-slate-800 dark:text-slate-100">
+                        Perlu Perbaikan
+                      </option>
+                      <option value="Ditolak" className="bg-white text-slate-900 dark:bg-slate-800 dark:text-slate-100">
+                        Ditolak
+                      </option>
                     </select>
                   </td>
-                  <td className="p-3 text-right space-x-2">
+                  <td className="p-3.5 text-right space-x-2">
                     <a
                       href={`https://wa.me/62${item.phone_number.replace(/[^0-9]/g, '').replace(/^0/, '')}`}
                       target="_blank"
                       rel="noreferrer"
-                      className="px-2.5 py-1 rounded bg-emerald-100 text-emerald-900 font-bold hover:bg-emerald-200 text-xs inline-flex items-center gap-1"
+                      className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs inline-flex items-center gap-1.5 shadow-sm transition-all"
                     >
-                      <Phone className="w-3 h-3" /> WA
+                      <Phone className="w-3.5 h-3.5" /> WA
                     </a>
                     <button
                       onClick={() => handleDelete(item.id)}
-                      className="px-2.5 py-1 rounded bg-red-50 text-red-800 font-bold hover:bg-red-100 text-xs"
+                      className="px-3 py-1.5 rounded-lg bg-red-50 hover:bg-red-100 dark:bg-red-950/50 dark:hover:bg-red-900 text-red-700 dark:text-red-300 font-bold text-xs border border-red-200 dark:border-red-900 transition-all"
                     >
                       Hapus
                     </button>
@@ -165,8 +185,8 @@ export const PpdbManager: React.FC<PpdbManagerProps> = ({ ppdbList, onSavePpdbLi
       </div>
 
       {ppdbList.length === 0 && (
-        <div className="text-center py-12 bg-white rounded-2xl border border-slate-200">
-          <p className="text-slate-500 text-sm">Belum ada pendaftar PPDB online.</p>
+        <div className="text-center py-12 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800">
+          <p className="text-slate-600 dark:text-slate-400 text-sm font-medium">Belum ada pendaftar PPDB online.</p>
         </div>
       )}
     </div>

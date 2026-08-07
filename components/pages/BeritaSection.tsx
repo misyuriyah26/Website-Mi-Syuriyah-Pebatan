@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import React, { useState } from 'react';
@@ -32,6 +33,59 @@ export const BeritaSection: React.FC<BeritaSectionProps> = ({
   const [activeCategory, setActiveCategory] = useState('Semua');
 
   const categories = ['Semua', 'Pengumuman', 'Berita', 'Prestasi', 'PPDB', 'Kegiatan'];
+
+  const [articleComments, setArticleComments] = useState<
+    Record<string, Array<{ id: string; name: string; comment: string; date: string; avatar: string }>>
+  >({
+    'news-1': [
+      {
+        id: 'c1',
+        name: 'Hj. Siti Maesaroh',
+        comment: 'Alhamdulillah, info PPDB yang sangat jelas. Bismillah mau mendaftarkan cucu untuk TA 2026/2027.',
+        date: '2026-07-21 09:15',
+        avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=200',
+      },
+      {
+        id: 'c2',
+        name: 'Ahmad Syafi\'i',
+        comment: 'Fasilitas di MI Syuriyah Pebatan makin lengkap dan modern. Sukses selalu!',
+        date: '2026-07-22 14:30',
+        avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=200',
+      },
+    ],
+  });
+
+  const [newCommentName, setNewCommentName] = useState('');
+  const [newCommentText, setNewCommentText] = useState('');
+  const [commentSuccess, setCommentSuccess] = useState(false);
+
+  const handleAddArticleComment = (newsId: string) => {
+    if (!newCommentName.trim() || !newCommentText.trim()) return;
+
+    const newObj = {
+      id: `comment-${Date.now()}`,
+      name: newCommentName.trim(),
+      comment: newCommentText.trim(),
+      date: new Date().toLocaleString('id-ID', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      }),
+      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200',
+    };
+
+    setArticleComments((prev) => ({
+      ...prev,
+      [newsId]: [newObj, ...(prev[newsId] || [])],
+    }));
+
+    setNewCommentName('');
+    setNewCommentText('');
+    setCommentSuccess(true);
+    setTimeout(() => setCommentSuccess(false), 2500);
+  };
 
   const filteredNews = newsList.filter((item) => {
     const matchesCategory = activeCategory === 'Semua' || item.category === activeCategory;
@@ -223,7 +277,7 @@ export const BeritaSection: React.FC<BeritaSectionProps> = ({
               </div>
 
               {/* Share box */}
-              <div className="pt-6 border-t border-slate-200 flex items-center justify-between">
+              <div className="pt-6 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
                 <div className="text-xs text-slate-500 flex items-center gap-1">
                   <Tag className="w-3.5 h-3.5 text-amber-600" /> MI Syuriyah Pebatan Brebes
                 </div>
@@ -239,10 +293,89 @@ export const BeritaSection: React.FC<BeritaSectionProps> = ({
                       alert('Tautan berita disalin ke clipboard!');
                     }
                   }}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 text-emerald-900 border border-emerald-200 text-xs font-bold hover:bg-emerald-100 transition-colors"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 dark:bg-slate-800 text-emerald-900 dark:text-emerald-300 border border-emerald-200 dark:border-slate-700 text-xs font-bold hover:bg-emerald-100 transition-colors"
                 >
                   <Share2 className="w-3.5 h-3.5" /> Bagikan Berita
                 </button>
+              </div>
+
+              {/* Visitor Comment Column / Section */}
+              <div className="pt-6 border-t border-slate-200 dark:border-slate-800 space-y-6">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                    <MessageSquare className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                    <span>Komentar Pengunjung</span>
+                    <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-900 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800">
+                      {(articleComments[selectedNews.id] || []).length} Komentar
+                    </span>
+                  </h3>
+                </div>
+
+                {/* Comment Form */}
+                <div className="bg-slate-50 dark:bg-slate-800/80 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-3">
+                  <h4 className="text-xs font-bold text-slate-800 dark:text-slate-200">
+                    Tulis Komentar / Tanggapan Anda:
+                  </h4>
+                  {commentSuccess && (
+                    <div className="p-2.5 rounded-xl bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-400 text-emerald-900 dark:text-emerald-200 text-xs font-bold">
+                      ✓ Komentar Anda berhasil dikirim!
+                    </div>
+                  )}
+                  <div className="grid grid-cols-1 gap-3">
+                    <input
+                      type="text"
+                      placeholder="Nama Lengkap Anda..."
+                      value={newCommentName}
+                      onChange={(e) => setNewCommentName(e.target.value)}
+                      className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                    />
+                    <textarea
+                      rows={2}
+                      placeholder="Tuliskan pendapat atau komentar Anda di sini..."
+                      value={newCommentText}
+                      onChange={(e) => setNewCommentText(e.target.value)}
+                      className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                    />
+                    <div className="flex justify-end">
+                      <button
+                        type="button"
+                        onClick={() => handleAddArticleComment(selectedNews.id)}
+                        className="px-4 py-2 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-xs shadow transition-colors"
+                      >
+                        Kirim Komentar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* List of comments */}
+                <div className="space-y-3">
+                  {(articleComments[selectedNews.id] || []).length > 0 ? (
+                    (articleComments[selectedNews.id] || []).map((c) => (
+                      <div
+                        key={c.id}
+                        className="p-3.5 rounded-2xl bg-white dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex gap-3 items-start"
+                      >
+                        <img
+                          src={c.avatar}
+                          alt={c.name}
+                          className="w-8 h-8 rounded-full object-cover border border-amber-400 shrink-0"
+                        />
+                        <div className="space-y-1 text-xs">
+                          <div className="flex items-center gap-2">
+                            <span className="font-bold text-slate-900 dark:text-white">{c.name}</span>
+                            <span className="text-[10px] text-slate-400">{c.date}</span>
+                          </div>
+                          <p className="text-slate-700 dark:text-slate-300 leading-relaxed">{c.comment}</p>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-xs text-slate-500 italic text-center py-4">
+                      Belum ada komentar untuk berita ini. Jadilah yang pertama memberikan komentar!
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
           </div>
