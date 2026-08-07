@@ -15,7 +15,7 @@ import {
 } from './types';
 import { supabase, isSupabaseConfigured } from './supabase';
 import { db, isFirebaseConfigured } from './firebase';
-import { doc, setDoc, getDoc, getDocs, collection } from 'firebase/firestore';
+import { doc, setDoc, getDoc, getDocs, collection, deleteDoc } from 'firebase/firestore';
 import { handleFirestoreError, OperationType } from './firebase-error';
 
 const STORAGE_KEYS = {
@@ -653,12 +653,26 @@ export class DataStore {
       localStorage.setItem(STORAGE_KEYS.NEWS, JSON.stringify(news));
     }
     if (isSupabaseConfigured() && supabase) {
-      supabase.from('news').upsert(news).then(undefined, () => {});
+      if (news.length > 0) {
+        supabase.from('news').upsert(news).then(undefined, () => {});
+        const keepIds = news.map((n) => n.id);
+        supabase.from('news').delete().not('id', 'in', `(${keepIds.map(id => `"${id}"`).join(',')})`).then(undefined, () => {});
+      } else {
+        supabase.from('news').delete().neq('id', '___none___').then(undefined, () => {});
+      }
     }
     if (isFirebaseConfigured()) {
+      const keepIds = new Set(news.map((item) => item.id));
       for (const item of news) {
         setDoc(doc(db, 'news', item.id), item).catch(() => {});
       }
+      getDocs(collection(db, 'news')).then((snap) => {
+        snap.docs.forEach((d) => {
+          if (!keepIds.has(d.id)) {
+            deleteDoc(doc(db, 'news', d.id)).catch(() => {});
+          }
+        });
+      }).catch(() => {});
     }
   }
 
@@ -682,12 +696,26 @@ export class DataStore {
       localStorage.setItem(STORAGE_KEYS.STAFF, JSON.stringify(staff));
     }
     if (isSupabaseConfigured() && supabase) {
-      supabase.from('staff').upsert(staff).then(undefined, () => {});
+      if (staff.length > 0) {
+        supabase.from('staff').upsert(staff).then(undefined, () => {});
+        const keepIds = staff.map((s) => s.id);
+        supabase.from('staff').delete().not('id', 'in', `(${keepIds.map(id => `"${id}"`).join(',')})`).then(undefined, () => {});
+      } else {
+        supabase.from('staff').delete().neq('id', '___none___').then(undefined, () => {});
+      }
     }
     if (isFirebaseConfigured()) {
+      const keepIds = new Set(staff.map((item) => item.id));
       for (const item of staff) {
         setDoc(doc(db, 'staff', item.id), item).catch(() => {});
       }
+      getDocs(collection(db, 'staff')).then((snap) => {
+        snap.docs.forEach((d) => {
+          if (!keepIds.has(d.id)) {
+            deleteDoc(doc(db, 'staff', d.id)).catch(() => {});
+          }
+        });
+      }).catch(() => {});
     }
   }
 
@@ -711,12 +739,26 @@ export class DataStore {
       localStorage.setItem(STORAGE_KEYS.GALLERY, JSON.stringify(gallery));
     }
     if (isSupabaseConfigured() && supabase) {
-      supabase.from('gallery').upsert(gallery).then(undefined, () => {});
+      if (gallery.length > 0) {
+        supabase.from('gallery').upsert(gallery).then(undefined, () => {});
+        const keepIds = gallery.map((g) => g.id);
+        supabase.from('gallery').delete().not('id', 'in', `(${keepIds.map(id => `"${id}"`).join(',')})`).then(undefined, () => {});
+      } else {
+        supabase.from('gallery').delete().neq('id', '___none___').then(undefined, () => {});
+      }
     }
     if (isFirebaseConfigured()) {
+      const keepIds = new Set(gallery.map((item) => item.id));
       for (const item of gallery) {
         setDoc(doc(db, 'gallery', item.id), item).catch(() => {});
       }
+      getDocs(collection(db, 'gallery')).then((snap) => {
+        snap.docs.forEach((d) => {
+          if (!keepIds.has(d.id)) {
+            deleteDoc(doc(db, 'gallery', d.id)).catch(() => {});
+          }
+        });
+      }).catch(() => {});
     }
   }
 
@@ -740,12 +782,26 @@ export class DataStore {
       localStorage.setItem(STORAGE_KEYS.MESSAGES, JSON.stringify(messages));
     }
     if (isSupabaseConfigured() && supabase) {
-      supabase.from('messages').upsert(messages).then(undefined, () => {});
+      if (messages.length > 0) {
+        supabase.from('messages').upsert(messages).then(undefined, () => {});
+        const keepIds = messages.map((m) => m.id);
+        supabase.from('messages').delete().not('id', 'in', `(${keepIds.map(id => `"${id}"`).join(',')})`).then(undefined, () => {});
+      } else {
+        supabase.from('messages').delete().neq('id', '___none___').then(undefined, () => {});
+      }
     }
     if (isFirebaseConfigured()) {
+      const keepIds = new Set(messages.map((item) => item.id));
       for (const item of messages) {
         setDoc(doc(db, 'messages', item.id), item).catch(() => {});
       }
+      getDocs(collection(db, 'messages')).then((snap) => {
+        snap.docs.forEach((d) => {
+          if (!keepIds.has(d.id)) {
+            deleteDoc(doc(db, 'messages', d.id)).catch(() => {});
+          }
+        });
+      }).catch(() => {});
     }
   }
 
@@ -823,12 +879,26 @@ export class DataStore {
       localStorage.setItem(STORAGE_KEYS.PPDB, JSON.stringify(list));
     }
     if (isSupabaseConfigured() && supabase) {
-      supabase.from('ppdb').upsert(list).then(undefined, () => {});
+      if (list.length > 0) {
+        supabase.from('ppdb').upsert(list).then(undefined, () => {});
+        const keepIds = list.map((item) => item.id);
+        supabase.from('ppdb').delete().not('id', 'in', `(${keepIds.map(id => `"${id}"`).join(',')})`).then(undefined, () => {});
+      } else {
+        supabase.from('ppdb').delete().neq('id', '___none___').then(undefined, () => {});
+      }
     }
     if (isFirebaseConfigured()) {
+      const keepIds = new Set(list.map((item) => item.id));
       for (const item of list) {
         setDoc(doc(db, 'ppdb', item.id), item).catch(() => {});
       }
+      getDocs(collection(db, 'ppdb')).then((snap) => {
+        snap.docs.forEach((d) => {
+          if (!keepIds.has(d.id)) {
+            deleteDoc(doc(db, 'ppdb', d.id)).catch(() => {});
+          }
+        });
+      }).catch(() => {});
     }
   }
 
@@ -881,12 +951,26 @@ export class DataStore {
       localStorage.setItem(STORAGE_KEYS.TESTIMONIALS, JSON.stringify(list));
     }
     if (isSupabaseConfigured() && supabase) {
-      supabase.from('testimonials').upsert(list).then(undefined, () => {});
+      if (list.length > 0) {
+        supabase.from('testimonials').upsert(list).then(undefined, () => {});
+        const keepIds = list.map((item) => item.id);
+        supabase.from('testimonials').delete().not('id', 'in', `(${keepIds.map(id => `"${id}"`).join(',')})`).then(undefined, () => {});
+      } else {
+        supabase.from('testimonials').delete().neq('id', '___none___').then(undefined, () => {});
+      }
     }
     if (isFirebaseConfigured()) {
+      const keepIds = new Set(list.map((item) => item.id));
       for (const item of list) {
         setDoc(doc(db, 'testimonials', item.id), item).catch(() => {});
       }
+      getDocs(collection(db, 'testimonials')).then((snap) => {
+        snap.docs.forEach((d) => {
+          if (!keepIds.has(d.id)) {
+            deleteDoc(doc(db, 'testimonials', d.id)).catch(() => {});
+          }
+        });
+      }).catch(() => {});
     }
   }
 
@@ -910,12 +994,26 @@ export class DataStore {
       localStorage.setItem(STORAGE_KEYS.ACHIEVEMENTS, JSON.stringify(list));
     }
     if (isSupabaseConfigured() && supabase) {
-      supabase.from('achievements').upsert(list).then(undefined, () => {});
+      if (list.length > 0) {
+        supabase.from('achievements').upsert(list).then(undefined, () => {});
+        const keepIds = list.map((item) => item.id);
+        supabase.from('achievements').delete().not('id', 'in', `(${keepIds.map(id => `"${id}"`).join(',')})`).then(undefined, () => {});
+      } else {
+        supabase.from('achievements').delete().neq('id', '___none___').then(undefined, () => {});
+      }
     }
     if (isFirebaseConfigured()) {
+      const keepIds = new Set(list.map((item) => item.id));
       for (const item of list) {
         setDoc(doc(db, 'achievements', item.id), item).catch(() => {});
       }
+      getDocs(collection(db, 'achievements')).then((snap) => {
+        snap.docs.forEach((d) => {
+          if (!keepIds.has(d.id)) {
+            deleteDoc(doc(db, 'achievements', d.id)).catch(() => {});
+          }
+        });
+      }).catch(() => {});
     }
   }
 
@@ -939,12 +1037,26 @@ export class DataStore {
       localStorage.setItem(STORAGE_KEYS.DOCUMENTS, JSON.stringify(list));
     }
     if (isSupabaseConfigured() && supabase) {
-      supabase.from('documents').upsert(list).then(undefined, () => {});
+      if (list.length > 0) {
+        supabase.from('documents').upsert(list).then(undefined, () => {});
+        const keepIds = list.map((item) => item.id);
+        supabase.from('documents').delete().not('id', 'in', `(${keepIds.map(id => `"${id}"`).join(',')})`).then(undefined, () => {});
+      } else {
+        supabase.from('documents').delete().neq('id', '___none___').then(undefined, () => {});
+      }
     }
     if (isFirebaseConfigured()) {
+      const keepIds = new Set(list.map((item) => item.id));
       for (const item of list) {
         setDoc(doc(db, 'documents', item.id), item).catch(() => {});
       }
+      getDocs(collection(db, 'documents')).then((snap) => {
+        snap.docs.forEach((d) => {
+          if (!keepIds.has(d.id)) {
+            deleteDoc(doc(db, 'documents', d.id)).catch(() => {});
+          }
+        });
+      }).catch(() => {});
     }
   }
 
@@ -976,12 +1088,26 @@ export class DataStore {
       localStorage.setItem(STORAGE_KEYS.ADMIN_USERS, JSON.stringify(list));
     }
     if (isSupabaseConfigured() && supabase) {
-      supabase.from('admin_users').upsert(list).then(undefined, () => {});
+      if (list.length > 0) {
+        supabase.from('admin_users').upsert(list).then(undefined, () => {});
+        const keepIds = list.map((item) => item.id);
+        supabase.from('admin_users').delete().not('id', 'in', `(${keepIds.map(id => `"${id}"`).join(',')})`).then(undefined, () => {});
+      } else {
+        supabase.from('admin_users').delete().neq('id', '___none___').then(undefined, () => {});
+      }
     }
     if (isFirebaseConfigured()) {
+      const keepIds = new Set(list.map((item) => item.id));
       for (const item of list) {
         setDoc(doc(db, 'admin_users', item.id), item).catch(() => {});
       }
+      getDocs(collection(db, 'admin_users')).then((snap) => {
+        snap.docs.forEach((d) => {
+          if (!keepIds.has(d.id)) {
+            deleteDoc(doc(db, 'admin_users', d.id)).catch(() => {});
+          }
+        });
+      }).catch(() => {});
     }
   }
 
