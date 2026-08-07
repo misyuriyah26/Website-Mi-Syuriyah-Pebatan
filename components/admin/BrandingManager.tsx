@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Palette, Save, Upload, CheckCircle2, Image as ImageIcon, School, Globe, Phone, Mail, MapPin } from 'lucide-react';
 import { SchoolSettings } from '@/lib/types';
 import { DataStore } from '@/lib/data-store';
+import { parseMapIframeUrl } from '@/lib/utils';
 import { ImageUploadInput } from '@/components/ui/ImageUploadInput';
 
 interface BrandingManagerProps {
@@ -21,8 +22,12 @@ export const BrandingManager: React.FC<BrandingManagerProps> = ({ settings, onSa
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    DataStore.saveSettings(formData);
-    onSaveSettings(formData);
+    const updatedSettings = {
+      ...formData,
+      maps_iframe_url: parseMapIframeUrl(formData.maps_iframe_url),
+    };
+    DataStore.saveSettings(updatedSettings);
+    onSaveSettings(updatedSettings);
     DataStore.addActivityLog('Update Pengaturan', 'Branding', 'Memperbarui logo, banner, dan pengaturan sekolah.');
     setSavedSuccess(true);
     setTimeout(() => setSavedSuccess(false), 3000);
@@ -287,7 +292,7 @@ export const BrandingManager: React.FC<BrandingManagerProps> = ({ settings, onSa
             <textarea
               rows={2}
               value={formData.maps_iframe_url || ''}
-              onChange={(e) => setFormData({ ...formData, maps_iframe_url: e.target.value })}
+              onChange={(e) => setFormData({ ...formData, maps_iframe_url: parseMapIframeUrl(e.target.value) })}
               placeholder="https://www.google.com/maps/embed?pb=..."
               className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs text-slate-900 dark:text-slate-100 font-mono"
             />

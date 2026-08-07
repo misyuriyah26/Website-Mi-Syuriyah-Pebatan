@@ -26,6 +26,7 @@ import {
   MapPin,
 } from 'lucide-react';
 import { ImageUploadInput } from '@/components/ui/ImageUploadInput';
+import { parseMapIframeUrl } from '@/lib/utils';
 
 interface PagesManagerProps {
   pagesContent: StaticPagesContent;
@@ -168,7 +169,7 @@ export const PagesManager: React.FC<PagesManagerProps> = ({
         deskripsi_peta:
           formData.kontak_info?.deskripsi_peta ||
           'Jl. Raya Pebatan No. 45, Desa Pebatan, Kec. Wanasari, Kab. Brebes, Jawa Tengah.',
-        maps_iframe_url: formData.kontak_info?.maps_iframe_url || '',
+        maps_iframe_url: parseMapIframeUrl(formData.kontak_info?.maps_iframe_url) || '',
       },
     };
 
@@ -1589,7 +1590,7 @@ export const PagesManager: React.FC<PagesManagerProps> = ({
                   ...formData,
                   kontak_info: {
                     ...(formData.kontak_info || {}),
-                    maps_iframe_url: e.target.value,
+                    maps_iframe_url: parseMapIframeUrl(e.target.value),
                   },
                 })
               }

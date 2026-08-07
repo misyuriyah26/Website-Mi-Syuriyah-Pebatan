@@ -17,6 +17,7 @@ import { supabase, isSupabaseConfigured } from './supabase';
 import { db, isFirebaseConfigured } from './firebase';
 import { doc, setDoc, getDoc, getDocs, collection, deleteDoc } from 'firebase/firestore';
 import { handleFirestoreError, OperationType } from './firebase-error';
+import { parseMapIframeUrl } from './utils';
 
 const STORAGE_KEYS = {
   NEWS: 'misyuriyah_news',
@@ -354,6 +355,7 @@ Hingga saat ini, MI Syuriyah Pebatan telah meluluskan ribuan alumni yang berkipr
     pesan_sukses: 'Alhamdulillah, Pesan Anda Berhasil Terkirim!',
     judul_peta: 'Peta Lokasi MI Syuriyah Pebatan Wanasari Brebes',
     deskripsi_peta: 'Jl. Raya Pebatan No. 45, Desa Pebatan, Kec. Wanasari, Kab. Brebes, Jawa Tengah.',
+    maps_iframe_url: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3961.163917693383!2d109.02733727441914!3d-6.87095356722614!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e6fb077004567ff%3A0x7b1680c42eb28ba9!2sMadrasah%20Ibtidaiyah%20Swasta%20Syuriyah!5e0!3m2!1sen!2sid!4v1786111417599!5m2!1sen!2sid',
   },
   ppdb_info: {
     judul: 'Informasi & Ketentuan PPDB TA 2026/2027',
@@ -379,7 +381,7 @@ export const initialSettings: SchoolSettings = {
   phone: '(0283) 617-8890',
   whatsapp: '6281234567890',
   email: 'misyuriyah26@gmail.com',
-  maps_iframe_url: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15844.75782976735!2d109.0205!3d-6.865!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e6fb1123456789%3A0x123456789abcdef!2sPebatan%2C%20Wanasari%2C%20Brebes!5e0!3m2!1sid!2sid!4v1700000000000!5m2!1sid!2sid',
+  maps_iframe_url: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3961.163917693383!2d109.02733727441914!3d-6.87095356722614!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e6fb077004567ff%3A0x7b1680c42eb28ba9!2sMadrasah%20Ibtidaiyah%20Swasta%20Syuriyah!5e0!3m2!1sen!2sid!4v1786111417599!5m2!1sen!2sid',
   headmaster_name: 'Ahmad Fauzi, S.Pd.I',
   npsn: '60712345',
   akreditasi: 'A (Sangat Baik)',
@@ -814,13 +816,23 @@ export class DataStore {
       return initialPagesContent;
     }
     try {
-      return JSON.parse(stored);
+      const parsed = JSON.parse(stored);
+      if (parsed.kontak_info) {
+        parsed.kontak_info.maps_iframe_url = parseMapIframeUrl(parsed.kontak_info.maps_iframe_url);
+        if (!parsed.kontak_info.maps_iframe_url || parsed.kontak_info.maps_iframe_url.includes('0x2e6fb1123456789') || parsed.kontak_info.maps_iframe_url.includes('0x2e6fb02fa3f2ec49')) {
+          parsed.kontak_info.maps_iframe_url = initialSettings.maps_iframe_url;
+        }
+      }
+      return parsed;
     } catch {
       return initialPagesContent;
     }
   }
 
   static savePagesContent(pages: StaticPagesContent): void {
+    if (pages.kontak_info) {
+      pages.kontak_info.maps_iframe_url = parseMapIframeUrl(pages.kontak_info.maps_iframe_url);
+    }
     if (this.isClient()) {
       localStorage.setItem(STORAGE_KEYS.PAGES, JSON.stringify(pages));
     }
@@ -841,13 +853,19 @@ export class DataStore {
       return initialSettings;
     }
     try {
-      return { ...initialSettings, ...JSON.parse(stored) };
+      const parsed = { ...initialSettings, ...JSON.parse(stored) };
+      parsed.maps_iframe_url = parseMapIframeUrl(parsed.maps_iframe_url);
+      if (!parsed.maps_iframe_url || parsed.maps_iframe_url.includes('0x2e6fb1123456789') || parsed.maps_iframe_url.includes('0x2e6fb02fa3f2ec49')) {
+        parsed.maps_iframe_url = initialSettings.maps_iframe_url;
+      }
+      return parsed;
     } catch {
       return initialSettings;
     }
   }
 
   static saveSettings(settings: SchoolSettings): void {
+    settings.maps_iframe_url = parseMapIframeUrl(settings.maps_iframe_url);
     if (this.isClient()) {
       localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(settings));
     }

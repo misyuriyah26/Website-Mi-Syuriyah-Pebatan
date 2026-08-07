@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { ContactMessage, SchoolSettings, StaticPagesContent } from '@/lib/types';
 import { DataStore } from '@/lib/data-store';
+import { parseMapIframeUrl } from '@/lib/utils';
 import { IslamicDivider, IslamicStarOrnament } from '../IslamicPattern';
 
 interface KontakSectionProps {
@@ -249,7 +250,11 @@ export const KontakSection: React.FC<KontakSectionProps> = ({
         </p>
         <div className="w-full h-80 rounded-xl overflow-hidden border border-slate-300 shadow-inner bg-slate-100">
           <iframe
-            src={kontak.maps_iframe_url || settings.maps_iframe_url || 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3961.018937666224!2d109.0225102!3d-6.8883656!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e6fb02fa3f2ec49%3A0xb355ee03efeb0a72!2sMIS%20Misyuriyah%20Pebatan!5e0!3m2!1sid!2sid!4v1700000000000'}
+            src={
+              parseMapIframeUrl(kontak.maps_iframe_url) ||
+              parseMapIframeUrl(settings.maps_iframe_url) ||
+              'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3961.163917693383!2d109.02733727441914!3d-6.87095356722614!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e6fb077004567ff%3A0x7b1680c42eb28ba9!2sMadrasah%20Ibtidaiyah%20Swasta%20Syuriyah!5e0!3m2!1sen!2sid!4v1786111417599!5m2!1sen!2sid'
+            }
             width="100%"
             height="100%"
             style={{ border: 0 }}
